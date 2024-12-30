@@ -6,4 +6,5 @@ import java.sql.SQLException;
 
 public interface StatementProvider {
 	PreparedStatement getPreparedStatement(Connection conn, String sql, Object... objs) throws SQLException;
+	
 }
