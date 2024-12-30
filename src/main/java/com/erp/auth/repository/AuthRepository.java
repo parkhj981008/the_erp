@@ -20,6 +20,7 @@ import com.erp.common.database.impl.OracleDBManager;
 import com.erp.common.database.impl.StatementProviderDefaultImpl;
 import com.erp.common.rest.RestBusinessException;
 import com.erp.common.rest.RestBusinessException.StatusCode;
+import com.erp.common.security.UserInfo;
 
 public class AuthRepository{
 	
@@ -45,7 +46,7 @@ public class AuthRepository{
 		}
 	}
 	
-	public LoginResponseDTO login(LoginRequestDTO requestDto) {
+	public UserInfo login(LoginRequestDTO requestDto) {
 		try(
 				Connection con = db.getConnection();
 				PreparedStatement ps = sp.getPreparedStatement(con, requestDto.converToSql(), requestDto.getAttributeAsObjectArray());
@@ -62,9 +63,7 @@ public class AuthRepository{
 				System.out.println(userPassword);
 				throw new RestBusinessException(StatusCode.INVALID_IP_PASSWORD);
 			}
-		
-			System.out.println(getUserRole(userSeq)[0]);
-			return LoginResponseDTO.builder().userSeq(userSeq).roles(getUserRole(userSeq)).build(); 
+			return UserInfo.builder().userSeq(userSeq).roles(getUserRole(userSeq)).build(); 
 		} catch (SQLException e) {
 			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);			
 		}

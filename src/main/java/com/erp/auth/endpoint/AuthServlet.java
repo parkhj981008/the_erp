@@ -15,6 +15,7 @@ import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
 import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestBusinessException;
+import com.erp.common.security.UserInfo;
 import com.erp.common.util.AES256Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.erp.common.rest.RestBusinessException.StatusCode;
 
 
-@WebServlet("/v1/auth/*")
+@WebServlet("/api/v1/auth/*")
 public class AuthServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -50,13 +51,13 @@ public class AuthServlet extends HttpServlet {
 	    String jsonString = jsonData.toString();
 
 		switch(request.getRequestURI()) {
-		case "/v1/auth/register" : {
+		case "/api/v1/auth/register" : {
 			authService.register(om.reader().readValue(jsonString, RegisterRequestDTO.class));
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			break;
 			}
-		case "/v1/auth/login" : {
-			LoginResponseDTO responseDto = authService.login(om.reader().readValue(jsonString, LoginRequestDTO.class));
+		case "/api/v1/auth/login" : {
+			UserInfo responseDto = authService.login(om.reader().readValue(jsonString, LoginRequestDTO.class));
 			response.setStatus(HttpServletResponse.SC_OK);
 			try {
 				Cookie cookie = new Cookie("auth", AES256Util.encrypt(om.writer().writeValueAsString(responseDto)));

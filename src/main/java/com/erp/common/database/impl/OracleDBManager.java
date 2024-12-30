@@ -3,6 +3,8 @@ package com.erp.common.database.impl;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -28,6 +30,27 @@ public class OracleDBManager implements DBManager{
 		conn.setAutoCommit(false);
 		return conn;
 	}
+	
+	@Override
+    public void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+        try {
+            if(rs != null)      rs.close();
+            if(pstmt != null)   pstmt.close();
+            if(conn != null)    conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void close(Connection conn, PreparedStatement pstmt) {
+        try {
+            if(pstmt != null)   pstmt.close();
+            if(conn != null)    conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	
 }

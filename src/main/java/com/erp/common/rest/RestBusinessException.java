@@ -37,6 +37,7 @@ public class RestBusinessException extends RuntimeException {
 		, INVALID_IP_PASSWORD("아이디 또는 암호가 올바르지않습니다", 400)
 		, UNEXPECTED_ERROR("예상치 못한 오류", 400)
 		, USER_NOT_EXISTS("없는 사용자입니다.", 400)
+		
 		;
 		
 		private final String desc;

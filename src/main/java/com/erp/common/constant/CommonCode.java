@@ -39,5 +39,4 @@ public class CommonCode{
 		
 		public int getNum() {return this.num; }
 	}
-
 }
