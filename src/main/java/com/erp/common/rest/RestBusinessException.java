@@ -21,6 +21,11 @@ public class RestBusinessException extends RuntimeException {
 		this.statusCode = statusCode;
 	}
 	
+	public RestBusinessException(StatusCode statusCode, Exception e){
+		super(e);
+		this.statusCode = statusCode;
+	}
+	
 	
 	
 	@AllArgsConstructor
@@ -28,6 +33,8 @@ public class RestBusinessException extends RuntimeException {
 	public static enum StatusCode{
 		BAD_REQUEST("잘못된 요청입니다.", 400)
 		, CONSTRAINT_VIOLATION("중복된 값을 입력하셨습니다.", 400)
+		, DATABASE_UKNOWN_ERROR("데이터베이스에서 알 수 없는 오류가 발생했습니다.", 400)
+		, INVALID_IP_PASSWORD("아이디 또는 암호가 올바르지않습니다", 400)
 		, UNEXPECTED_ERROR("예상치 못한 오류", 400)
 		, USER_NOT_EXISTS("없는 사용자입니다.", 400)
 		;

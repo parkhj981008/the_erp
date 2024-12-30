@@ -27,6 +27,7 @@ public class RestBusinessExceptionHandler implements Filter {
     	HttpServletResponse servletResponse = (HttpServletResponse)response;
     	servletResponse.setStatus(e.getStatusCode().getStatusCode());
     	try {
+    		e.printStackTrace();
 			servletResponse.getWriter().flush();
 			servletResponse.getWriter()
 				.write(om.writer().writeValueAsString(e.convertToRestResponse()));

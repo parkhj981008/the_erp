@@ -4,14 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.erp.auth.service.AuthService;
 import com.erp.auth.service.impl.AuthServiceImpl;
+import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
+import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestBusinessException;
+import com.erp.common.util.AES256Util;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.erp.common.rest.RestBusinessException.StatusCode;
@@ -49,7 +54,22 @@ public class AuthServlet extends HttpServlet {
 		switch(request.getRequestURI()) {
 		case "/v1/auth/register" : {
 			authService.register(om.reader().readValue(jsonString, RegisterRequestDTO.class));
+			response.setStatus(HttpServletResponse.SC_CREATED);
+			break;
+			}
+		case "/v1/auth/login" : {
+			LoginResponseDTO responseDto = authService.login(om.reader().readValue(jsonString, LoginRequestDTO.class));
 			response.setStatus(HttpServletResponse.SC_OK);
+			try {
+				Cookie cookie = new Cookie("auth", AES256Util.encrypt(om.writer().writeValueAsString(responseDto)));
+				cookie.setMaxAge(3600); 
+		        cookie.setPath("/");
+		        response.addCookie(cookie);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			break;
 			}
 		default : throw new RestBusinessException(StatusCode.BAD_REQUEST);

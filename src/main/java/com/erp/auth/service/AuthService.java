@@ -3,6 +3,8 @@
  */
 package com.erp.auth.service;
 
+import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
+import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestResponse;
 
@@ -17,4 +19,5 @@ import com.erp.common.rest.RestResponse;
  */
 public interface AuthService {
 	void register(RegisterRequestDTO dto);
+	LoginResponseDTO login(LoginRequestDTO dto);
 }
