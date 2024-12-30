@@ -3,8 +3,11 @@
  */
 package com.erp.auth.service;
 
+import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
+import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestResponse;
+import com.erp.common.security.UserInfo;
 
 /**
  * Description : 클래스에 대한 설명을 입력해주세요.<br>
@@ -17,4 +20,5 @@ import com.erp.common.rest.RestResponse;
  */
 public interface AuthService {
 	void register(RegisterRequestDTO dto);
+	UserInfo login(LoginRequestDTO dto);
 }
