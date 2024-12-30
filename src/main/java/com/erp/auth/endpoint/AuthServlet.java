@@ -21,9 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.erp.common.rest.RestBusinessException.StatusCode;
 
-/**
- * Servlet implementation class AuthServlet
- */
+
 @WebServlet("/v1/auth/*")
 public class AuthServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
