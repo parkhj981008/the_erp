@@ -23,6 +23,11 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
+
+# Ignore MANIFEST.MF files
+MANIFEST.MF
+**/MANIFEST.MF
+
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 

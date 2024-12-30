@@ -15,6 +15,7 @@ import com.erp.common.rest.RestBusinessException;
 import com.erp.common.rest.RestBusinessException.StatusCode;
 
 public class AuthRepository{
+	
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
 	
