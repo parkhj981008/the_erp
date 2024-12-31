@@ -1,12 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- base:css -->
+<link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
+<link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
+
     <ul class="nav">
         <li class="nav-item">
             <div class="d-flex sidebar-profile">
                 <div class="sidebar-profile-image">
-                    <img src="images/faces/face29.png" alt="image">
+                    <img src="/erp/images/faces/face29.png" alt="image">
                     <span class="sidebar-status-indicator"></span>
                 </div>
                 <div class="sidebar-profile-name">
@@ -30,7 +39,7 @@
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                 <i class="typcn typcn-briefcase menu-icon"></i>
                 <span class="menu-title">회계</span>
-                <i class="typcn typcn-chevron-right menu-arrow"></i>
+               <!--  <i class="typcn typcn-chevron-right menu-arrow"></i> -->
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
@@ -46,7 +55,7 @@
             <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
                 <i class="typcn typcn-film menu-icon"></i>
                 <span class="menu-title">인사</span>
-                <i class="menu-arrow"></i>
+                <!-- <i class="menu-arrow"></i> -->
             </a>
             <div class="collapse" id="form-elements">
                 <ul class="nav flex-column sub-menu">
@@ -59,7 +68,7 @@
             <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
                 <i class="typcn typcn-chart-pie-outline menu-icon"></i>
                 <span class="menu-title">총무</span>
-                <i class="menu-arrow"></i>
+                <!-- <i class="menu-arrow"></i> -->
             </a>
             <div class="collapse" id="charts">
                 <ul class="nav flex-column sub-menu">
