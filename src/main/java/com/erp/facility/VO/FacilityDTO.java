@@ -1,7 +1,5 @@
 package com.erp.facility.VO;
 
-
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -21,8 +19,8 @@ public class FacilityDTO {
 	private String operatingStatus;
 	private String facilityType;
 	private Date completionDate;
-
 	
+
 	public static String findAllFacility() {
 		return "select * from facility";
 	}
@@ -44,9 +42,6 @@ public class FacilityDTO {
 	    return "INSERT INTO facility (facility_id, name, location, capacity, operating_status, facility_type, completion_date) " +
 	           "VALUES (facility_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 	}
-	
-	
-	
 	
 	
 	// 고민

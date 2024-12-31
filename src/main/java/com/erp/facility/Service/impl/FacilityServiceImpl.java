@@ -6,6 +6,7 @@ import com.erp.facility.Repository.FacilityRepository;
 import com.erp.facility.Service.FacilityService;
 import com.erp.facility.VO.FacilityDTO;
 import com.erp.facility.VO.InspectionDTO;
+import com.erp.facility.dto.FacilityAndNameDTO;
 
 public class FacilityServiceImpl implements FacilityService{
 
@@ -37,6 +38,11 @@ public class FacilityServiceImpl implements FacilityService{
 	public List<FacilityDTO> findAllFacilityType(String type) {
 	
 		return null;
+	}
+
+	@Override
+	public FacilityAndNameDTO findDetails(int seq) {
+		return facilityRepository.findDetails(seq);
 	}
 
 	

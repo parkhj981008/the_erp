@@ -30,7 +30,7 @@ public class AuthFilter implements Filter {
 
 		setUserInfoByCookie(httpRequest.getCookies());
 		chain.doFilter(request, response);
-		System.out.println("test:   " + SecurityContext.getCurrentUser().getUserSeq());
+//		System.out.println("test:   " + SecurityContext.getCurrentUser().getUserSeq());
 		SecurityContext.clear();
 	}
 
