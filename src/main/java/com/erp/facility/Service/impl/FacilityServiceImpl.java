@@ -22,35 +22,23 @@ public class FacilityServiceImpl implements FacilityService{
 		return facilityRepository.findAll();
 	}
 	
-	
-	
-
-	
 	@Override
-	public int save(InspectionDTO inspectionVO) {
-		// TODO Auto-generated method stub
-		return 0;
+	public List<FacilityDTO> findAllFacilityOperating() {
+		return facilityRepository.findAllFacilityOperating();
 	}
 
 	@Override
-	public List<InspectionDTO> findALl() {
-		// TODO Auto-generated method stub
+	public List<FacilityDTO> findAllFacilityNon_Operating() {
+		return facilityRepository.findAllFacilityNon_Operating();
+	}
+	
+	//TODO
+	@Override
+	public List<FacilityDTO> findAllFacilityType(String type) {
+	
 		return null;
 	}
 
-
-
-
-
-	
-	
-	
-	
-	
-
-	
-
-	
 	
 	
 }
