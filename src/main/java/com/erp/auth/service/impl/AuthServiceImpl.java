@@ -5,8 +5,11 @@ package com.erp.auth.service.impl;
 
 import com.erp.auth.repository.AuthRepository;
 import com.erp.auth.service.AuthService;
+import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
+import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestResponse;
+import com.erp.common.security.UserInfo;
 
 /**
  * Description : 클래스에 대한 설명을 입력해주세요.<br>
@@ -23,6 +26,11 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public void register(RegisterRequestDTO dto) {
 		authRepository.register(dto);
+	}
+
+	@Override
+	public UserInfo login(LoginRequestDTO dto) {
+		return authRepository.login(dto);
 	}
 	
 }

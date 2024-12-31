@@ -36,9 +36,9 @@ public class StatementProviderDefaultImpl implements StatementProvider {
                 resultPS.setString(i, (String) o);
             }else if (o instanceof java.util.Date) {
             	java.util.Date utilDate = (java.util.Date)o;
-                resultPS.setDate(i, new java.sql.Date(utilDate.getDate()));
+                resultPS.setDate(i, new java.sql.Date(utilDate.getTime()));
             } else if (o instanceof java.sql.Date) {
-                resultPS.setDate(i, (java.sql.Date) o);
+                resultPS.setDate(i, (java.sql.Date) o);        
             } else if (o instanceof java.sql.Timestamp) {
                 resultPS.setTimestamp(i, (java.sql.Timestamp) o);
             } else if (o instanceof Boolean) {
