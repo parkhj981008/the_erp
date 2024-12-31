@@ -4,13 +4,13 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 
-import javax.servlet.FilterConfig;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 
+//@WebServlet("/*")
 public class EncodingFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -19,9 +19,10 @@ public class EncodingFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String uri = httpRequest.getRequestURI();
 		String contextPath = httpRequest.getContextPath();
+		
 		// 정적 리소스 요청은 필터 제외
-		if (uri.startsWith(contextPath + "/erp/css/") || uri.startsWith(contextPath + "/erp/js/")
-				|| uri.startsWith(contextPath + "/erp/images/")) {
+		if (uri.startsWith(contextPath + "/erp/css") || uri.startsWith(contextPath + "/erp/js")
+				|| uri.startsWith(contextPath + "/erp/images")) {
 			chain.doFilter(request, response);
 			return;
 		}
