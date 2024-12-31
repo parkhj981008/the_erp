@@ -21,8 +21,13 @@ public class FacilityDTO {
 	private String operatingStatus;
 	private String facilityType;
 	private Date completionDate;
-
 	
+	public static String findDetails() {
+		return "select f.*, m.work_manager\n"
+				+ "from (select * from facility where facility_id = ?) f, maintenance m\n"
+				+ "where f.facility_id = m.facility_id";
+	}
+
 	public static String findAllFacility() {
 		return "select * from facility";
 	}

@@ -47,7 +47,12 @@ public class FacilityServlet extends HttpServlet {
 				
 			}
 		 
-		} else if ("/modify".equals(pathInfo)) {
+		} else if("/deatils".equals(pathInfo)){
+			
+			
+		}
+		
+		else if ("/modify".equals(pathInfo)) {
             // 수정 페이지 로직 처리
            response.sendRedirect("/facility/modify.jsp");
            

@@ -15,12 +15,45 @@ import com.erp.common.database.impl.StatementProviderDefaultImpl;
 import com.erp.common.rest.RestBusinessException;
 import com.erp.common.rest.RestBusinessException.StatusCode;
 import com.erp.facility.VO.FacilityDTO;
+import com.erp.facility.dto.FacilityAndNameDTO;
 
 
 public class FacilityRepository {
 
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
+	
+	public FacilityAndNameDTO findDetails(int seq) {
+	
+	    
+	    try (
+	        Connection con = db.getConnectionForTransaction();
+	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityType());    		    	
+	    ) {	
+	    	ps.setInt(1, seq);
+	    	ResultSet rs = ps.executeQuery();
+	   
+	    	FacilityAndNameDTO facilityAndName = new FacilityAndNameDTO(
+	    	        rs.getLong("facility_id"),      
+	    	        rs.getString("name"),           
+	    	        rs.getString("location"),       
+	    	        rs.getInt("capacity"),          
+	    	        rs.getString("operating_status"),  
+	    	        rs.getString("facility_type"),  
+	    	        rs.getDate("completion_date"),
+	    	        rs.getString("work_manager")
+	    	        );   
+
+	        return facilityAndName;
+	        
+	    } catch (SQLException e) {
+	        if(e instanceof SQLIntegrityConstraintViolationException) 
+	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+	        e.printStackTrace();
+	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+	    }
+	}
+	
 	
 	
 	// 운영 중단인 시설불러오기 
