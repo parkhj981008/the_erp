@@ -23,6 +23,11 @@ public class InspectionDTO {
 		return "select * from inspection";
 	}
 	
+	public static String saveInspection() {
+		return "INSERT INTO inspection(inspection_id, facility_id, inspection_date, inspection_state, inspection_result, work_manager) " +
+		           "VALUES (inspection_seq.NEXTVAL, ?, ?, ?, ?, ?)";
+	}
+	
 	public Object[] getAttributeAsObjectArray() {	
 	    return new Object[] {
 	        this.facilityId,
