@@ -11,13 +11,14 @@ public class StatementProviderDefaultImpl implements StatementProvider {
 
     @Override
     public PreparedStatement getPreparedStatement(Connection conn, String sql, Object... objs) throws SQLException {
+  	
         int count = 0;
         for (char c : sql.toCharArray()) {
             if (c == '?') count++;
         }
 
         PreparedStatement resultPS = conn.prepareStatement(sql);
-
+      
         for (int i = 1; i <= count; i++) {
             Object o = objs[i - 1];
             if (o == null) {

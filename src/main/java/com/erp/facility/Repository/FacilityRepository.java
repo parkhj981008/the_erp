@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.*;
 
 import com.erp.common.database.DBManager;
@@ -23,28 +22,26 @@ public class FacilityRepository {
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
 	
-	public FacilityAndNameDTO findDetails(int seq) {
 	
-	    
+	
+	public FacilityAndNameDTO findDetails(int seq) {   
 	    try (
 	        Connection con = db.getConnectionForTransaction();
-	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityType());    		    	
-	    ) {	
-	    	ps.setInt(1, seq);
-	    	ResultSet rs = ps.executeQuery();
-	   
-	    	FacilityAndNameDTO facilityAndName = new FacilityAndNameDTO(
-	    	        rs.getLong("facility_id"),      
-	    	        rs.getString("name"),           
-	    	        rs.getString("location"),       
-	    	        rs.getInt("capacity"),          
-	    	        rs.getString("operating_status"),  
-	    	        rs.getString("facility_type"),  
-	    	        rs.getDate("completion_date"),
-	    	        rs.getString("work_manager")
-	    	        );   
-
-	        return facilityAndName;
+	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityAndNameDTO.findDetails(),seq);   
+	    	ResultSet rs = ps.executeQuery();	    
+	    ) {	    	
+	    	 if (rs.next()) {  // 데이터가 있는지 먼저 확인
+	             return new FacilityAndNameDTO(
+	                 rs.getLong("facility_id"),      
+	                 rs.getString("name"),           
+	                 rs.getString("location"),       
+	                 rs.getInt("capacity"),          
+	                 rs.getString("operating_status"),  
+	                 rs.getString("facility_type"),  
+	                 rs.getDate("completion_date"),
+	                 rs.getString("work_manager")
+	             );  
+	    	 }
 	        
 	    } catch (SQLException e) {
 	        if(e instanceof SQLIntegrityConstraintViolationException) 
@@ -52,6 +49,7 @@ public class FacilityRepository {
 	        e.printStackTrace();
 	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
 	    }
+	    throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR);
 	}
 	
 	

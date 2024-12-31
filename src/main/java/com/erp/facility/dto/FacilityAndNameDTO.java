@@ -22,7 +22,11 @@ public class FacilityAndNameDTO {
 	private String workName;
 	
 	
-	
+	public static String findDetails() {
+		return "select f.*, m.work_manager\n"
+				+ "from (select * from facility where facility_id = ?) f, maintenance m\n"
+				+ "where f.facility_id = m.facility_id";
+	}
 	
 
 
