@@ -29,7 +29,7 @@
 	<div class="container-scroller">
 
 
-		<!-- 상단 네-->
+		<!-- 상단 네비-->
 		<%@ include file="/erp/layout/top_layout.jsp"%>
 
 		<!-- partial -->
