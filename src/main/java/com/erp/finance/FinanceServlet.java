@@ -23,28 +23,34 @@ public class FinanceServlet extends HttpServlet {
 
 		FinanceDAO dao = new FinanceDAO();
 		String uri = request.getRequestURI();
-
-		List<FinanceVO> fList1 = dao.totalStatementList();
-
-		request.setAttribute("KEY_TOTAL_FLIST", fList1);
 		
 
-		
-		if (uri.equals("/finance/general_ledger")) {
+		//계정관리
+		if (uri.equals("/finance/accounts")) {
+			List<FinanceVO> fList1 = dao.AccountsList();
+			request.setAttribute("KEY_ACCOUNTS_FLIST", fList1);
+			request.getRequestDispatcher("/erp/pages/finance/accounts.jsp").forward(request, response);
+		//전표관리
+		} else if (uri.equals("/finance/general_ledger")) {
+			List<FinanceVO> fList2 = dao.SlipList();
+			request.setAttribute("KEY_SLIP_FLIST", fList2);
 			request.getRequestDispatcher("/erp/pages/finance/general_ledger.jsp").forward(request, response);
-		} else if (uri.equals("/finance/income_Statement")) {
-			List<FinanceVO> fList3 = dao.sumIncomeList();
-			request.setAttribute("KEY_INCOME_FLIST", fList3);
-			request.getRequestDispatcher("/erp/pages/finance/income_Statement.jsp").forward(request, response);
+		//계정별원장
+		} else if (uri.equals("/finance/sum_FinanceList")) {
+			List<FinanceVO> fList3 = dao.sumFinanceList();
+			request.setAttribute("KEY_SUM_FLIST", fList3);
+			request.getRequestDispatcher("/erp/pages/finance/sum_FinanceList.jsp").forward(request, response);
+		//재무상태표
 		} else if (uri.equals("/finance/sofp")) {
-			List<FinanceVO> fList2 = dao.sumStatementList();
-			  System.out.println("fList2 size: " + fList2.size()); // 데이터 개수 출력
-			    for (FinanceVO vo : fList2) {
-			        System.out.println(vo.getParent_type() + " " + vo.getAccount_name() + " " + vo.getDiff());
-			    }
-			
-			request.setAttribute("KEY_STATE_FLIST", fList2);
-			request.getRequestDispatcher(request.getContextPath() + "/erp/pages/finance/sofp.jsp").forward(request, response);}
+			List<FinanceVO> fList4 = dao.SoFPList();
+			request.setAttribute("KEY_STATE_FLIST", fList4);
+			request.getRequestDispatcher("/erp/pages/finance/sofp.jsp").forward(request, response);
+		//손익계산서
+		} else if (uri.equals("/finance/income_Statement")) {
+			List<FinanceVO> fList5 = dao.sumIncomeList();
+			request.setAttribute("KEY_INCOME_FLIST", fList5);
+			request.getRequestDispatcher("/erp/pages/finance/income_Statement.jsp").forward(request, response);
+		} 
 
 
 	}

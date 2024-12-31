@@ -12,13 +12,8 @@ import java.util.Map;
 import com.erp.finance.common.DBManager;
 import com.erp.finance.common.OracleDBManager;
 
-
-
-
-
 public class FinanceDAO {
 
-	
 	private String account_id;
 	private String account_name;
 	private String account_type;
@@ -30,9 +25,39 @@ public class FinanceDAO {
 	private Long debit;
 	private Long credit;
 	
+	// 계정관리
+	public ArrayList<FinanceVO> AccountsList()  {
+    	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
+		try {
+			String query = "SELECT ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_TYPE, PARENT_TYPE " +
+						   "FROM ACCOUNTS " +
+						   "ORDER BY ACCOUNT_ID ASC";
+        	System.out.println(query);
+        	
+			pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	FinanceVO vo = new FinanceVO();
+            	vo.setAccount_id(rs.getString("ACCOUNT_ID"));
+            	vo.setAccount_name(rs.getString("ACCOUNT_NAME"));
+            	vo.setAccount_type(rs.getString("ACCOUNT_TYPE"));
+            	vo.setParent_type(rs.getString("PARENT_TYPE"));
+            	fList.add(vo);
+            }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	finally {
+				dbm.close(conn, pstmt, rs);
+		}
+		return fList;
+    }
 	
 	// 전표관리
-	public ArrayList<FinanceVO> totalStatementList()  {
+	public ArrayList<FinanceVO> SlipList()  {
     	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();
 		Connection conn = dbm.connect();
 		PreparedStatement pstmt = null;
@@ -72,7 +97,7 @@ public class FinanceDAO {
 		return fList;
     }
 
-	//계정별원장
+	// 계정별원장
 	public ArrayList<FinanceVO> sumFinanceList()  {
     	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();
 		Connection conn = dbm.connect();
@@ -187,8 +212,8 @@ public class FinanceDAO {
 	
 
 	
-//재무상태표
-	public ArrayList<FinanceVO> sumStatementList()  {
+	// 재무상태표
+	public ArrayList<FinanceVO> SoFPList()  {
     	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();
 		Connection conn = dbm.connect();
 		PreparedStatement pstmt = null;
@@ -210,6 +235,7 @@ public class FinanceDAO {
             	FinanceVO vo = new FinanceVO();
             	vo.setParent_type(rs.getString("PARENT_TYPE"));
             	vo.setAccount_type(rs.getString("ACCOUNT_TYPE"));
+            	vo.setAccount_name(rs.getString("ACCOUNT_NAME"));
             	vo.setDiff(rs.getLong("DIFF"));
             	fList.add(vo);
             }
@@ -221,7 +247,7 @@ public class FinanceDAO {
 		return fList;
     }
 	
-	//손익계산서
+	// 손익계산서
 	public ArrayList<FinanceVO> sumIncomeList()  {
     	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();
 		Connection conn = dbm.connect();
