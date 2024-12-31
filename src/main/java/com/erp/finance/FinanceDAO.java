@@ -30,6 +30,45 @@ public class FinanceDAO {
 	private Long debit;
 	private Long credit;
 	
+	public ArrayList<FinanceVO> totalStatementList()  {
+    	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
+		try {
+			String query = "SELECT "
+		             + "VOUCHER_DATE, "
+		             + "DESCRIPT, "
+		             + "ACCOUNT_ID, "
+		             + "ACCOUNT_NAME, "
+		             + "DEBIT, "
+		             + "CREDIT "
+		             + "FROM "
+		             + "VOUCHER";
+        	System.out.println(query);
+        	
+        	
+        	
+			pstmt = conn.prepareStatement(query);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+            	FinanceVO vo = new FinanceVO();
+            	vo.setVoucher_date(rs.getString("VOUCHER_DATE"));
+            	vo.setDescript(rs.getString("DESCRIPT"));
+            	vo.setAccount_id(rs.getString("ACCOUNT_ID"));
+            	vo.setAccount_name(rs.getString("ACCOUNT_NAME"));
+            	vo.setDebit(rs.getLong("DEBIT"));
+            	vo.setCredit(rs.getLong("CREDIT"));
+            	fList.add(vo);
+            }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	finally {
+				dbm.close(conn, pstmt, rs);
+		}
+		return fList;
+    }
 	
 	public ArrayList<FinanceVO> sumFinanceList()  {
     	DBManager dbm = OracleDBManager.getInstance();  	//new OracleDBManager();

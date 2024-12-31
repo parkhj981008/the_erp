@@ -5,7 +5,36 @@
 <%@ taglib prefix="fn" 	uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="x" 	uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
- 
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+<table border=1  width=50%>
+<tr>
+	<th>날짜</th>
+	<th>적요</th>
+	<th>계정ID</th>
+	<th>계정명</th>
+	<th>차변</th>
+	<th>대변</th>
+</tr>
+<c:forEach var="vo" items="${KEY_TOTAL_FLIST}">
+	<tr>
+		<td>${vo.voucher_date}</td>
+		<td>${vo.descript}</td>
+		<td>${vo.account_id}</td>
+		<td>${vo.account_name}</td>
+		<td>${vo.debit}</td>
+		<td>${vo.credit}</td>
+	</tr>	
+</c:forEach>
+</table>
+
+</table>
+<br><br>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
