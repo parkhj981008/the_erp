@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.erp.attendance.vo.AllEmployeeDTO;
 import com.erp.attendance.vo.AttendanceDTO;
 import com.erp.attendance.vo.InsertAttendanceDTO;
 import com.erp.common.attendance.DBManager;
@@ -78,6 +79,42 @@ public class AttendanceRepository {
 		}
 		
 		return rows;
+	}
+	
+	// 부서별 사원 조회
+	public List<AllEmployeeDTO> selectUsersByDepartment() {
+		List<AllEmployeeDTO> list = new ArrayList<AllEmployeeDTO>();
+		
+		DBManager dbm = OracleDBManager.getInstance();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			// ATTENDANCE_SEQ, ATTENDANCE_CODE, ATTENDANCE_DATE, DAYS_NUMBER, VACATION_NAME, NOTES, USER_SEQ
+			String sql = "SELECT a.user_seq, a.user_name, d.name\r\n"
+					+ "FROM app_users a\r\n"
+					+ "JOIN department d\r\n"
+					+ "ON a.department_id = d.department_id";
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				AllEmployeeDTO adto = new AllEmployeeDTO();
+				adto.setUserSeq(rs.getLong("user_seq"));
+				adto.setUserName(rs.getString("user_name"));
+				adto.setName(rs.getString("name"));
+				list.add(adto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbm.close(conn, pstmt, rs);
+		}
+		
+		return list;
+		
 	}
 	
 	public static void main(String[] args) {
