@@ -1,26 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" 	uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" 	uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" 	uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="x" 	uri="http://java.sun.com/jsp/jstl/xml" %>
-<%@ taglib prefix="sql" 	uri="http://java.sun.com/jsp/jstl/sql" %>
 <!DOCTYPE html>
 <html lang="en">
 
+
+<!-- Mirrored from demo.bootstrapdash.com/celestial-free/template/pages/charts/chartjs.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 30 Dec 2024 08:36:54 GMT -->
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>CelestialUI Admin</title>
   <!-- base:css -->
-  <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
-  <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="../../vendors/typicons.font/font/typicons.css">
+  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="/erp/images/favicon.png" />
+  <link rel="shortcut icon" href="../../images/favicon.png" />
 </head>
 
 <body>
@@ -272,7 +267,7 @@
             </a>
             <div class="collapse" id="charts">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../charts/chartjs.html">ChartJs</a></li>
+                <li class="nav-item"> <a class="nav-link" href="chartjs.html">ChartJs</a></li>
               </ul>
             </div>
           </li>
@@ -284,7 +279,7 @@
             </a>
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="basic-table.html">Basic table</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../tables/basic-table.html">Basic table</a></li>
               </ul>
             </div>
           </li>
@@ -342,68 +337,59 @@
           <li class="nav-item"><a href="#" class="nav-link">#Growth</a></li>
         </ul>
       </nav>
-      
-      
-      
-      
-      <!-- 테이블 내용 수정하시면 됩니다. -->
-      
       <!-- partial -->
-   <div class="main-panel">
+      <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
-          
-            <div class="col-lg-12 grid-margin stretch-card">
+            <div class="col-lg-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">근태 입력</h4>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">근태일자</th>
-                          <th scope="col">사원</th>
-                          <th scope="col">근태</th>
-                          <th scope="col">휴가</th>
-                          <th scope="col">근태(일/시간)</th>
-                          <th scope="col">적요</th>
-                        </tr>
-                      </thead>
-                      <tbody id="table-tbody">
-                        <tr>
-                          <td>Jacob</td>
-                          <td>53275531</td>
-                          <td>12 May 2017</td>
-                          <td><label class="badge badge-danger">Pending</label></td>
-                        </tr>
-                        <tr>
-                          <td>Messsy</td>
-                          <td>53275532</td>
-                          <td>15 May 2017</td>
-                          <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
-                        <tr>
-                          <td>John</td>
-                          <td>53275533</td>
-                          <td>14 May 2017</td>
-                          <td><label class="badge badge-info">Fixed</label></td>
-                        </tr>
-                        <tr>
-                          <td>Peter</td>
-                          <td>53275534</td>
-                          <td>16 May 2017</td>
-                          <td><label class="badge badge-success">Completed</label></td>
-                        </tr>
-                        <tr>
-                          <td>Dave</td>
-                          <td>53275535</td>
-                          <td>20 May 2017</td>
-                          <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <button type="button" class="btn btn-primary" id="insertBtn">근태 입력</button>
+                  <h4 class="card-title">Line chart</h4>
+                  <canvas id="lineChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Bar chart</h4>
+                  <canvas id="barChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Area chart</h4>
+                  <canvas id="areaChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Doughnut chart</h4>
+                  <canvas id="doughnutChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 grid-margin grid-margin-lg-0 stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Pie chart</h4>
+                  <canvas id="pieChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 grid-margin grid-margin-lg-0 stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Scatter chart</h4>
+                  <canvas id="scatterChart"></canvas>
                 </div>
               </div>
             </div>
@@ -413,32 +399,35 @@
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
-              <span class="text-center text-sm-left d-block d-sm-inline-block">Copyright Â© <a href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com</a> 2020</span>
+              <span class="text-center text-sm-left d-block d-sm-inline-block">Copyright © <a href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com</a> 2020</span>
               <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard </a>templates from Bootstrapdash.com</span>
             </div>
           </footer>
         <!-- partial -->
       </div>
-      <!-- 테이블 내용 수정 end -->
-      
-      
-      
-      
-      
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
   <!-- base:js -->
-  <script src="/erp/vendors/js/vendor.bundle.base.js"></script>
-  
-  <script src="/erp/js/off-canvas.js"></script>
-  <script src="/erp/js/hoverable-collapse.js"></script>
-  <script src="/erp/js/template.js"></script>
-  <script src="/erp/js/settings.js"></script>
-  <script src="/erp/js/todolist.js"></script>
-
+  <script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- inject:js -->
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <script src="../../js/settings.js"></script>
+  <script src="../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- plugin js for this page -->
+  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <script src="../../js/chart.js"></script>
+  <!-- End custom js for this page-->
 </body>
 
+
+<!-- Mirrored from demo.bootstrapdash.com/celestial-free/template/pages/charts/chartjs.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 30 Dec 2024 08:36:54 GMT -->
 </html>
