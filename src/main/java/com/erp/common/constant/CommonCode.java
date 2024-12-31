@@ -1,5 +1,8 @@
 package com.erp.common.constant;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class CommonCode{
 	public static enum Gender{
@@ -35,7 +38,5 @@ public class CommonCode{
 		}
 		
 		public int getNum() {return this.num; }
-		
-		
 	}
 }

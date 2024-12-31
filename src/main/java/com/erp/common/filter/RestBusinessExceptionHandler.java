@@ -23,7 +23,6 @@ public class RestBusinessExceptionHandler implements Filter {
     
     private void handleRestBusinessException 
     	(RestBusinessException e, ServletRequest request, ServletResponse response){
-//    	response.setStatus(HttpServletResponse.SC_OK);
     	HttpServletResponse servletResponse = (HttpServletResponse)response;
     	servletResponse.setStatus(e.getStatusCode().getStatusCode());
     	try {

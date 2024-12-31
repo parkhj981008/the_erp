@@ -21,9 +21,9 @@ public interface FacilityService {
 	
 	List<FacilityDTO> findAll();	
 	int save(FacilityDTO facilityDTO);
+	List<FacilityDTO> findAllFacilityOperating();	
+	List<FacilityDTO> findAllFacilityNon_Operating();	
+	List<FacilityDTO> findAllFacilityType(String type);	
 
-	
-	List<InspectionDTO> findALl();
-	int save(InspectionDTO inspectionVO);
 	
 }
