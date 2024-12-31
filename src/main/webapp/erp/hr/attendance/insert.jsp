@@ -13,14 +13,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>CelestialUI Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <!-- base:css -->
   <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
-  <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="/erp/images/favicon.png" />
+  <link rel="shortcut icon" href="/images/favicon.png" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+  
 </head>
 
 <body>
@@ -28,7 +31,7 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo.svg" alt="logo"/></a>
+          <a class="navbar-brand brand-logo" href="../../index.html">ERP</a>
           <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-mini.svg" alt="logo"/></a>
           <button class="navbar-toggler navbar-toggler align-self-center d-none d-lg-flex" type="button" data-toggle="minimize">
             <span class="typcn typcn-th-menu"></span>
@@ -208,7 +211,7 @@
           <li class="nav-item">
             <div class="d-flex sidebar-profile">
               <div class="sidebar-profile-image">
-                <img src="../../images/faces/face29.png" alt="image">
+                <img src="/images/faces/face29.png" alt="image">
                 <span class="sidebar-status-indicator"></span>
               </div>
               <div class="sidebar-profile-name">
@@ -342,14 +345,8 @@
           <li class="nav-item"><a href="#" class="nav-link">#Growth</a></li>
         </ul>
       </nav>
-      
-      
-      
-      
-      <!-- 테이블 내용 수정하시면 됩니다. -->
-      
       <!-- partial -->
-   <div class="main-panel">
+      <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
           
@@ -419,26 +416,106 @@
           </footer>
         <!-- partial -->
       </div>
-      <!-- 테이블 내용 수정 end -->
-      
-      
-      
-      
-      
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
   <!-- base:js -->
-  <script src="/erp/vendors/js/vendor.bundle.base.js"></script>
+  <script src="/vendors/js/vendor.bundle.base.js"></script>
   
-  <script src="/erp/js/off-canvas.js"></script>
-  <script src="/erp/js/hoverable-collapse.js"></script>
-  <script src="/erp/js/template.js"></script>
-  <script src="/erp/js/settings.js"></script>
-  <script src="/erp/js/todolist.js"></script>
-
+  <script src="/js/off-canvas.js"></script>
+  <script src="/js/hoverable-collapse.js"></script>
+  <script src="/js/template.js"></script>
+  <script src="/js/settings.js"></script>
+  <script src="/js/todolist.js"></script>
+	<script>
+        	$(document).ready(function() {
+       			$.ajax({
+       				url: '/v1/attendance/selectAll',
+       				method: 'GET',
+       				dataType: 'json',
+       				success: function(data) {
+       					$('#table-tbody').empty();
+       					var html = '';
+       					$.each(data, function(i, vo) {
+      						console.log(vo);
+      						html += '<tr>';
+      						html += '<td>' + vo.attendanceSeq + '</td>';
+      						html += '<td class="userList" data-bs-toggle="modal" data-bs-target="#userListModal">' + vo.userName + '</td>';
+      						html += '<td>' + vo.attendanceCode + '</td>';
+      						html += '<td>' + vo.daysNumber + '</td>';
+      						html += '<td>' + vo.vacationName + '</td>';
+      						html += '<td>' + vo.notes + '</td>';
+      						html += '</tr>';
+       					});
+       					$('#table-tbody').html(html);
+       				},
+       				error: function (xhr, status, error) {
+       		            console.error('오류 발생:', error);
+       		        }
+       			});
+       			
+       			$.ajax({
+       				url: '/v1/attendance/selectAllEmployee',
+       				method: 'GET',
+       				dataType: 'json',
+       				success: function(data) {
+       					$('#modal-tbody').empty();
+       					var html = '';
+       					$.each(data, function(i, vo) {
+      						console.log(vo);
+      						html += '<tr>';
+      						html += '<td>' + vo.userSeq + '</td>';
+      						/* html += '<td class="userList" data-bs-toggle="modal" data-bs-target="#userListModal">' + vo.userName + '</td>'; */
+      						html += '<td>' + vo.userName + '</td>';
+      						html += '<td>' + vo.name + '</td>';
+      						html += '</tr>';
+       					});
+       					$('#modal-tbody').html(html);
+       				},
+       				error: function (xhr, status, error) {
+       		            console.error('오류 발생:', error);
+       		        }
+       			});
+       			
+/*        			$('#insertBtn').click(function() {
+       				location.href="/attendance/insert-attendance.jsp"	
+       			}); */
+        	});
+        </script>
+        
+<!-- 사원 검색 모달창 -->
+<div class="modal fade" id="userListModal" tabindex="-1" 
+			aria-labelledby="userListModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userListModalLabel">사원 검색</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+   		<table>
+   			<tr>
+   				<th>사원번호</th>
+   				<th>성명</th>
+   				<th>부서명</th>
+   			</tr>
+   			<tbody id="modal-tbody">
+   			</tbody>
+   		</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+	
+</script>
+<!-- 사원 검색 모달창 end -->
 </body>
 
 </html>
