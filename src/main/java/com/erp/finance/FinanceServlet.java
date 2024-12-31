@@ -22,32 +22,29 @@ public class FinanceServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		FinanceDAO dao = new FinanceDAO();
-		String path = request.getPathInfo();
+		String uri = request.getRequestURI();
 
-		
 		List<FinanceVO> fList1 = dao.totalStatementList();
 
 		request.setAttribute("KEY_TOTAL_FLIST", fList1);
 		
-		List<FinanceVO> fList2 = dao.sumStatementList();
 
-		request.setAttribute("KEY_STATE_FLIST", fList2);
 		
-		
-		
-		if (path == null) {
-			request.getRequestDispatcher(request.getContextPath() + "erp/pages/finance/general_ledger.jsp").forward(request, response);
-		} else if (path.equals("/income")) {
+		if (uri.equals("/finance/general_ledger")) {
+			request.getRequestDispatcher("/erp/pages/finance/general_ledger.jsp").forward(request, response);
+		} else if (uri.equals("/finance/income_Statement")) {
 			List<FinanceVO> fList3 = dao.sumIncomeList();
 			request.setAttribute("KEY_INCOME_FLIST", fList3);
-			request.getRequestDispatcher(request.getContextPath() + "/Income_Statement.jsp").forward(request, response);
-		} else if (path.equals("/sum")) {
-			List<FinanceVO> fList = dao.sumFinanceList();
-			request.setAttribute("KEY_SUM_FLIST", fList);
-			Map<String, List<FinanceVO>> groupedData = dao.getFinanceDataGroupedByAccountId();
-			request.setAttribute("groupedData", groupedData);
-			request.getRequestDispatcher("/sum_list.jsp").forward(request, response);
-		}
+			request.getRequestDispatcher("/erp/pages/finance/income_Statement.jsp").forward(request, response);
+		} else if (uri.equals("/finance/sofp")) {
+			List<FinanceVO> fList2 = dao.sumStatementList();
+			  System.out.println("fList2 size: " + fList2.size()); // 데이터 개수 출력
+			    for (FinanceVO vo : fList2) {
+			        System.out.println(vo.getParent_type() + " " + vo.getAccount_name() + " " + vo.getDiff());
+			    }
+			
+			request.setAttribute("KEY_STATE_FLIST", fList2);
+			request.getRequestDispatcher(request.getContextPath() + "/erp/pages/finance/sofp.jsp").forward(request, response);}
 
 
 	}
