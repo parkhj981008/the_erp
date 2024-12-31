@@ -23,9 +23,108 @@ public class FacilityRepository {
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
 	
 	
+	// 운영 중단인 시설불러오기 
+		public List<FacilityDTO> findAllFacilityType(String type) {
+		    List<FacilityDTO> facilityList = new ArrayList<>();
+		    
+		    try (
+		        Connection con = db.getConnectionForTransaction();
+		        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityType());    		    	
+		    ) {	
+		    	ps.setString(1, type);
+		    	ResultSet rs = ps.executeQuery();
+		    
+		    	while (rs.next()) {
+		    	    FacilityDTO facility = new FacilityDTO(
+		    	        rs.getLong("facility_id"),      
+		    	        rs.getString("name"),           
+		    	        rs.getString("location"),       
+		    	        rs.getInt("capacity"),          
+		    	        rs.getString("operating_status"),  
+		    	        rs.getString("facility_type"),  
+		    	        rs.getDate("completion_date")   
+		    	    );
+		    	    facilityList.add(facility);
+		    	}
 
+		        return facilityList;
+		        
+		    } catch (SQLException e) {
+		        if(e instanceof SQLIntegrityConstraintViolationException) 
+		            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+		        e.printStackTrace();
+		        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		    }
+		}
 	
-	// =================
+	
+	// 운영 중단인 시설불러오기 
+	public List<FacilityDTO> findAllFacilityNon_Operating() {
+	    List<FacilityDTO> facilityList = new ArrayList<>();
+	    
+	    try (
+	        Connection con = db.getConnectionForTransaction();
+	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityNon_Operating());
+	        ResultSet rs = ps.executeQuery()
+	    ) {
+	    	while (rs.next()) {
+	    	    FacilityDTO facility = new FacilityDTO(
+	    	        rs.getLong("facility_id"),      
+	    	        rs.getString("name"),           
+	    	        rs.getString("location"),       
+	    	        rs.getInt("capacity"),          
+	    	        rs.getString("operating_status"),  
+	    	        rs.getString("facility_type"),  
+	    	        rs.getDate("completion_date")   
+	    	    );
+	    	    facilityList.add(facility);
+	    	}
+
+	        return facilityList;
+	        
+	    } catch (SQLException e) {
+	        if(e instanceof SQLIntegrityConstraintViolationException) 
+	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+	        e.printStackTrace();
+	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+	    }
+	}
+	
+	
+	// 운영중인 시설 불러오기 
+	public List<FacilityDTO> findAllFacilityOperating() {
+	    List<FacilityDTO> facilityList = new ArrayList<>();
+	    
+	    try (
+	        Connection con = db.getConnectionForTransaction();
+	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityOperating());
+	        ResultSet rs = ps.executeQuery()
+	    ) {
+	    	while (rs.next()) {
+	    	    FacilityDTO facility = new FacilityDTO(
+	    	        rs.getLong("facility_id"),      
+	    	        rs.getString("name"),           
+	    	        rs.getString("location"),       
+	    	        rs.getInt("capacity"),          
+	    	        rs.getString("operating_status"),  
+	    	        rs.getString("facility_type"),  
+	    	        rs.getDate("completion_date")   
+	    	    );
+	    	    facilityList.add(facility);
+	    	}
+
+	        return facilityList;
+	        
+	    } catch (SQLException e) {
+	        if(e instanceof SQLIntegrityConstraintViolationException) 
+	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+	        e.printStackTrace();
+	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+	    }
+	}
+	
+	
+	
 	
 	public List<FacilityDTO> findAll() {
 	    List<FacilityDTO> facilityList = new ArrayList<>();
@@ -44,7 +143,6 @@ public class FacilityRepository {
 	    	        rs.getString("operating_status"),  
 	    	        rs.getString("facility_type"),  
 	    	        rs.getDate("completion_date")   
-//	    	        rs.getTimestamp("completion_date").toLocalDateTime()
  
 	    	    );
 	    	    facilityList.add(facility);
@@ -67,15 +165,6 @@ public class FacilityRepository {
 				PreparedStatement ps 
 					= sp.getPreparedStatement(con, FacilityDTO.saveFacility()  , facilityDTO.getAttributeAsObjectArray());				
 		){
-			
-			StringBuilder query = new StringBuilder(FacilityDTO.saveFacility());
-			Object[] params = facilityDTO.getAttributeAsObjectArray();
-			System.out.println("Original SQL: " + query);
-			System.out.println("Parameters: " + Arrays.toString(params));
-
-			
-			
-			System.out.println("query = " + ps.toString());
 			int rows = ps.executeUpdate(); 
 			if(rows == 1) {
 				con.commit();

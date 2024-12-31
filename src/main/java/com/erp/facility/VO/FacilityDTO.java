@@ -27,11 +27,27 @@ public class FacilityDTO {
 		return "select * from facility";
 	}
 	
+	public static String findAllFacilityOperating() {
+		return "select * from facility where operating_status = '운영중'";
+	}
+	
+	public static String findAllFacilityNon_Operating() {
+		return "select * from facility where operating_status = '중단'";
+	}
+	
+	public static String findAllFacilityType() {
+		return "select * from facility where facility_type =?";
+	}
+	
 
 	public static String saveFacility() {
 	    return "INSERT INTO facility (facility_id, name, location, capacity, operating_status, facility_type, completion_date) " +
 	           "VALUES (facility_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 	}
+	
+	
+	
+	
 	
 	// 고민
 	public static String updateFacility() {

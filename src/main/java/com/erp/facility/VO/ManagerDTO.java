@@ -12,6 +12,11 @@ public class ManagerDTO {
         return "select * from manager";
     }
     
+	public static String saveManager() {
+		return "INSERT INTO inspection(inspection_id, facility_id, inspection_date, inspection_state, inspection_result, work_manager) " +
+		           "VALUES (inspection_seq.NEXTVAL, ?, ?, ?, ?, ?)";
+	}
+    
     public Object[] getAttributeAsObjectArray() {
         return new Object[] {
             this.name,
