@@ -39,6 +39,8 @@ public class FinanceServlet extends HttpServlet {
 		} else if (uri.equals("/finance/sum_FinanceList")) {
 			List<FinanceVO> fList3 = dao.sumFinanceList();
 			request.setAttribute("KEY_SUM_FLIST", fList3);
+			Map<String, List<FinanceVO>> groupedData = dao.getFinanceDataGroupedByAccountId();
+			request.setAttribute("groupedData", groupedData);
 			request.getRequestDispatcher("/erp/pages/finance/sum_FinanceList.jsp").forward(request, response);
 		//재무상태표
 		} else if (uri.equals("/finance/sofp")) {

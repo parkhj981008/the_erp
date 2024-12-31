@@ -111,8 +111,8 @@ public class FinanceDAO {
 				    "        J.DESCRIPT, " +
 				    "        J.ACCOUNT_ID, " +
 				    "        A.ACCOUNT_NAME, " +
-				    "        NVL(J.DEBIT, 0) AS DEBIT, " + // NULL일 경우 0으로 설정
-				    "        NVL(J.CREDIT, 0) AS CREDIT, " + // NULL일 경우 0으로 설정
+				    "        NVL(J.DEBIT, 0) AS DEBIT, " +
+				    "        NVL(J.CREDIT, 0) AS CREDIT, " +
 				    "        NULL AS DIFF " + 
 				    "    FROM  " +
 				    "        VOUCHER J " +
@@ -160,18 +160,18 @@ public class FinanceDAO {
 				    "        NULL AS ACCOUNT_NAME, " +
 				    "        NULL AS DEBIT, " +
 				    "        NULL AS CREDIT, " +
-				    "        NVL(DIFF, 0) AS DIFF, " + // NULL일 경우 0으로 설정
+				    "        NVL(DIFF, 0) AS DIFF, " +
 				    "        9999 AS RN " + 
 				    "    FROM SUMMARY " +
 				    ") " +
 				    "SELECT  " +
 				    "    NVL(VOUCHER_DATE, TO_DATE('1970-01-01', 'YYYY-MM-DD')) AS VOUCHER_DATE, " + // NULL일 경우 기본값
-				    "    NVL(DESCRIPT, '미정') AS DESCRIPT, " + // NULL일 경우 기본값
-				    "    NVL(ACCOUNT_ID, 0) AS ACCOUNT_ID, " + // NULL일 경우 0으로 설정
-				    "    NVL(ACCOUNT_NAME, 'N/A') AS ACCOUNT_NAME, " + // NULL일 경우 기본값
-				    "    NVL(DEBIT, 0) AS DEBIT, " + // NULL일 경우 0으로 설정
-				    "    NVL(CREDIT, 0) AS CREDIT, " + // NULL일 경우 0으로 설정
-				    "    NVL(DIFF, 0) AS DIFF " + // NULL일 경우 0으로 설정
+				    "    NVL(DESCRIPT, '미정') AS DESCRIPT, " +
+				    "    NVL(ACCOUNT_ID, 0) AS ACCOUNT_ID, " +
+				    "    NVL(ACCOUNT_NAME, 'N/A') AS ACCOUNT_NAME, " +
+				    "    NVL(DEBIT, 0) AS DEBIT, " +
+				    "    NVL(CREDIT, 0) AS CREDIT, " +
+				    "    NVL(DIFF, 0) AS DIFF " +
 				    "FROM COMBINED " +
 				    "ORDER BY  " +
 				    "    ACCOUNT_ID, RN";

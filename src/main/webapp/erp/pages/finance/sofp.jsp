@@ -67,7 +67,7 @@
                 <tbody>
                     <c:forEach var="vo" items="${KEY_STATE_FLIST}">
                         <tr>
-                            <td class="section-title">${vo.section_title}</td>
+                            <td class="section-title">${vo.parent_type}</td>
                             <td>${vo.account_type}</td>
                             <td class="numeric">${vo.account_name}</td>
                             <td class="numeric">${vo.diff}</td>
