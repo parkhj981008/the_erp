@@ -84,25 +84,32 @@
 	<script>
 		$(document).ready(function() {
 			$("#login-div-tag").click(function() {
-				var sendFormData = {
-						userId: $("#exampleInputEmail1").val(),
-						userPassword: $("#exampleInputPassword1").val()
-						}
+				
+				var userId = $("#exampleInputEmail1").val();
+		        var userPassword = $("#exampleInputPassword1").val();
+
+		        // 입력값 검증
+		        if (!userId || !userPassword) {
+		            alert("아이디와 비밀번호를 입력해주세요.");
+		            return; // 데이터가 없으면 AJAX 요청을 보내지 않음
+		        }
+
+		        var sendFormData = {
+		            userId: userId,
+		            userPassword: userPassword
+		        };
 				$.ajax({
 					url : "/api/v1/auth/login",
 					method : 'POST',
 					data : JSON.stringify(sendFormData),
 					contentType : "application/json", 
 					dataType 	: "json", 	
-					success : function(jsonStr) {
-						//jsonStr = JSON.stringify(jsonObj)의 반대
-						obj = JSON.parse(jsonStr);
-						console.log("응답:" + obj)
-						//console.log(obj['message']);
-						//console.log(obj['status']);
+					//success : function(obj) {
+					success: function(obj) {
+						window.location.href = "/";
 					},
 					error : function(err) {
-						console.log("에러:" + err)
+						alert(err.responseJSON.message)
 					}
 				});
 			});

@@ -40,6 +40,7 @@ public class AuthRepository{
 				throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
 			}
 		} catch (SQLException e) {
+			System.out.println(e instanceof SQLIntegrityConstraintViolationException);
 			if(e instanceof SQLIntegrityConstraintViolationException) 
 				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
 			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);

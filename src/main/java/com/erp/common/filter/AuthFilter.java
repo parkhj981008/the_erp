@@ -12,6 +12,7 @@ import com.erp.common.security.UserInfo;
 import com.erp.common.util.AES256Util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class AuthFilter implements Filter {
 	private static final ObjectMapper om = new ObjectMapper();
 
@@ -30,7 +31,6 @@ public class AuthFilter implements Filter {
 
 		setUserInfoByCookie(httpRequest.getCookies());
 		chain.doFilter(request, response);
-//		System.out.println("test:   " + SecurityContext.getCurrentUser().getUserSeq());
 		SecurityContext.clear();
 	}
 
@@ -42,10 +42,7 @@ public class AuthFilter implements Filter {
 			else {
 				for (Cookie cookie : cookies) {
 					if (cookie.getName().equals("auth")) {
-						System.out.println("cookie.getValue():  " +  cookie.getValue());
-						System.out.println("URLDecoder.decode(cookie.getValue(), \"UTF-8\"):  " +  URLDecoder.decode(cookie.getValue(), "UTF-8"));
 						SecurityContext.setCurrentUser(om.reader().readValue(
-//								AES256Util.decrypt(URLDecoder.decode(cookie.getValue(), "UTF-8")), UserInfo.class));
 								AES256Util.decrypt(URLDecoder.decode(cookie.getValue(), "UTF-8")), UserInfo.class));
 						findCookie = true;
 						break;
@@ -54,7 +51,6 @@ public class AuthFilter implements Filter {
 			}
 			if (!findCookie)
 				setGuestUserInfo();
-			System.out.println("!@#!@#!@#:   " + SecurityContext.getCurrentUser().getUserSeq());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
