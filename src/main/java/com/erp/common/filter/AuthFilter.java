@@ -19,6 +19,15 @@ public class AuthFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		String uri = httpRequest.getRequestURI();
+		String contextPath = httpRequest.getContextPath();
+		// 정적 리소스 요청은 필터 제외
+		if (uri.startsWith(contextPath + "/erp/css") || uri.startsWith(contextPath + "/erp/js")
+				|| uri.startsWith(contextPath + "/erp/images")) {
+			chain.doFilter(request, response);
+			return;
+		}
+
 		setUserInfoByCookie(httpRequest.getCookies());
 		chain.doFilter(request, response);
 		System.out.println("test:   " + SecurityContext.getCurrentUser().getUserSeq());
@@ -33,19 +42,24 @@ public class AuthFilter implements Filter {
 			else {
 				for (Cookie cookie : cookies) {
 					if (cookie.getName().equals("auth")) {
+						System.out.println("cookie.getValue():  " +  cookie.getValue());
+						System.out.println("URLDecoder.decode(cookie.getValue(), \"UTF-8\"):  " +  URLDecoder.decode(cookie.getValue(), "UTF-8"));
 						SecurityContext.setCurrentUser(om.reader().readValue(
+//								AES256Util.decrypt(URLDecoder.decode(cookie.getValue(), "UTF-8")), UserInfo.class));
 								AES256Util.decrypt(URLDecoder.decode(cookie.getValue(), "UTF-8")), UserInfo.class));
 						findCookie = true;
 						break;
 					}
 				}
 			}
-			if(!findCookie) setGuestUserInfo();
+			if (!findCookie)
+				setGuestUserInfo();
+			System.out.println("!@#!@#!@#:   " + SecurityContext.getCurrentUser().getUserSeq());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void setGuestUserInfo() {
 		SecurityContext.setCurrentUser(UserInfo.builder().userSeq(-1).roles(new int[] { -1 }).build());
 	}
