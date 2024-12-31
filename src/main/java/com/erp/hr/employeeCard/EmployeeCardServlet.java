@@ -137,45 +137,45 @@ public class EmployeeCardServlet extends HttpServlet {
    			hrVO vo = om.reader().readValue(jsonString, hrVO.class);
    			System.out.println(vo);
    		    
-   	   		String v_userid 		 = request.getParameter("user_id");		//employee_form의 name값이 user_id인 것
-   	   		String v_user_password 	 = request.getParameter("user_password");
-   	   		String v_email 			 = request.getParameter("email");
-   	   		String v_address 		 = request.getParameter("address");
-   	   		int v_phone_number 		 = Integer.parseInt(request.getParameter("phone_number").trim());
-   	   		Date v_register_date 	 = java.sql.Date.valueOf(request.getParameter("register_date"));
-   	   		UserStatus v_user_status = UserStatus.parseUserStatus(request.getParameter("user_status"));
-   	   		Date v_hire_date 		 = java.sql.Date.valueOf(request.getParameter("hire_date"));
-   	   		String v_user_name 		 = request.getParameter("user_name");
-   	   		Date v_modify_date 		 = java.sql.Date.valueOf(request.getParameter("modify_date"));
-   	   		int v_department_id 	 = Integer.parseInt(request.getParameter("department_id"));
-   	   		Gender v_gender 		 = Gender.parseGender(request.getParameter("gender"));
-   	   		Date v_birth 			 = java.sql.Date.valueOf(request.getParameter("birth"));
-   	   		int v_extension_number	 = Integer.parseInt(request.getParameter("extension_number"));
-   	   		Date v_termination_date  = java.sql.Date.valueOf(request.getParameter("termination_date"));
-   	   		String v_position 		 = request.getParameter("position");
-   	   		int v_manager_id 		 = Integer.parseInt(request.getParameter("manager_id"));
-   			
-   			hrVO hvo  = new hrVO();
-	   			hvo.setUser_id(v_userid);
-				hvo.setUser_password(v_user_password);
-				hvo.setEmail(v_email);
-				hvo.setAddress(v_address);
-				hvo.setPhone_number(v_phone_number);
-				hvo.setRegister_date(v_register_date);
-				hvo.setUser_status(v_user_status);
-				hvo.setHire_date(v_hire_date);
-				hvo.setUser_name(v_user_name);
-				hvo.setModify_date(v_modify_date);
-				hvo.setDepartment_id(v_department_id);
-				hvo.setGender(v_gender);
-				hvo.setBirth(v_birth);
-				hvo.setExtension_number(v_extension_number);
-				hvo.setTermination_date(v_termination_date);
-				hvo.setPosition(v_position);
-				hvo.setManager_id(v_manager_id);
+//   	   		String v_userid 		 = request.getParameter("user_id");		//employee_form의 name값이 user_id인 것
+//   	   		String v_user_password 	 = request.getParameter("user_password");
+//   	   		String v_email 			 = request.getParameter("email");
+//   	   		String v_address 		 = request.getParameter("address");
+//   	   		int v_phone_number 		 = Integer.parseInt(request.getParameter("phone_number").trim());
+//   	   		Date v_register_date 	 = java.sql.Date.valueOf(request.getParameter("register_date"));
+//   	   		UserStatus v_user_status = UserStatus.parseUserStatus(request.getParameter("user_status"));
+//   	   		Date v_hire_date 		 = java.sql.Date.valueOf(request.getParameter("hire_date"));
+//   	   		String v_user_name 		 = request.getParameter("user_name");
+//   	   		Date v_modify_date 		 = java.sql.Date.valueOf(request.getParameter("modify_date"));
+//   	   		int v_department_id 	 = Integer.parseInt(request.getParameter("department_id"));
+//   	   		Gender v_gender 		 = Gender.parseGender(request.getParameter("gender"));
+//   	   		Date v_birth 			 = java.sql.Date.valueOf(request.getParameter("birth"));
+//   	   		int v_extension_number	 = Integer.parseInt(request.getParameter("extension_number"));
+//   	   		Date v_termination_date  = java.sql.Date.valueOf(request.getParameter("termination_date"));
+//   	   		String v_position 		 = request.getParameter("position");
+//   	   		int v_manager_id 		 = Integer.parseInt(request.getParameter("manager_id"));
+//   			
+//   			hrVO hvo  = new hrVO();
+//	   			hvo.setUser_id(v_userid);
+//				hvo.setUser_password(v_user_password);
+//				hvo.setEmail(v_email);
+//				hvo.setAddress(v_address);
+//				hvo.setPhone_number(v_phone_number);
+//				hvo.setRegister_date(v_register_date);
+//				hvo.setUser_status(v_user_status);
+//				hvo.setHire_date(v_hire_date);
+//				hvo.setUser_name(v_user_name);
+//				hvo.setModify_date(v_modify_date);
+//				hvo.setDepartment_id(v_department_id);
+//				hvo.setGender(v_gender);
+//				hvo.setBirth(v_birth);
+//				hvo.setExtension_number(v_extension_number);
+//				hvo.setTermination_date(v_termination_date);
+//				hvo.setPosition(v_position);
+//				hvo.setManager_id(v_manager_id);
 	   			
 	   			
-   			int res = edao.insaCardInsert(hvo);
+   			int res = edao.insaCardInsert(vo);
    			
    			//정상적으로 입력 된 경우 --> 목록으로 가기
 			if(res > 0) {
