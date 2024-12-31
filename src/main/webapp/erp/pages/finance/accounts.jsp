@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>전표 관리</title>
+    <title>계정 관리</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,55 +78,29 @@
 					<div class="col-lg-12 grid-margin stretch-card">
 						<div class="card">
 							<div class="card-body">
-								<h4 class="card-title">전표 관리</h4>
+								<h4 class="card-title">계정 관리</h4>
 								<p class="card-description">
-									2024년
 									<code> </code>
 								</p>
 								<div class="table-responsive">
 									<table class="table">
 										<thead>
 											<tr>
-												<th>날짜</th>
-												<th>적요</th>
-												<th width="80">계정ID</th>
+												<th>계정ID</th>
 												<th>계정명</th>
-												<th>차변</th>
-												<th>대변</th>
+												<th>계정유형</th>
+												<th>부모계정</th>
 											</tr>
 										</thead>
 										<tbody>
-											<c:set var="debitSum" value="0" />
-											<c:set var="creditSum" value="0" />
-											<c:forEach var="vo" items="${KEY_SLIP_FLIST}">
-												<c:set var="debitSum" value="${debitSum + vo.debit}" />
-												<c:set var="creditSum" value="${creditSum + vo.credit}" />
-												<tr>
-													<td>${vo.voucher_date}</td>
-													<td>${vo.descript}</td>
-													<td>${vo.account_id}</td>
-													<td>${vo.account_name}</td>
-													<td class="numeric"><c:if test="${vo.debit != 0}">
-															<fmt:formatNumber value="${vo.debit}" type="number"
-																groupingUsed="true" />
-														</c:if></td>
-													<td class="numeric"><c:if test="${vo.credit != 0}">
-															<fmt:formatNumber value="${vo.credit}" type="number"
-																groupingUsed="true" />
-														</c:if></td>
-												</tr>
-											</c:forEach>
-											<tr>
-												<td colspan="4">합계:</td>
-												<td class="numeric"><c:if test="${debitSum != 0}">
-														<fmt:formatNumber value="${debitSum}" type="number"
-															groupingUsed="true" />
-													</c:if></td>
-												<td class="numeric"><c:if test="${creditSum != 0}">
-														<fmt:formatNumber value="${creditSum}" type="number"
-															groupingUsed="true" />
-													</c:if></td>
-											</tr>
+											<c:forEach var="vo" items="${KEY_ACCOUNTS_FLIST}">
+						                        <tr>
+						                            <td>${vo.account_id}</td>
+						                            <td>${vo.account_name}</td>
+						                            <td>${vo.account_type}</td>
+						                            <td>${vo.parent_type}</td>
+						                        </tr>
+                 							</c:forEach>
 										</tbody>
 									</table>
 								</div>
