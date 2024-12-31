@@ -24,13 +24,19 @@ public class FinanceServlet extends HttpServlet {
 		FinanceDAO dao = new FinanceDAO();
 		String path = request.getPathInfo();
 
-		List<FinanceVO> fList2 = dao.sumStatementList();
+		
+		List<FinanceVO> fList1 = dao.totalStatementList();
 
+		request.setAttribute("KEY_TOTAL_FLIST", fList1);
+		
+		List<FinanceVO> fList2 = dao.sumStatementList();
 
 		request.setAttribute("KEY_STATE_FLIST", fList2);
 		
+		
+		
 		if (path == null) {
-			request.getRequestDispatcher(request.getContextPath() + "/finance_list.jsp").forward(request, response);
+			request.getRequestDispatcher(request.getContextPath() + "erp/pages/finance/general_ledger.jsp").forward(request, response);
 		} else if (path.equals("/income")) {
 			List<FinanceVO> fList3 = dao.sumIncomeList();
 			request.setAttribute("KEY_INCOME_FLIST", fList3);
