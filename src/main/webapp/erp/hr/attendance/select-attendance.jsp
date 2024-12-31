@@ -14,13 +14,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>CelestialUI Admin</title>
   <!-- base:css -->
-  <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
-  <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/vendors/typicons.font/font/typicons.css">
+  <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="/erp/images/favicon.png" />
+  <link rel="shortcut icon" href="/images/favicon.png" />
 </head>
 
 <body>
@@ -28,7 +28,7 @@
     <!-- partial:../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo.svg" alt="logo"/></a>
+          <a class="navbar-brand brand-logo" href="../../index.html">ERP</a>
           <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-mini.svg" alt="logo"/></a>
           <button class="navbar-toggler navbar-toggler align-self-center d-none d-lg-flex" type="button" data-toggle="minimize">
             <span class="typcn typcn-th-menu"></span>
@@ -342,30 +342,24 @@
           <li class="nav-item"><a href="#" class="nav-link">#Growth</a></li>
         </ul>
       </nav>
-      
-      
-      
-      
-      <!-- 테이블 내용 수정하시면 됩니다. -->
-      
       <!-- partial -->
-   <div class="main-panel">
+      <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
           
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">근태 입력</h4>
+                  <h4 class="card-title">근태 조회</h4>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">근태일자</th>
-                          <th scope="col">사원</th>
-                          <th scope="col">근태</th>
-                          <th scope="col">휴가</th>
-                          <th scope="col">근태(일/시간)</th>
+                          <th scope="col">근태번호</th>
+                          <th scope="col">사원명</th>
+                          <th scope="col">근태코드</th>
+                          <th scope="col">근태수</th>
+                          <th scope="col">휴가명</th>
                           <th scope="col">적요</th>
                         </tr>
                       </thead>
@@ -419,26 +413,52 @@
           </footer>
         <!-- partial -->
       </div>
-      <!-- 테이블 내용 수정 end -->
-      
-      
-      
-      
-      
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
   <!-- base:js -->
-  <script src="/erp/vendors/js/vendor.bundle.base.js"></script>
+  <script src="/vendors/js/vendor.bundle.base.js"></script>
   
-  <script src="/erp/js/off-canvas.js"></script>
-  <script src="/erp/js/hoverable-collapse.js"></script>
-  <script src="/erp/js/template.js"></script>
-  <script src="/erp/js/settings.js"></script>
-  <script src="/erp/js/todolist.js"></script>
-
+  <script src="/js/off-canvas.js"></script>
+  <script src="/js/hoverable-collapse.js"></script>
+  <script src="/js/template.js"></script>
+  <script src="/js/settings.js"></script>
+  <script src="/js/todolist.js"></script>
+	<script>
+        	$(document).ready(function() {
+       			$.ajax({
+       				url: '/v1/attendance/selectAll',
+       				method: 'GET',
+       				dataType: 'json',
+       				success: function(data) {
+       					$('#table-tbody').empty();
+       					var html = '';
+       					$.each(data, function(i, vo) {
+      						console.log(vo);
+      						html += '<tr>';
+      						html += '<td>' + vo.attendanceSeq + '</td>';
+      						html += '<td>' + vo.userName + '</td>';
+      						html += '<td>' + vo.attendanceCode + '</td>';
+      						html += '<td>' + vo.daysNumber + '</td>';
+      						html += '<td>' + vo.vacationName + '</td>';
+      						html += '<td>' + vo.notes + '</td>';
+      						html += '</tr>';
+       					});
+       					$('#table-tbody').html(html);
+       				},
+       				error: function (xhr, status, error) {
+       		            console.error('오류 발생:', error);
+       		        }
+       			});
+       			
+       			$('#insertBtn').click(function() {
+       				location.href="/attendance/insert.jsp"	
+       			});
+        	});
+        </script>
+	
 </body>
 
 </html>
