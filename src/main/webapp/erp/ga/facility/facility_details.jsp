@@ -86,7 +86,12 @@
 											</tr>
 											<tr>
 												<th class="text-muted">담당자</th>
-												<td class="fw-bold">${FACILITY.workName}</td>
+												<td class="fw-bold">
+												<c:choose>
+													<c:when test="${not empty MANAGER.name}">${MANAGER.name}</c:when>
+													<c:otherwise>없음</c:otherwise>
+												</c:choose>
+												</td>
 											</tr>
 										</tbody>
 									</table>
