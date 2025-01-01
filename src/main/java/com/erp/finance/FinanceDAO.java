@@ -96,6 +96,83 @@ public class FinanceDAO {
 		}
 		return fList;
     }
+	
+	// 전표입력 기능
+	public boolean addVoucher(FinanceVO vo) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    boolean isSuccess = false;
+
+	    try {
+	        String query = "INSERT INTO VOUCHER (VOUCHER_DATE, DESCRIPT, ACCOUNT_ID, ACCOUNT_NAME, DEBIT, CREDIT) " +
+	                   "VALUES (?, ?, ?, ?, ?, ?)";
+	        pstmt = conn.prepareStatement(query);
+	        pstmt.setString(1, vo.getVoucher_date());
+	        pstmt.setString(2, vo.getDescript());
+	        pstmt.setString(3, vo.getAccount_id());
+	        pstmt.setString(4, vo.getAccount_name());
+	        pstmt.setLong(5, vo.getDebit());
+	        pstmt.setLong(6, vo.getCredit());
+
+	        int rows = pstmt.executeUpdate();
+	        isSuccess = rows > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, null);
+	    }
+
+	    return isSuccess;
+	}
+	// 전표 입력시 계정 이름을 조회하는 메서드
+	public String getAccountNameById(String accountId) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String accountName = null;
+
+	    try {
+	        String query = "SELECT ACCOUNT_NAME FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+	        pstmt = conn.prepareStatement(query);
+	        pstmt.setString(1, accountId);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            accountName = rs.getString("ACCOUNT_NAME");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, rs);
+	    }
+	    return accountName;
+	}
+	
+	//전표 삭제 기능
+	public boolean deleteVoucher(String voucherDate, String descript, String accountId) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    boolean isDeleted = false;
+
+	    try {
+	        String query = "DELETE FROM VOUCHER WHERE VOUCHER_DATE = ? AND DESCRIPT = ? AND ACCOUNT_ID = ?";
+	        pstmt = conn.prepareStatement(query);
+	        pstmt.setString(1, voucherDate);
+	        pstmt.setString(2, descript);
+	        pstmt.setString(3, accountId);
+
+	        int rows = pstmt.executeUpdate();
+	        isDeleted = rows > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, null);
+	    }
+
+	    return isDeleted;
+	}
 
 	// 계정별원장
 	public ArrayList<FinanceVO> sumFinanceList()  {
@@ -256,77 +333,76 @@ public class FinanceDAO {
 		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
 		try {
 			String query = "WITH AggregatedData (PARENT_TYPE, ACCOUNT_NAME, DEBIT, CREDIT) AS ( " +
-				    "    SELECT a.PARENT_TYPE, " +
-				    "           v.ACCOUNT_NAME, " +
-				    "           SUM(v.DEBIT) AS DEBIT, " +
-				    "           SUM(v.CREDIT) AS CREDIT " +
-				    "    FROM voucher v " +
-				    "    JOIN ACCOUNTS a " +
-				    "      ON v.ACCOUNT_ID = a.ACCOUNT_ID " +
-				    "    WHERE a.PARENT_TYPE IN ('매출', '매출원가', '판매비및일반관리비', '영업외수익', '영업외비용', '법인세비용') " +
-				    "    GROUP BY a.PARENT_TYPE, v.ACCOUNT_NAME " +
-				    "), " +
-				    "ComputedTotals1 AS ( " +
-				    "    SELECT '매출총이익' AS PARENT_TYPE, " +
-				    "           '' AS ACCOUNT_NAME, " +
-				    "           NULL AS DEBIT, " +
-				    "           (SELECT SUM(CREDIT) FROM AggregatedData WHERE PARENT_TYPE = '매출') " +
-				    "           - (SELECT SUM(DEBIT) FROM AggregatedData WHERE PARENT_TYPE = '매출원가') AS CREDIT " +
-				    "    FROM DUAL " +
-				    "), " +
-				    "ComputedTotals2 AS ( " +
-				    "    SELECT '영업이익' AS PARENT_TYPE, " +
-				    "           '' AS ACCOUNT_NAME, " +
-				    "           NULL AS DEBIT, " +
-				    "           (SELECT CREDIT FROM ComputedTotals1) " +
-				    "           - (SELECT SUM(DEBIT) FROM AggregatedData WHERE PARENT_TYPE = '판매비및일반관리비') AS CREDIT " +
-				    "    FROM DUAL " +
-				    "), " +
-				    "ComputedTotals3 AS ( " +
-				    "    SELECT '법인세차감전순이익' AS PARENT_TYPE, " +
-				    "           '' AS ACCOUNT_NAME, " +
-				    "           NULL AS DEBIT, " +
-				    "           (SELECT CREDIT FROM ComputedTotals2) " +
-				    "           + (SELECT SUM(CREDIT) FROM AggregatedData WHERE PARENT_TYPE = '영업외수익') " +
-				    "           - (SELECT SUM(DEBIT) FROM AggregatedData WHERE PARENT_TYPE = '영업외비용') AS CREDIT " +
-				    "    FROM DUAL " +
-				    "), " +
-				    "ComputedTotals4 AS ( " +
-				    "    SELECT '당기순이익' AS PARENT_TYPE, " +
-				    "           '' AS ACCOUNT_NAME, " +
-				    "           NULL AS DEBIT, " +
-				    "           (SELECT CREDIT FROM ComputedTotals3) " +
-				    "           - (SELECT SUM(DEBIT) FROM AggregatedData WHERE PARENT_TYPE = '법인세비용') AS CREDIT " +
-				    "    FROM DUAL " +
-				    "), " +
-				    "FinalOutput AS ( " +
-				    "    SELECT * FROM AggregatedData " +
-				    "    UNION ALL " +
-				    "    SELECT * FROM ComputedTotals1 " +
-				    "    UNION ALL " +
-				    "    SELECT * FROM ComputedTotals2 " +
-				    "    UNION ALL " +
-				    "    SELECT * FROM ComputedTotals3 " +
-				    "    UNION ALL " +
-				    "    SELECT * FROM ComputedTotals4 " +
-				    ") " +
-				    "SELECT PARENT_TYPE, ACCOUNT_NAME, DEBIT, CREDIT " +
-				    "FROM FinalOutput " +
-				    "ORDER BY  " +
-				    "   CASE  " +
-				    "       WHEN PARENT_TYPE = '매출' THEN 1 " +
-				    "       WHEN PARENT_TYPE = '매출원가' THEN 2 " +
-				    "       WHEN PARENT_TYPE = '매출총이익' THEN 3 " +
-				    "       WHEN PARENT_TYPE = '판매비및일반관리비' THEN 4 " +
-				    "       WHEN PARENT_TYPE = '영업이익' THEN 5 " +
-				    "       WHEN PARENT_TYPE = '영업외수익' THEN 6 " +
-				    "       WHEN PARENT_TYPE = '영업외비용' THEN 7 " +
-				    "       WHEN PARENT_TYPE = '법인세차감전순이익' THEN 8 " +
-				    "       WHEN PARENT_TYPE = '법인세비용' THEN 9 " +
-				    "       WHEN PARENT_TYPE = '당기순이익' THEN 10 " +
-				    "       ELSE 11 " +
-				    "   END, " +
-				    "   ACCOUNT_NAME";
+                    "    SELECT a.PARENT_TYPE, " +
+                    "           v.ACCOUNT_NAME, " +
+                    "           SUM(NVL(v.DEBIT, 0)) AS DEBIT, " +
+                    "           SUM(NVL(v.CREDIT, 0)) AS CREDIT " +
+                    "    FROM voucher v " +
+                    "    JOIN ACCOUNTS a ON v.ACCOUNT_ID = a.ACCOUNT_ID " +
+                    "    WHERE a.PARENT_TYPE IN ('매출', '매출원가', '판매비및일반관리비', '영업외수익', '영업외비용', '법인세비용') " +
+                    "    GROUP BY a.PARENT_TYPE, v.ACCOUNT_NAME " +
+                    "), " +
+                    "ComputedTotals1 AS ( " +
+                    "    SELECT '매출총이익' AS PARENT_TYPE, " +
+                    "           '' AS ACCOUNT_NAME, " +
+                    "           NULL AS DEBIT, " +
+                    "           (SELECT NVL(SUM(CREDIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '매출') " +
+                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '매출원가') AS CREDIT " +
+                    "    FROM DUAL " +
+                    "), " +
+                    "ComputedTotals2 AS ( " +
+                    "    SELECT '영업이익' AS PARENT_TYPE, " +
+                    "           '' AS ACCOUNT_NAME, " +
+                    "           NULL AS DEBIT, " +
+                    "           (SELECT CREDIT FROM ComputedTotals1) " +
+                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '판매비및일반관리비') AS CREDIT " +
+                    "    FROM DUAL " +
+                    "), " +
+                    "ComputedTotals3 AS ( " +
+                    "    SELECT '법인세차감전순이익' AS PARENT_TYPE, " +
+                    "           '' AS ACCOUNT_NAME, " +
+                    "           NULL AS DEBIT, " +
+                    "           (SELECT CREDIT FROM ComputedTotals2) " +
+                    "           + (SELECT NVL(SUM(CREDIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '영업외수익') " +
+                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '영업외비용') AS CREDIT " +
+                    "    FROM DUAL " +
+                    "), " +
+                    "ComputedTotals4 AS ( " +
+                    "    SELECT '당기순이익' AS PARENT_TYPE, " +
+                    "           '' AS ACCOUNT_NAME, " +
+                    "           NULL AS DEBIT, " +
+                    "           (SELECT CREDIT FROM ComputedTotals3) " +
+                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '법인세비용') AS CREDIT " +
+                    "    FROM DUAL " +
+                    "), " +
+                    "FinalOutput AS ( " +
+                    "    SELECT * FROM AggregatedData " +
+                    "    UNION ALL " +
+                    "    SELECT * FROM ComputedTotals1 " +
+                    "    UNION ALL " +
+                    "    SELECT * FROM ComputedTotals2 " +
+                    "    UNION ALL " +
+                    "    SELECT * FROM ComputedTotals3 " +
+                    "    UNION ALL " +
+                    "    SELECT * FROM ComputedTotals4 " +
+                    ") " +
+                    "SELECT PARENT_TYPE, ACCOUNT_NAME, DEBIT, CREDIT " +
+                    "FROM FinalOutput " +
+                    "ORDER BY " +
+                    "   CASE " +
+                    "       WHEN PARENT_TYPE = '매출' THEN 1 " +
+                    "       WHEN PARENT_TYPE = '매출원가' THEN 2 " +
+                    "       WHEN PARENT_TYPE = '매출총이익' THEN 3 " +
+                    "       WHEN PARENT_TYPE = '판매비및일반관리비' THEN 4 " +
+                    "       WHEN PARENT_TYPE = '영업이익' THEN 5 " +
+                    "       WHEN PARENT_TYPE = '영업외수익' THEN 6 " +
+                    "       WHEN PARENT_TYPE = '영업외비용' THEN 7 " +
+                    "       WHEN PARENT_TYPE = '법인세차감전순이익' THEN 8 " +
+                    "       WHEN PARENT_TYPE = '법인세비용' THEN 9 " +
+                    "       WHEN PARENT_TYPE = '당기순이익' THEN 10 " +
+                    "       ELSE 11 " +
+                    "   END, " +
+                    "   ACCOUNT_NAME";
         	System.out.println(query);
         	
         	pstmt = conn.prepareStatement(query);
