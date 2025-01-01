@@ -55,6 +55,55 @@ public class FinanceDAO {
 		}
 		return fList;
     }
+	// 계정 추가 기능
+	public boolean addAccount(FinanceVO vo) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    boolean isSuccess = false;
+
+	    try {
+	        String query = "INSERT INTO ACCOUNTS (ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_TYPE, PARENT_TYPE) " +
+	                       "VALUES (?, ?, ?, ?)";
+	        pstmt = conn.prepareStatement(query);
+	        pstmt.setString(1, vo.getAccount_id());
+	        pstmt.setString(2, vo.getAccount_name());
+	        pstmt.setString(3, vo.getAccount_type());
+	        pstmt.setString(4, vo.getParent_type());
+
+	        int rows = pstmt.executeUpdate();
+	        isSuccess = rows > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, null);
+	    }
+
+	    return isSuccess;
+	}
+	
+	// 계정 삭제 기능
+	public boolean deleteAccount(String accountId) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    boolean isDeleted = false;
+
+	    try {
+	        String query = "DELETE FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+	        pstmt = conn.prepareStatement(query);
+	        pstmt.setString(1, accountId);
+
+	        int rows = pstmt.executeUpdate();
+	        isDeleted = rows > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, null);
+	    }
+
+	    return isDeleted;
+	}
 	
 	// 전표관리
 	public ArrayList<FinanceVO> SlipList()  {
