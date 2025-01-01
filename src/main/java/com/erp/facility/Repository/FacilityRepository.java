@@ -21,7 +21,7 @@ public class FacilityRepository {
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
 		
-	//시설타입 불러오d
+	//시설타입 불러오기 
 	public List<String> findFacilityType() {
 		List<String> fTypeList = new ArrayList<>();
 		
@@ -32,7 +32,11 @@ public class FacilityRepository {
 				PreparedStatement ps = sp.getPreparedStatement(con, sql);
 				ResultSet rs = ps.executeQuery();
 				) 
+		
 			{ while (rs.next()) {
+				String str = rs.getString("type_name");
+				System.out.println("str = " + str);
+				
 				fTypeList.add(rs.getString("type_name"));
 			}
 
