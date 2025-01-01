@@ -39,7 +39,6 @@ public class FacilityServlet extends HttpServlet {
 		String actionPage = request.getParameter("actiop");
 		String pathInfo = request.getPathInfo();
 
-		System.out.println("actionPage = " + actionPage);
 		System.out.println("pathInfo = " + pathInfo);
 
 		// 아무것도 없다면 list로 보내기
@@ -89,17 +88,25 @@ public class FacilityServlet extends HttpServlet {
 
 		} else if("/add-manager".equals(pathInfo)){
 			
-			List<String> fType =facilityService.facilityType();
+			List<String> fType =  facilityService.facilityType();
+			System.out.println("type 실 행 " );
+			System.out.println("Size =  "+  fType);
+			fType.forEach(i -> System.out.println("type = " + i));
 			request.setAttribute("F_TYPE", fType);
+			
 			request.getRequestDispatcher("/erp/ga/facility/manager_form.jsp").forward(request, response);
 			
 		}else {
 			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
 		}
 
-		System.out.println("Servlet Get End ");
+		System.out.println("Facility Servlet Get End ");
 	}
 
+	
+	
+	
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String actionPage = request.getParameter("actiop");
 
@@ -107,7 +114,7 @@ public class FacilityServlet extends HttpServlet {
 		
 		if (actionPage == null) {
 			System.out.println("NULL 입니다. ");
-
+			response.sendRedirect("/facility/list");
 			
 		} else if (actionPage.equals("save")) {
 			
@@ -139,7 +146,7 @@ public class FacilityServlet extends HttpServlet {
 			mapper.writeValue(out, flist);
 		}
 
-		System.out.println("Servlet Post End");
+		System.out.println("Facility Servlet Post End");
 	}
 
 }
