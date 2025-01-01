@@ -20,100 +20,99 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.erp.facility.common.DtoConverter.convertToDto;
 
-
 @WebServlet("/facility/*")
 public class FacilityServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
 	private final FacilityService facilityService = new FacilityServiceImpl();
 
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String actionPage = request.getParameter("actiop");	
-		String pathInfo = request.getPathInfo(); 
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-		System.out.println("actionPage = "+ actionPage);
-		
+		String actionPage = request.getParameter("actiop");
+		String pathInfo = request.getPathInfo();
 
-		if(pathInfo.equals("/list")) {
-			String type = request.getParameter("type");	
-			if(type == null) {
+		System.out.println("actionPage = " + actionPage);
+		
+		// 아무것도 없다면 list로 보
+		if (pathInfo == null) {
+		
+			response.sendRedirect("/facility/list");
+			
+			// 시설관리 리스트 보기
+		} else if (pathInfo.equals("/list")) {
 				List<FacilityDTO> allList = facilityService.findAll();
 //				allList.forEach(i -> System.out.println(i)); 
-				
-				request.setAttribute("Fac_LIST", allList );		
-				request.getRequestDispatcher("/erp/ga/facility/facility_main.jsp").forward(request, response);				
-			    
-			} 
-		 
-		} else if("/details".equals(pathInfo)){
+
+				request.setAttribute("Fac_LIST", allList);
+				request.getRequestDispatcher("/erp/ga/facility/facility_main.jsp").forward(request, response);
+
+		} else if ("/details".equals(pathInfo)) {
 			String seqStr = request.getParameter("facilityId");
-			
-			if(seqStr != null) {
-				int seq = Integer.parseInt(seqStr);	
-				
-				System.out.println("seqStr = "+ seqStr);
-				
-				// N + 1  문제 발생 !! 나중에 따로 분리할것 
-				FacilityAndNameDTO facility= facilityService.findDetails(seq);
-				System.out.println("facility = "+ facility);
-				request.setAttribute("FACILITY", facility );		
-				request.getRequestDispatcher("/erp/ga/facility/facility_details.jsp").forward(request, response);				
-			
-			} else {
+
+			if (seqStr != null) {
+				int seq = Integer.parseInt(seqStr);
+
+				System.out.println("seqStr = " + seqStr);
+
+				// N + 1 문제 발생 !! 나중에 따로 분리할것
+				FacilityAndNameDTO facility = facilityService.findDetails(seq);
+				System.out.println("facility = " + facility);
+				request.setAttribute("FACILITY", facility);
+				request.getRequestDispatcher("/erp/ga/facility/facility_details.jsp").forward(request, response);
+
+			} else if (pathInfo.equals("init")) {
+
+			}
+
+			else {
 				throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
 			}
-			  
-			
-			 System.out.println("디테일 실행 ");
+
+			System.out.println("디테일 실행 ");
 		}
-		
+
 		else if ("/modify".equals(pathInfo)) {
-            // 수정 페이지 로직 처리
-           response.sendRedirect("/facility/modify.jsp");
-           
-           
-		} 
-		
-		
+			// 수정 페이지 로직 처리
+			response.sendRedirect("/facility/modify.jsp");
+
+		}
 
 		System.out.println("Servlet Get End ");
 	}
 
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String actionPage = request.getParameter("actiop");
-		
-		if(actionPage==null) {
+
+		if (actionPage == null) {
 			System.out.println("NULL 입니다. ");
-			
-		} else if(actionPage.equals("save")) {
-			
+
+		} else if (actionPage.equals("save")) {
+
 			// 타입 컨버트, 자동으로 필드 매핑
-			FacilityDTO facilityDTO = convertToDto(request, FacilityDTO.class);  
+			FacilityDTO facilityDTO = convertToDto(request, FacilityDTO.class);
 			facilityService.save(facilityDTO);
-			
-			System.out.println(facilityDTO);		
+
+			System.out.println(facilityDTO);
 			System.out.println("facilityDTO : 저장완료");
-			
-			
-		} else if(actionPage.equals("status")) {
-			String status =  request.getParameter("value");
+
+		} else if (actionPage.equals("status")) {
+			String status = request.getParameter("value");
 			List<FacilityDTO> flist = null;
-			if(status.equals("open")) {
+			if (status.equals("open")) {
 				flist = facilityService.findAllFacilityOperating();
-			} else if(status.equals("close")) {
-				flist = facilityService.findAllFacilityNon_Operating();					
-			}else {
+			} else if (status.equals("close")) {
+				flist = facilityService.findAllFacilityNon_Operating();
+			} else {
 				flist = facilityService.findAll();
 			}
 //			System.out.print(flist);
-			ObjectMapper mapper = new ObjectMapper();			
-			PrintWriter out = response.getWriter();			
-			mapper.writeValue(out, flist);		
+			ObjectMapper mapper = new ObjectMapper();
+			PrintWriter out = response.getWriter();
+			mapper.writeValue(out, flist);
 		}
- 		
+
 		System.out.println("Servlet Post End");
 	}
 

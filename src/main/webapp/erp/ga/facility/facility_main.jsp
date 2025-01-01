@@ -32,6 +32,7 @@
 		
 		<%@ include file="/erp/layout/top_layout.jsp"%>		
 		
+		<div id="top_nav">
 		<!-- partial -->
 		<div class="container-fluid page-body-wrapper">
 			<!-- partial:../../partials/_settings-panel.html -->
@@ -201,37 +202,35 @@
 							});
 						}
 					});
+					
+					
 
 					function updateFacilityTable(data) {
-						let tbody = "";
-						$.each(data, function(index, fa) {
-							tbody += "<tr>";
-							tbody += "<td>" + fa.facilityId + "</td>";
-							tbody += "<td>" + fa.name + "</td>";
-							tbody += "<td>" + fa.location + "</td>";
-							tbody += "<td>" + fa.capacity + "</td>";
-							tbody += "<td>";
-							if (fa.operatingStatus === '중단') {
-								tbody += "<label class='badge badge-danger'>"
-										+ fa.operatingStatus + "</label>";
-							} else {
-								tbody += "<label class='badge badge-success'>"
-										+ fa.operatingStatus + "</label>";
-							}
-							tbody += "</td>";
-							tbody += "<td>" + fa.facilityType + "</td>";
-							tbody += "<td>"
-									+ new Date(fa.completionDate)
-											.toLocaleDateString('ko-KR', {
-												year : 'numeric',
-												month : '2-digit',
-												day : '2-digit'
-											}).replace(/\. /g, '-').replace(
-													'.', '') + "</td>";
-							tbody += "</tr>";
-						});
-						$("#table-tbody").html(tbody);
+					    let tbody = "";
+					    $.each(data, function(index, fa) {
+					        tbody += "<tr>";
+					        tbody += "<td>" + fa.facilityId + "</td>";
+					        tbody += "<td><a href='/facility/details?actiop=details&facilityId=" + fa.facilityId + "' class='link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'>" + fa.name + "</a></td>";
+					        tbody += "<td>" + fa.location + "</td>";
+					        tbody += "<td>" + fa.capacity + "</td>";
+					        tbody += "<td>";
+					        if (fa.operatingStatus === '중단') {
+					            tbody += "<label class='badge badge-danger'>" + fa.operatingStatus + "</label>";
+					        } else {
+					            tbody += "<label class='badge badge-success'>" + fa.operatingStatus + "</label>";
+					        }
+					        tbody += "</td>";
+					        tbody += "<td>" + fa.facilityType + "</td>";
+					        tbody += "<td>" + new Date(fa.completionDate).toLocaleDateString('ko-KR', {
+					            year: 'numeric',
+					            month: '2-digit',
+					            day: '2-digit'
+					        }).replace(/\. /g, '-').replace('.', '') + "</td>";
+					        tbody += "</tr>";
+					    });
+					    $("#table-tbody").html(tbody);
 					}
+
 
 				});
 	</script>

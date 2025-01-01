@@ -65,7 +65,7 @@
 			<!-- partial -->
 			<!-- 사이드 네비 -->
 			<%@ include file="/erp/layout/side_layout.jsp"%>
-
+			<div id="left_nav"> </div>
 			<!-- partial -->
 			<div class="main-panel">
 				<div class="content-wrapper">
