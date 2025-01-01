@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.erp.facility.VO.FacilityDTO;
 import com.erp.facility.VO.InspectionDTO;
+import com.erp.facility.VO.ManagerDTO;
 import com.erp.facility.dto.FacilityAndNameDTO;
 
 /**
@@ -25,7 +26,7 @@ public interface FacilityService {
 	List<FacilityDTO> findAllFacilityOperating();	
 	List<FacilityDTO> findAllFacilityNon_Operating();	
 	List<FacilityDTO> findAllFacilityType(String type);	
-	FacilityAndNameDTO findDetails(int seq);
-
+	FacilityDTO findDetailsFacility(int seq);
+	List<String> facilityType();
 	
 }
