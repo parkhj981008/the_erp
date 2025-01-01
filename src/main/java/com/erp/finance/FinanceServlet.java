@@ -63,7 +63,48 @@ public class FinanceServlet extends HttpServlet {
 
 	    String uri = request.getRequestURI();
 	    FinanceDAO dao = new FinanceDAO();
+	    
+	 // 계정 입력 기능
+	    if (uri.equals("/finance/add_account")) {
+	        String accountId = request.getParameter("account_id");
+	        String accountName = request.getParameter("account_name");
+	        String accountType = request.getParameter("account_type");
+	        String parentType = request.getParameter("parent_type");
 
+	        FinanceVO accountVO = FinanceVO.builder()
+	                                       .account_id(accountId)
+	                                       .account_name(accountName)
+	                                       .account_type(accountType)
+	                                       .parent_type(parentType)
+	                                       .build();
+	        boolean isAdded = dao.addAccount(accountVO);
+
+	        if (isAdded) {
+	            response.sendRedirect("/finance/accounts");
+	        } else {
+	            response.getWriter().write("계정 추가에 실패했습니다.");
+	        }
+	    }
+	    
+	    // 계정 삭제 기능
+	    if (uri.equals("/finance/delete_account")) {
+	        String accountId = request.getParameter("account_id");
+
+	        if (accountId == null || accountId.isEmpty()) {
+	            response.getWriter().write("유효하지 않은 계정 ID입니다.");
+	            return;
+	        }
+
+	        boolean isDeleted = dao.deleteAccount(accountId);
+
+	        if (isDeleted) {
+	            response.sendRedirect("/finance/accounts");
+	        } else {
+	            response.getWriter().write("계정 삭제에 실패했습니다.");
+	        }
+	    }
+	    
+	    // 전표 입력 기능
 	    if (uri.equals("/finance/add_voucher")) {
 
 	        String voucherDate = request.getParameter("voucher_date");
@@ -105,6 +146,7 @@ public class FinanceServlet extends HttpServlet {
 	    } else {
 	        response.getWriter().write("Unsupported POST request");
 	    }
+	    //전표 삭제 기능
 	    if (uri.equals("/finance/delete_voucher")) {
 	    	
 	        String voucherDate = request.getParameter("voucher_date");
@@ -114,12 +156,13 @@ public class FinanceServlet extends HttpServlet {
 	        boolean isDeleted = dao.deleteVoucher(voucherDate, descript, accountId);
 
 	        if (isDeleted) {
-	            response.sendRedirect("/finance/general_ledger"); // 삭제 후 목록으로 리다이렉트
+	            response.sendRedirect("/finance/general_ledger");
 	        } else {
 	            response.getWriter().write("Failed to delete voucher");
 	        }
 	    } else {
 	        response.getWriter().write("Unsupported POST request");
 	    }
+	    
 	}
 }
