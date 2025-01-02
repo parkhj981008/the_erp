@@ -346,13 +346,13 @@ public class FinanceDAO {
 		ResultSet rs = null;
 		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
 		try {
-			String query =   "SELECT a.parent_type, a.account_type, a.account_name, " +
-                    "ABS(SUM(NVL(v.debit,0)) - SUM(NVL(v.credit,0))) AS DIFF " +
-                    "FROM voucher v " +
-                    "JOIN accounts a ON a.account_id = v.account_id " +
-                    "WHERE a.parent_type IN ('자산', '부채', '자본') " +
-                    "GROUP BY a.account_name, a.account_type, a.parent_type, a.account_id " +
-                    "ORDER BY a.account_id";
+			String query =    "SELECT a.parent_type, a.account_type, a.account_name, " +
+				    "       ABS(SUM(NVL(v.debit, 0)) - SUM(NVL(v.credit, 0))) AS diff " +
+				    "FROM voucher v " +
+				    "JOIN accounts a ON a.account_id = v.account_id " +
+				    "WHERE a.parent_type IN ('자산', '부채', '자본') " +
+				    "GROUP BY a.account_name, a.account_type, a.parent_type, a.account_id " +
+				    "ORDER BY a.account_id";
         	System.out.println(query);
         	
 			pstmt = conn.prepareStatement(query);
@@ -381,77 +381,92 @@ public class FinanceDAO {
 		ResultSet rs = null;
 		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
 		try {
-			String query = "WITH AggregatedData (PARENT_TYPE, ACCOUNT_NAME, DEBIT, CREDIT) AS ( " +
-                    "    SELECT a.PARENT_TYPE, " +
-                    "           v.ACCOUNT_NAME, " +
-                    "           SUM(NVL(v.DEBIT, 0)) AS DEBIT, " +
-                    "           SUM(NVL(v.CREDIT, 0)) AS CREDIT " +
-                    "    FROM voucher v " +
-                    "    JOIN ACCOUNTS a ON v.ACCOUNT_ID = a.ACCOUNT_ID " +
-                    "    WHERE a.PARENT_TYPE IN ('매출', '매출원가', '판매비및일반관리비', '영업외수익', '영업외비용', '법인세비용') " +
-                    "    GROUP BY a.PARENT_TYPE, v.ACCOUNT_NAME " +
-                    "), " +
-                    "ComputedTotals1 AS ( " +
-                    "    SELECT '매출총이익' AS PARENT_TYPE, " +
-                    "           '' AS ACCOUNT_NAME, " +
-                    "           NULL AS DEBIT, " +
-                    "           (SELECT NVL(SUM(CREDIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '매출') " +
-                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '매출원가') AS CREDIT " +
-                    "    FROM DUAL " +
-                    "), " +
-                    "ComputedTotals2 AS ( " +
-                    "    SELECT '영업이익' AS PARENT_TYPE, " +
-                    "           '' AS ACCOUNT_NAME, " +
-                    "           NULL AS DEBIT, " +
-                    "           (SELECT CREDIT FROM ComputedTotals1) " +
-                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '판매비및일반관리비') AS CREDIT " +
-                    "    FROM DUAL " +
-                    "), " +
-                    "ComputedTotals3 AS ( " +
-                    "    SELECT '법인세차감전순이익' AS PARENT_TYPE, " +
-                    "           '' AS ACCOUNT_NAME, " +
-                    "           NULL AS DEBIT, " +
-                    "           (SELECT CREDIT FROM ComputedTotals2) " +
-                    "           + (SELECT NVL(SUM(CREDIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '영업외수익') " +
-                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '영업외비용') AS CREDIT " +
-                    "    FROM DUAL " +
-                    "), " +
-                    "ComputedTotals4 AS ( " +
-                    "    SELECT '당기순이익' AS PARENT_TYPE, " +
-                    "           '' AS ACCOUNT_NAME, " +
-                    "           NULL AS DEBIT, " +
-                    "           (SELECT CREDIT FROM ComputedTotals3) " +
-                    "           - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '법인세비용') AS CREDIT " +
-                    "    FROM DUAL " +
-                    "), " +
-                    "FinalOutput AS ( " +
-                    "    SELECT * FROM AggregatedData " +
-                    "    UNION ALL " +
-                    "    SELECT * FROM ComputedTotals1 " +
-                    "    UNION ALL " +
-                    "    SELECT * FROM ComputedTotals2 " +
-                    "    UNION ALL " +
-                    "    SELECT * FROM ComputedTotals3 " +
-                    "    UNION ALL " +
-                    "    SELECT * FROM ComputedTotals4 " +
-                    ") " +
-                    "SELECT PARENT_TYPE, ACCOUNT_NAME, DEBIT, CREDIT " +
-                    "FROM FinalOutput " +
-                    "ORDER BY " +
-                    "   CASE " +
-                    "       WHEN PARENT_TYPE = '매출' THEN 1 " +
-                    "       WHEN PARENT_TYPE = '매출원가' THEN 2 " +
-                    "       WHEN PARENT_TYPE = '매출총이익' THEN 3 " +
-                    "       WHEN PARENT_TYPE = '판매비및일반관리비' THEN 4 " +
-                    "       WHEN PARENT_TYPE = '영업이익' THEN 5 " +
-                    "       WHEN PARENT_TYPE = '영업외수익' THEN 6 " +
-                    "       WHEN PARENT_TYPE = '영업외비용' THEN 7 " +
-                    "       WHEN PARENT_TYPE = '법인세차감전순이익' THEN 8 " +
-                    "       WHEN PARENT_TYPE = '법인세비용' THEN 9 " +
-                    "       WHEN PARENT_TYPE = '당기순이익' THEN 10 " +
-                    "       ELSE 11 " +
-                    "   END, " +
-                    "   ACCOUNT_NAME";
+			String query = "WITH AggregatedData (PARENT_TYPE, ACCOUNT_NAME, ACCOUNT_ID, DEBIT, CREDIT) AS ( " +
+				    "    SELECT " +
+				    "        a.PARENT_TYPE, " +
+				    "        v.ACCOUNT_NAME, " +
+				    "        v.ACCOUNT_ID, " +
+				    "        SUM(NVL(v.DEBIT, 0)) AS DEBIT, " +
+				    "        SUM(NVL(v.CREDIT, 0)) AS CREDIT " +
+				    "    FROM voucher v " +
+				    "    JOIN ACCOUNTS a ON v.ACCOUNT_ID = a.ACCOUNT_ID " +
+				    "    WHERE a.PARENT_TYPE IN ('매출', '매출원가', '판매비및일반관리비', '영업외수익', '영업외비용', '법인세비용') " +
+				    "    GROUP BY a.PARENT_TYPE, v.ACCOUNT_NAME, v.ACCOUNT_ID " +
+				    "), " +
+				    "ComputedTotals1 AS ( " +
+				    "    SELECT " +
+				    "        '매출총이익' AS PARENT_TYPE, " +
+				    "        '' AS ACCOUNT_NAME, " +
+				    "        NULL AS ACCOUNT_ID, " +
+				    "        NULL AS DEBIT, " +
+				    "        (SELECT NVL(SUM(CREDIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '매출') " +
+				    "        - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '매출원가') AS CREDIT " +
+				    "    FROM DUAL " +
+				    "), " +
+				    "ComputedTotals2 AS ( " +
+				    "    SELECT " +
+				    "        '영업이익' AS PARENT_TYPE, " +
+				    "        '' AS ACCOUNT_NAME, " +
+				    "        NULL AS ACCOUNT_ID, " +
+				    "        NULL AS DEBIT, " +
+				    "        (SELECT CREDIT FROM ComputedTotals1) " +
+				    "        - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '판매비및일반관리비') AS CREDIT " +
+				    "    FROM DUAL " +
+				    "), " +
+				    "ComputedTotals3 AS ( " +
+				    "    SELECT " +
+				    "        '법인세차감전순이익' AS PARENT_TYPE, " +
+				    "        '' AS ACCOUNT_NAME, " +
+				    "        NULL AS ACCOUNT_ID, " +
+				    "        NULL AS DEBIT, " +
+				    "        (SELECT CREDIT FROM ComputedTotals2) " +
+				    "        + (SELECT NVL(SUM(CREDIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '영업외수익') " +
+				    "        - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '영업외비용') AS CREDIT " +
+				    "    FROM DUAL " +
+				    "), " +
+				    "ComputedTotals4 AS ( " +
+				    "    SELECT " +
+				    "        '당기순이익' AS PARENT_TYPE, " +
+				    "        '' AS ACCOUNT_NAME, " +
+				    "        NULL AS ACCOUNT_ID, " +
+				    "        NULL AS DEBIT, " +
+				    "        (SELECT CREDIT FROM ComputedTotals3) " +
+				    "        - (SELECT NVL(SUM(DEBIT), 0) FROM AggregatedData WHERE PARENT_TYPE = '법인세비용') AS CREDIT " +
+				    "    FROM DUAL " +
+				    "), " +
+				    "FinalOutput AS ( " +
+				    "    SELECT * FROM AggregatedData " +
+				    "    UNION ALL " +
+				    "    SELECT * FROM ComputedTotals1 " +
+				    "    UNION ALL " +
+				    "    SELECT * FROM ComputedTotals2 " +
+				    "    UNION ALL " +
+				    "    SELECT * FROM ComputedTotals3 " +
+				    "    UNION ALL " +
+				    "    SELECT * FROM ComputedTotals4 " +
+				    ") " +
+				    "SELECT " +
+				    "    PARENT_TYPE, " +
+				    "    ACCOUNT_NAME, " +
+				    "    DEBIT, " +
+				    "    CREDIT " +
+				    "FROM FinalOutput " +
+				    "ORDER BY " +
+				    "    CASE " +
+				    "        WHEN PARENT_TYPE = '매출' THEN 1 " +
+				    "        WHEN PARENT_TYPE = '매출원가' THEN 2 " +
+				    "        WHEN PARENT_TYPE = '매출총이익' THEN 3 " +
+				    "        WHEN PARENT_TYPE = '판매비및일반관리비' THEN 4 " +
+				    "        WHEN PARENT_TYPE = '영업이익' THEN 5 " +
+				    "        WHEN PARENT_TYPE = '영업외수익' THEN 6 " +
+				    "        WHEN PARENT_TYPE = '영업외비용' THEN 7 " +
+				    "        WHEN PARENT_TYPE = '법인세차감전순이익' THEN 8 " +
+				    "        WHEN PARENT_TYPE = '법인세비용' THEN 9 " +
+				    "        WHEN PARENT_TYPE = '당기순이익' THEN 10 " +
+				    "        ELSE 11 " +
+				    "    END, " +
+				    "    ACCOUNT_ID, " +
+				    "    ACCOUNT_NAME";
         	System.out.println(query);
         	
         	pstmt = conn.prepareStatement(query);
