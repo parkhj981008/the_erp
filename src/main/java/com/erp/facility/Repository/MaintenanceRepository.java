@@ -25,9 +25,9 @@ public class MaintenanceRepository {
 	
 	public int save(MaintenanceDTO maintenance) {
 		try(
-				Connection con = db.getConnectionForTransaction();
-				PreparedStatement ps 
-					= sp.getPreparedStatement(con, MaintenanceDTO.saveManager()  , maintenance.getAttributeAsObjectArray());				
+			Connection con = db.getConnectionForTransaction();
+			PreparedStatement ps 
+					= sp.getPreparedStatement(con, MaintenanceDTO.getInsertMaintenanceQuery()  , maintenance.getAttributeAsObjectArray());				
 		){
 			int rows = ps.executeUpdate(); 
 			if(rows == 1) {
@@ -48,26 +48,16 @@ public class MaintenanceRepository {
 	}
 	
 	
-	public List<MaintenanceDTO> findAll() {
+	public List<MaintenanceDTO> findMaintenance(String facilityId) {
 	    List<MaintenanceDTO> maintenanceList = new ArrayList<>();
 	    
 	    try (
 	        Connection con = db.getConnectionForTransaction();
-	        PreparedStatement ps = sp.getPreparedStatement(con, MaintenanceDTO.findAllMaintenance());
+	        PreparedStatement ps = sp.getPreparedStatement(con, MaintenanceDTO.findAllMaintenance(),facilityId);
 	        ResultSet rs = ps.executeQuery()
 	    ) {
 	    	while (rs.next()) {	    		
-	    		MaintenanceDTO maintenance = new MaintenanceDTO(
-	    			    rs.getLong("maintenance_id"),      
-	    			    rs.getLong("facility_id"),      
-	    			    rs.getDate("working_date"),   
-	    			    rs.getString("work_detail"),           
-	    			    rs.getString("work_status"),       
-	    			    rs.getString("work_cost"),          
-	    			    rs.getString("work_manager")         
-	    			);
-
-	    	    maintenanceList.add(maintenance);
+	    	    maintenanceList.add(MaintenanceDTO.fromResultSet(rs));
 	    	}
 	        return maintenanceList;
 	        

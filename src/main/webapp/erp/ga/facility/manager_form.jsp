@@ -49,59 +49,24 @@
 					<div class="container">
 						<div class="card shadow-sm">
 							<div class="card-header bg-primary bg-gradient text-white">
-								<h4 class="card-title mb-0">시설 등록</h4>
+								<h4 class="card-title mb-0">관리자 등록</h4>
 							</div>
 
 
 							<form id="facilityForm" action="/facility" method="POST" onsubmit="return validateForm()">
-								<input type="hidden" name="actiop" value="save">
+								<input type="hidden" name="actiop" value=manager-add>
 								<div class="card-body p-4">
 									<div class="mb-3">
-										<label for="name" class="form-label text-muted">시설이름</label> <input type="text" class="form-control" id="name" name="name" required maxlength="50">
-										<div class="invalid-feedback">시설이름을 입력해주세요 (최대 50자)</div>
-									</div>
-									<div class="mb-3">
-										<label for="location" class="form-label text-muted">시설위치</label> <input type="text" class="form-control" id="location" name="location" required maxlength="100">
-										<div class="invalid-feedback">시설위치를 입력해주세요 (최대 100자)</div>
-									</div>
-									<div class="mb-3">
-										<label for="capacity" class="form-label text-muted">시설인원</label> <input type="number" class="form-control" id="capacity" name="capacity" required min="1" max="9999">
-										<div class="invalid-feedback">시설인원을 입력해주세요 (1-9999명)</div>
-									</div>
-									<div class="mb-3">
-										<label for="operatingStatus" class="form-label text-muted">시설운영</label>
-										<select class="form-select" id="operatingStatus" name="operatingStatus" required>
-											<option value="">선택해주세요</option>
-											<option value="운영중">운영중</option>
-											<option value="중단">중단</option>
-										</select>
-										<div class="invalid-feedback">시설운영 상태를 선택해주세요</div>
-									</div>
-
-
-
-
-									<div class="mb-3">
-										<label for="facilityType" class="form-label text-muted">시설타입</label> <input type="text" class="form-control" id="facilityType" name="facilityType" list="typeList" autocomplete="off" onfocus="this.value=''" required maxlength="30">
-										<datalist id="typeList">
-											<c:forEach items="${F_TYPE}" var="type">
-												<option value="${type}" style="display: none">
-											</c:forEach>
-										</datalist>
-										<div class="invalid-feedback">시설타입을 입력해주세요</div>
-									</div>
-
-
-
-
-
-
-
-									<div class="mb-3">
-										<label for="workName" class="form-label text-muted">담당자</label> <input type="text" class="form-control" id="workName" name="workName" required maxlength="20">
-										<div class="invalid-feedback">담당자명을 입력해주세요 (최대 20자)</div>
+										<label for="name" class="form-label text-muted">사원번호</label>
+										<div class="input-group">
+											<input type="number" class="form-control" id="name" name="name" required>
+											<button type="button" class="btn btn-outline-primary" id="checkManager">사원확인</button>
+										</div>
+										<div class="invalid-feedback">사원번호를 입력해주세요</div>
+										<small id="managerCheckResult" class="form-text text-success" style="display: none;">확인된 사원입니다.</small>
 									</div>
 								</div>
+								
 								<div class="card-footer text-end">
 									<button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
 									<button type="submit" class="btn btn-primary">등록</button>
@@ -145,101 +110,62 @@
 	<!-- End custom js for this page-->
 
 	<script>
-	
-	/* // 아무것도 없을때는 안뜨게 
-	$(document).ready(function() {
-    const $input = $('#facilityType');
-    const $options = $('#typeList option');
-    
-    $input.on('input', function() {
-        const inputValue = $(this).val();
-        
-        // 입력값이 없을 때 모든 옵션 숨김
-        if (!inputValue) {
-            $options.hide();
-            return;
-        }
-        
-        // 입력값과 일치하는 옵션 필터링
-        $options.hide();
-        $options.filter(function() {
-            return $(this).val().indexOf(inputValue) > -1;
-        }).slice(0, 5).show();
-    });
-}); */
+		$(document).ready(
+				function() {
+					const $submitButton = $('button[type="submit"]');
+					const $checkButton = $('#checkManager');
+					const $nameInput = $('#name');
+					const $resultText = $('#managerCheckResult');
 
+					// 초기에 등록 버튼 비활성화
+					$submitButton.prop('disabled', true);
 
+					$checkButton.click(function() {
+						const managerValue = $nameInput.val().trim();
 
+						if (!managerValue) {
+							$nameInput.addClass('is-invalid');
+							return;
+						}
 
-	//---------------------------입력 필드 검증
-	
-	function validateForm() {
-    const form = document.getElementById('facilityForm');
-    const inputs = form.querySelectorAll('input, select');
-    let isValid = true;
+						$.ajax({
+							url : 'facility',
+							type : 'POST',
+							data : {
+								actiop : 'manager-search',
+								name : managerValue
+							},
+							success : function(data) {
+								if (data) {
+									$submitButton.prop('disabled', false);
+									$nameInput.removeClass('is-invalid');
+									$resultText.show().removeClass(
+											'text-danger').addClass(
+											'text-success').text('가능한 사원입니다.');
+								} else {
+									$submitButton.prop('disabled', true);
+									$nameInput.addClass('is-invalid');
+									$resultText.show().removeClass(
+											'text-success').addClass(
+											'text-danger').text(
+											'불가능한 사원번호입니다.');
+								}
+							},
+							error : function() {
+								$submitButton.prop('disabled', true);
+								$resultText.show().addClass('text-danger')
+										.text('서버 오류가 발생했습니다.');
+							}
+						});
+					});
 
-    // 모든 입력 필드 검증
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            input.classList.add('is-invalid');
-            isValid = false;
-        } else {
-            input.classList.remove('is-invalid');
-        }
-    });
-
-    // 특수 필드 검증
-    const capacity = document.getElementById('capacity');
-    if (capacity.value) {
-        const capacityNum = parseInt(capacity.value);
-        if (isNaN(capacityNum) || capacityNum < 1 || capacityNum > 9999) {
-            capacity.classList.add('is-invalid');
-            isValid = false;
-        }
-    }
-
-    const completionDate = document.getElementById('completionDate');
-    if (completionDate.value) {
-        const selectedDate = new Date(completionDate.value);
-        const today = new Date();
-        if (selectedDate > today) {
-            completionDate.classList.add('is-invalid');
-            isValid = false;
-        }
-    }
-
-    // 이름과 위치에 특수문자 검증
-    const name = document.getElementById('name');
-    const location = document.getElementById('location');
-    const specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-
-    if (specialChars.test(name.value)) {
-        name.classList.add('is-invalid');
-        isValid = false;
-    }
-
-    if (specialChars.test(location.value)) {
-        location.classList.add('is-invalid');
-        isValid = false;
-    }
-
-    if (!isValid) {
-        alert('입력값을 확인해주세요.');
-        return false;
-    }
-
-    return true;
-}
-
-// 실시간 유효성 검사
-document.querySelectorAll('input, select').forEach(input => {
-    input.addEventListener('input', function() {
-        if (this.value.trim()) {
-            this.classList.remove('is-invalid');
-        }
-    });
-});
-</script>
+					// 사원번호 입력값이 변경되면 다시 버튼 비활성화
+					$nameInput.on('input', function() {
+						$submitButton.prop('disabled', true);
+						$resultText.hide();
+					});
+				});
+	</script>
 
 
 

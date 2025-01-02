@@ -15,7 +15,8 @@ public class FacilityServiceImpl implements FacilityService{
 	
 	
 	@Override
-	public int save(FacilityDTO facilityDTO) {		
+	public int save(FacilityDTO facilityDTO) {	
+		
 		return facilityRepository.save(facilityDTO);	
 	}
 	
@@ -24,15 +25,6 @@ public class FacilityServiceImpl implements FacilityService{
 		return facilityRepository.findAll();
 	}
 	
-	@Override
-	public List<FacilityDTO> findAllFacilityOperating() {
-		return facilityRepository.findAllFacilityOperating();
-	}
-
-	@Override
-	public List<FacilityDTO> findAllFacilityNon_Operating() {
-		return facilityRepository.findAllFacilityNon_Operating();
-	}
 	
 	//TODO
 	@Override
@@ -49,6 +41,29 @@ public class FacilityServiceImpl implements FacilityService{
 	@Override
 	public List<String> facilityType() {
 		return facilityRepository.findFacilityType();
+	}
+
+	@Override
+	public List<FacilityDTO> findTypeSelectList(String status) {
+		
+		String selectStatus = null;
+
+		if(status.equals("open")) {
+			selectStatus = "운영중";
+			
+		} else if(status.equals("close")) {
+			selectStatus = "중단";
+			
+		} else {
+			return facilityRepository.findAll();
+		}
+		
+		return facilityRepository.findAllFacilityOperatingStatus(selectStatus);
+	}
+
+	@Override
+	public int updateFacility(FacilityDTO facilityDTO) {
+		return facilityRepository.updateFacility(facilityDTO);
 	}
 
 	
