@@ -1,80 +1,144 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>재무상태표</title>
-<link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
-<link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
-<link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+    <meta charset="UTF-8">
+    <title>재무상태표</title>
+    <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
+    <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+    <link rel="shortcut icon" href="/erp/images/favicon.png" />
 <style>
     body {
         font-family: Arial, sans-serif;
         text-align: center;
     }
-    .table {
-        width: 80%;
-        margin: 30px auto;
+    table {
+        width: 70%;
         border-collapse: collapse;
-        font-size: 14px;
+        margin: 20px auto;
+        table-layout: auto;
     }
-    .table th, .table td {
+    table, th, td {
         border: 1px solid #ddd;
+    }
+    th, td {
         padding: 10px;
+    }
+    th {
+        background-color: #f4f4f4;
         text-align: center;
     }
-    .table th {
-        background-color: #f4f4f4;
-        font-weight: bold;
+    .left-align {
+        text-align: left; /* 왼쪽 정렬 */
     }
     .numeric {
         text-align: right;
     }
     .section-title {
         font-weight: bold;
-        background-color: #f9f9f9;
+        text-align: center;
     }
-    .page-title {
-        font-size: 24px;
+    .account-info {
+        font-size: 17px;
+        margin-bottom: 20px;
+    }
+    .centered-header h2 {
+        font-size: 26px;
         font-weight: bold;
-        margin: 20px 0;
     }
     .sub-header {
-        font-size: 16px;
-        margin-bottom: 20px;
+        font-size: 18px!important;
     }
 </style>
 </head>
 <body>
     <div>
-        <div class="page-title">재무상태표</div>
-        <div class="sub-header">
-            2024/12/31일 기준<br>
-            회사명: [ERP]
-        </div>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>부모계정</th>
-                        <th>계정유형</th>
-                        <th>계정명</th>
-                        <th>금액</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="vo" items="${KEY_STATE_FLIST}">
-                        <tr>
-                            <td class="section-title">${vo.parent_type}</td>
-                            <td>${vo.account_type}</td>
-                            <td class="numeric">${vo.account_name}</td>
-                            <td class="numeric">${vo.diff}</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="centered-header">
+                                    <h2>재무상태표</h2>
+                                </div>
+                                <div class="sub-header">
+                                    <p>2024년 12월 31일 현재.</p>
+                                    <p>회사명: <c:out value="${companyName}" /></p>
+                                </div>
+
+					            <table>
+					                <thead>
+					                    <tr>
+					                        <th>부모계정</th>
+					                        <th>계정유형</th>
+					                        <th>계정명</th>
+					                        <th>금액</th>
+					                    </tr>
+					                </thead>
+					                <tbody>
+    <c:set var="previousParentType" value="" />
+    <c:set var="currentSum" value="0" />
+    <c:forEach var="vo" items="${KEY_STATE_FLIST}" varStatus="status">
+        <!-- Parent Type가 바뀌는 경우 합계 행 추가 -->
+        <c:if test="${previousParentType != '' && vo.parent_type != previousParentType}">
+            <tr>
+                <td><strong>${previousParentType} 합계</strong></td>
+                <td></td>
+                <td></td>
+                <td class="numeric">
+                    <fmt:formatNumber value="${currentSum}" type="number" groupingUsed="true" />
+                </td>
+            </tr>
+            <c:set var="currentSum" value="0" />
+        </c:if>
+        <tr>
+            <td>
+                <c:choose>
+                    <c:when test="${vo.parent_type != previousParentType}">
+                        <strong>${vo.parent_type}</strong>
+                        <c:set var="previousParentType" value="${vo.parent_type}" />
+                    </c:when>
+                    <c:otherwise> </c:otherwise>
+                </c:choose>
+            </td>
+            <td>
+                <c:choose>
+                    <c:when test="${vo.account_type != previousAccountType}">
+                        <strong>${vo.account_type}</strong>
+                        <c:set var="previousAccountType" value="${vo.account_type}" />
+                    </c:when>
+                    <c:otherwise> </c:otherwise>
+                </c:choose>
+            </td>
+            <td class="left-align">${vo.account_name}</td>
+            <td class="numeric">
+                <fmt:formatNumber value="${vo.diff}" type="number" groupingUsed="true" />
+                <c:set var="currentSum" value="${currentSum + vo.diff}" />
+            </td>
+        </tr>
+        <!-- 마지막 항목에서 합계 출력 -->
+        <c:if test="${status.last}">
+            <tr>
+                <td><strong>${previousParentType} 합계</strong></td>
+                <td></td>
+                <td></td>
+                <td class="numeric">
+                    <fmt:formatNumber value="${currentSum}" type="number" groupingUsed="true" />
+                </td>
+            </tr>
+        </c:if>
+    </c:forEach>
+</tbody>
+					            </table>
+					       </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
