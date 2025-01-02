@@ -3,6 +3,7 @@ package com.erp.facility.Service;
 import java.util.List;
 
 import com.erp.facility.VO.ManagerDTO;
+import com.erp.facility.dto.UserSmallDTO;
 
 /**
  * Description : Facility에 관한 서비스 모음 <br>
@@ -18,6 +19,11 @@ public interface ManagerService {
 	
 	ManagerDTO findDetailsManager(int seq);
 	List<ManagerDTO> findAll();
-	int save(ManagerDTO managerDTO);
+	int save(String seq );
+	List<ManagerDTO> findFacilityIsNull();
+	boolean checkUser(String seq);
+	
+	UserSmallDTO getUserInfo(String seq);
+	int update(String userSeq, String facilityId, String currentManagerId);
 
 }
