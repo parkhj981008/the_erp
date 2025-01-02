@@ -6,11 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import com.erp.auth.vo.AuthDTOs.FeaturesResponseDTO;
+import com.erp.auth.vo.AuthDTOs.FeaturesResponseDTO.FeatureDetail;
 import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
 import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
@@ -26,6 +29,52 @@ public class AuthRepository{
 	
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
+	
+	public FeaturesResponseDTO getFeatures() {
+		FeaturesResponseDTO response = new FeaturesResponseDTO();
+		response.setDatas(new ArrayList<>());
+		try(
+				Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps 
+					= con.prepareStatement("SELECT fr.*, stb.user_name FROM FEATURE_ROLES fr INNER JOIN (SELECT user_name, user_seq FROM app_users) stb ON(fr.register_user = stb.user_seq)");
+//					= sp.getPreparedStatement(con, "SELECT fr.*, stb.user_name FROM FEATURE_ROLES fr INNER JOIN (SELECT user_name, user_seq FROM app_users) stb ON(fr.register_user = stb.user_seq)", new Object[0]);
+				ResultSet rs = ps.executeQuery();
+				){
+			while(rs.next()) {
+				/*
+FEATURE_SEQ   NOT NULL NUMBER       
+URL           NOT NULL VARCHAR2(50) 
+METHOD        NOT NULL VARCHAR2(10) 
+REGISTER_DATE NOT NULL DATE         
+REGISTER_USER NOT NULL NUMBER       
+ROLE_SEQ      NOT NULL NUMBER     
+				 * 
+				 * 
+				 * 
+		private String url;
+		private String httpMethod;
+		private Date createAt;
+		private int roleSeq;
+		private int featureSeq;
+		private String userName;
+				 */
+				response.getDatas().add(FeatureDetail.builder()
+						.url(rs.getString("url"))
+						.httpMethod(rs.getString("method"))
+						.createAt(rs.getDate("register_date"))
+						.roleSeq(rs.getInt("role_seq"))
+						.featureSeq(rs.getInt("feature_seq"))
+						.userName(rs.getString("user_name"))
+						.build());
+			}
+			return response;
+		}catch (SQLException e) {
+			System.out.println(e instanceof SQLIntegrityConstraintViolationException);
+			if(e instanceof SQLIntegrityConstraintViolationException) 
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);
+		}
+	}
 	
 	public void register(RegisterRequestDTO requestDto) {
 		try(

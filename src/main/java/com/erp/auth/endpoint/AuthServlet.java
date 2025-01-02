@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.erp.auth.service.AuthService;
 import com.erp.auth.service.impl.AuthServiceImpl;
+import com.erp.auth.vo.AuthDTOs.FeaturesResponseDTO;
 import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestBusinessException;
@@ -38,7 +39,21 @@ public class AuthServlet extends HttpServlet {
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
+		response.setContentType("application/json");
+		RestResponse<?> restResponse;
+		switch(request.getRequestURI()) {
+		case "/api/v1/auth/features" : {
+			restResponse = RestResponse.builder()
+					.message("OK")
+					.resonseDate(new Date())
+					.data(authService.getFeatures())
+					.build();
+			response.setStatus(HttpServletResponse.SC_OK);
+			break;
+			}
+		default : throw new RestBusinessException(StatusCode.BAD_REQUEST);
+		}
+		response.getWriter().write(om.writer().writeValueAsString(restResponse));	
 	}
 
 	/**

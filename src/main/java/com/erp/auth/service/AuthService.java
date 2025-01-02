@@ -3,6 +3,7 @@
  */
 package com.erp.auth.service;
 
+import com.erp.auth.vo.AuthDTOs.FeaturesResponseDTO;
 import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
 import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
@@ -19,6 +20,8 @@ import com.erp.common.security.UserInfo;
  * @version 1.0
  */
 public interface AuthService {
+	FeaturesResponseDTO getFeatures();
+	
 	void register(RegisterRequestDTO dto);
 	UserInfo login(LoginRequestDTO dto);
 }

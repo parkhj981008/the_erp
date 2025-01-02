@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 public class ChatDTOs{
 	
@@ -18,16 +19,16 @@ public class ChatDTOs{
 	@Setter
 	@NoArgsConstructor
 	@AllArgsConstructor
+	@ToString
 	public static class ChatMessage{
 		private String message;
 		private int chatSeq;
 		private String method;
 		
 		
-		
 		public PreparedStatementVO toCreateChatRoom(){
 			PreparedStatementVO preparedStatementVO = new PreparedStatementVO();
-	        preparedStatementVO.setSql("INSERT INTO CHAT_ROOMs (chat_room_detail_seq, chat_room_seq, join_date, latest_message_seq) * VALUES(chat_room_seq.NEXTVAL, ?, 'default')");
+	        preparedStatementVO.setSql("INSERT INTO CHAT_ROOMs (CHAT_ROOM_SEQ, CREATE_DATE, ROOM_NAME) VALUES(chat_room_seq.NEXTVAL, ?, 'default')");
 	        preparedStatementVO.setAttribute(new Object[]{new Date()});
 
 	        return preparedStatementVO;
@@ -35,7 +36,7 @@ public class ChatDTOs{
 		
 		public PreparedStatementVO toCreateChatRoom(int chatRoomUser){
 			PreparedStatementVO preparedStatementVO = new PreparedStatementVO();
-	        preparedStatementVO.setSql("INSERT INTO CHAT_ROOM_DETAILS (chat_room_detail_seq, chat_room_seq, join_date, chat_room_user) * VALUES(chat_room_detail_seq.NEXTVAL, chat_room_seq.CURRVAL, ?, ?)");
+	        preparedStatementVO.setSql("INSERT INTO CHAT_ROOM_DETAILS (chat_room_detail_seq, chat_room_seq, join_date, chat_room_user) VALUES(chat_room_detail_seq.NEXTVAL, chat_room_seq.CURRVAL, ?, ?)");
 	        preparedStatementVO.setAttribute(new Object[]{new Date(), chatRoomUser});
 	         
 	        return preparedStatementVO;
