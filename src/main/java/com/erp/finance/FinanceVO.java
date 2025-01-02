@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FinanceVO {
 
-	private String account_id;
-	private String account_name;
-	private String account_type;
-	private String parent_type;
-	private Long diff;
+	private String account_id;		// 계정ID
+	private String account_name;	// 계정명
+	private String account_type;	// 계정유형
+	private String parent_type;		// 부모계정
+	private Long diff;				// 차변과 대변의 차
 	
-	private String voucher_date;
-	private String descript;
-	private Long debit;
-	private Long credit;
+	private String voucher_date;	// 전표날짜
+	private String descript;		// 적요
+	private Long debit;				// 차변
+	private Long credit;			// 대변
 	
 	
 }
