@@ -19,6 +19,15 @@ public class CommonCode{
 		}
 		
 		public int getNum() {return this.num; }
+
+		public static Gender parseGender(String string) {
+			for (Gender gender : Gender.values()) {
+		        if (gender.desc.equals(string) || String.valueOf(gender.num).equals(string)) {
+		            return gender;
+		        }
+		    }
+		    throw new IllegalArgumentException("Invalid gender: " + string);
+		}
 	}
 	
 	public static enum UserStatus{
@@ -37,6 +46,17 @@ public class CommonCode{
 			this.num = num;
 		}
 		
+		
 		public int getNum() {return this.num; }
+
+
+		public static UserStatus parseUserStatus(String string) {
+			for (UserStatus userStatus : UserStatus.values()) {
+		        if (userStatus.desc.equals(string) || String.valueOf(userStatus.num).equals(string)) {
+		            return userStatus;
+		        }
+		    }
+		    throw new IllegalArgumentException("Invalid userStatus: " + string);
+		}
 	}
 }

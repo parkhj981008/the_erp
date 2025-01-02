@@ -13,13 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.erp.facility.Service.InspectionService;
 import com.erp.facility.Service.MaintenanceService;
-import com.erp.facility.Service.MaintenanceServiceImpl;
+
 import com.erp.facility.Service.impl.InspectionServiceImpl;
+import com.erp.facility.Service.impl.MaintenanceServiceImpl;
 import com.erp.facility.VO.InspectionDTO;
 import com.erp.facility.VO.MaintenanceDTO;
 
 
-@WebServlet("/maintenance")
+//@WebServlet("/maintenance")
 public class MaintenanceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -32,17 +33,17 @@ public class MaintenanceServlet extends HttpServlet {
 		if(actionPage == null) {
 			
 			// QueryParam 을 DTO로 변
-			MaintenanceDTO maintenanceDTO = convertToDto(request, MaintenanceDTO.class);  
-//			System.out.println("inspectionDTO = " + inspectionDTO);
-			List<MaintenanceDTO> mlist = maintenanceService.findALl();
-			System.out.println("mlist = " + mlist.size());
-			
-			mlist.forEach(i -> System.out.println(i)); 
-			
-			request.setAttribute("MAI_LIST", mlist );
-			request.setAttribute("gift", "QWER" );
-			
-			request.getRequestDispatcher("/facility/maintenance_detail.jsp").forward(request, response);
+//			MaintenanceDTO maintenanceDTO = convertToDto(request, MaintenanceDTO.class);  
+////			System.out.println("inspectionDTO = " + inspectionDTO);
+//			List<MaintenanceDTO> mlist = maintenanceService.findALl();
+//			System.out.println("mlist = " + mlist.size());
+//			
+//			mlist.forEach(i -> System.out.println(i)); 
+//			
+//			request.setAttribute("MAI_LIST", mlist );
+//			request.setAttribute("gift", "QWER" );
+//			
+//			request.getRequestDispatcher("/facility/maintenance_detail.jsp").forward(request, response);
 		}
 			
 			

@@ -15,7 +15,7 @@
   <title>CelestialUI Admin</title>
   <!-- base:css -->
   <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
-  <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/erp/vendors/css/vendor.bune.base.css">
   <!-- endinject -->
   <!-- inject:css -->
   <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">

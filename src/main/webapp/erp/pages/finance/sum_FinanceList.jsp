@@ -1,23 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" 	uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" 	uri="http://java.sun.com/jsp/jstl/fmt" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" 	uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="x" 	uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
- 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
     <title>계정별 원장</title>
+    <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
+    <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
+    <link rel="shortcut icon" href="/erp/images/favicon.png" />
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
         }
         table {
-            width: 50%;
+            width: 90%;
             border-collapse: collapse;
             margin: 20px auto;
         }
@@ -26,19 +29,29 @@
         }
         th, td {
             padding: 8px;
-            text-align: left; /* 기본적으로 내용은 왼쪽 정렬 */
+            text-align: left;
         }
         th {
             background-color: #f4f4f4;
-            text-align: center; /* 헤더는 중앙 정렬 */
+            text-align: center;
         }
         .numeric {
-            text-align: right; /* 차변, 대변, 잔액 셀은 오른쪽 정렬 */
+            text-align: right;
         }
     </style>
-</head>
-<body>
-    <h1>계정별 원장</h1>
+
+</head><body>
+
+    <div>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="centered-header">
+                                
+<h2>계정별 원장</h2>
 
     <!-- 각 계정별 테이블 생성 -->
     <c:forEach var="entry" items="${groupedData}">
@@ -111,18 +124,33 @@
         </table>
         <br>
     </c:forEach>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 </body>
 </html>
-<br><br>
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script>
-$( document ).ready(function() {
-	//$("#btn").click( function() {  
-	//    	$("#input").val();
-	//});
-});
-</script>
+<!-- container-scroller -->
+<!-- base:js -->
+<script src="/erp/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="/erp/js/off-canvas.js"></script>
+<script src="/erp/js/hoverable-collapse.js"></script>
+<script src="/erp/js/template.js"></script>
+<script src="/erp/js/settings.js"></script>
+<script src="/erp/js/todolist.js"></script>
+<!-- endinject -->
+<!-- plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- Custom js for this page-->
+<!-- End custom js for this page-->
 </body>
 </html>

@@ -1,7 +1,7 @@
 package com.erp.facility.VO;
 
-
-import java.time.LocalDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -21,19 +21,24 @@ public class FacilityDTO {
 	private String operatingStatus;
 	private String facilityType;
 	private Date completionDate;
+	
+	
 
 	
+	
+	public static String getFindDetailsFacilityQuery() {
+	    return "select * from facility where facility_id = ?";
+	}
+
+
 	public static String findAllFacility() {
 		return "select * from facility";
 	}
 	
-	public static String findAllFacilityOperating() {
-		return "select * from facility where operating_status = '운영중'";
+	public static String findAllFacilityOperatingStatus() {
+		return "select * from facility where operating_status = ?";
 	}
-	
-	public static String findAllFacilityNon_Operating() {
-		return "select * from facility where operating_status = '중단'";
-	}
+
 	
 	public static String findAllFacilityType() {
 		return "select * from facility where facility_type =?";
@@ -44,9 +49,6 @@ public class FacilityDTO {
 	    return "INSERT INTO facility (facility_id, name, location, capacity, operating_status, facility_type, completion_date) " +
 	           "VALUES (facility_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 	}
-	
-	
-	
 	
 	
 	// 고민
@@ -61,6 +63,21 @@ public class FacilityDTO {
 		           "WHERE facility_id = ?";
 	}
 
+	
+	public static FacilityDTO fromResultSet(ResultSet rs) throws SQLException {
+	    return new FacilityDTO(
+	        rs.getLong("facility_id"),
+	        rs.getString("name"),
+	        rs.getString("location"),
+	        rs.getInt("capacity"),
+	        rs.getString("operating_status"),
+	        rs.getString("facility_type"),
+	        rs.getDate("completion_date")
+	    );
+	}
+
+	
+	
 	
 	public FacilityDTO(String name, String location, int capacity, String operatingStatus, String facilityType,
 			Date completionDate) {
@@ -83,6 +100,19 @@ public class FacilityDTO {
 	        this.facilityType,
 	        this.completionDate
 	    };
+	}
+	
+	public Object[] getAttributeAsObjectArraUpdate() {	
+		return new Object[] {
+//	    	return new Object[] {
+		        this.name,
+		        this.location,
+		        this.capacity,
+		        this.operatingStatus,
+		        this.facilityType,
+		        this.completionDate,
+		        this.facilityId
+		};
 	}
 
 	
