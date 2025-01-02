@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.erp.attendance.repository.AttendanceRepository;
 import com.erp.attendance.vo.AllEmployeeDTO;
 import com.erp.attendance.vo.AttendanceDTO;
+import com.erp.attendance.vo.AttendanceItemsDTO;
 import com.erp.attendance.vo.InsertAttendanceDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestBusinessException;
@@ -48,10 +49,11 @@ public class AttendanceServlet extends HttpServlet {
 			out.write(jsonStr);
 			break;
 		}
+		// 전체 직원 조회
 		case "/v1/attendance/selectAllEmployee": {
 			AttendanceRepository ar = new AttendanceRepository();
 			List<AllEmployeeDTO> list = ar.selectUsersByDepartment();
-			
+
 			response.setContentType("application/json; charset=UTF-8");
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonStr = mapper.writeValueAsString(list);
@@ -60,6 +62,20 @@ public class AttendanceServlet extends HttpServlet {
 			out.write(jsonStr);
 			break;
 		}
+		// 전체 근태 항목 조회
+		case "/v1/attendance/selectAttendanceItems": {
+			AttendanceRepository ar = new AttendanceRepository();
+			List<AttendanceItemsDTO> list = ar.selectAttendanceItems();
+
+			response.setContentType("application/json; charset=UTF-8");
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonStr = mapper.writeValueAsString(list);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonStr);
+			break;
+		}
+
 		default:
 			throw new RestBusinessException(StatusCode.BAD_REQUEST);
 		}
@@ -96,6 +112,7 @@ public class AttendanceServlet extends HttpServlet {
 				return;
 			}
 
+			System.out.println(idto);
 			AttendanceRepository ar = new AttendanceRepository();
 
 			int rows = ar.insertAttendance(idto);
@@ -103,7 +120,7 @@ public class AttendanceServlet extends HttpServlet {
 			if (rows > 0) {
 				response.setStatus(HttpServletResponse.SC_OK);
 			} else {
-
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 
 			response.setContentType("application/json; charset=UTF-8");
