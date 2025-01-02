@@ -100,9 +100,8 @@
 										</table>
 									</div>
 									<br>
-									
-									<button type="button" class="btn btn-primary float-right" id="facilityBtn" onclick="location.href='/facility/create'">시설 등록</button>
-									<button type="button" class="btn btn-primary float-right me-2" id="managerBtn" onclick="location.href='/facility/add-manager'">시설 매니저 등록</button>
+									<button type="button" class="btn btn-primary float-right" id="insertBtn">입력</button>
+
 								</div>
 							</div>
 						</div>

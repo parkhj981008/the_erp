@@ -1,5 +1,7 @@
 package com.erp.facility.VO;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +22,12 @@ public class FacilityDTO {
 	private String facilityType;
 	private Date completionDate;
 	
+	
+	
+	public static String getFindDetailsFacilityQuery() {
+	    return "select * from facility where facility_id = ?";
+	}
+
 
 	public static String findAllFacility() {
 		return "select * from facility";
@@ -56,6 +64,21 @@ public class FacilityDTO {
 		           "WHERE facility_id = ?";
 	}
 
+	
+	public static FacilityDTO fromResultSet(ResultSet rs) throws SQLException {
+	    return new FacilityDTO(
+	        rs.getLong("facility_id"),
+	        rs.getString("name"),
+	        rs.getString("location"),
+	        rs.getInt("capacity"),
+	        rs.getString("operating_status"),
+	        rs.getString("facility_type"),
+	        rs.getDate("completion_date")
+	    );
+	}
+
+	
+	
 	
 	public FacilityDTO(String name, String location, int capacity, String operatingStatus, String facilityType,
 			Date completionDate) {

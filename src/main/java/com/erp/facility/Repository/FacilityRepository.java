@@ -14,204 +14,180 @@ import com.erp.common.database.impl.StatementProviderDefaultImpl;
 import com.erp.common.rest.RestBusinessException;
 import com.erp.common.rest.RestBusinessException.StatusCode;
 import com.erp.facility.VO.FacilityDTO;
-import com.erp.facility.dto.FacilityAndNameDTO;
 
 
 public class FacilityRepository {
 
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
-	
-	
-	
-	public FacilityAndNameDTO findDetails(int seq) {   
-	    try (
-	        Connection con = db.getConnectionForTransaction();
-	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityAndNameDTO.findDetails(),seq);   
-	    	ResultSet rs = ps.executeQuery();	    
-	    ) {	    	
-	    	 if (rs.next()) {  // 데이터가 있는지 먼저 확인
-	             return new FacilityAndNameDTO(
-	                 rs.getLong("facility_id"),      
-	                 rs.getString("name"),           
-	                 rs.getString("location"),       
-	                 rs.getInt("capacity"),          
-	                 rs.getString("operating_status"),  
-	                 rs.getString("facility_type"),  
-	                 rs.getDate("completion_date"),
-	                 rs.getString("work_manager")
-	             );  
-	    	 }
-	        
-	    } catch (SQLException e) {
-	        if(e instanceof SQLIntegrityConstraintViolationException) 
-	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
-	        e.printStackTrace();
-	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
-	    }
-	    throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR);
-	}
-	
-	
-	
-	// 운영 중단인 시설불러오기 
-		public List<FacilityDTO> findAllFacilityType(String type) {
-		    List<FacilityDTO> facilityList = new ArrayList<>();
-		    
-		    try (
-		        Connection con = db.getConnectionForTransaction();
-		        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityType());    		    	
-		    ) {	
-		    	ps.setString(1, type);
-		    	ResultSet rs = ps.executeQuery();
-		    
-		    	while (rs.next()) {
-		    	    FacilityDTO facility = new FacilityDTO(
-		    	        rs.getLong("facility_id"),      
-		    	        rs.getString("name"),           
-		    	        rs.getString("location"),       
-		    	        rs.getInt("capacity"),          
-		    	        rs.getString("operating_status"),  
-		    	        rs.getString("facility_type"),  
-		    	        rs.getDate("completion_date")   
-		    	    );
-		    	    facilityList.add(facility);
-		    	}
-
-		        return facilityList;
-		        
-		    } catch (SQLException e) {
-		        if(e instanceof SQLIntegrityConstraintViolationException) 
-		            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
-		        e.printStackTrace();
-		        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
-		    }
-		}
-	
-	
-	// 운영 중단인 시설불러오기 
-	public List<FacilityDTO> findAllFacilityNon_Operating() {
-	    List<FacilityDTO> facilityList = new ArrayList<>();
-	    
-	    try (
-	        Connection con = db.getConnectionForTransaction();
-	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityNon_Operating());
-	        ResultSet rs = ps.executeQuery()
-	    ) {
-	    	while (rs.next()) {
-	    	    FacilityDTO facility = new FacilityDTO(
-	    	        rs.getLong("facility_id"),      
-	    	        rs.getString("name"),           
-	    	        rs.getString("location"),       
-	    	        rs.getInt("capacity"),          
-	    	        rs.getString("operating_status"),  
-	    	        rs.getString("facility_type"),  
-	    	        rs.getDate("completion_date")   
-	    	    );
-	    	    facilityList.add(facility);
-	    	}
-
-	        return facilityList;
-	        
-	    } catch (SQLException e) {
-	        if(e instanceof SQLIntegrityConstraintViolationException) 
-	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
-	        e.printStackTrace();
-	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
-	    }
-	}
-	
-	
-	// 운영중인 시설 불러오기 
-	public List<FacilityDTO> findAllFacilityOperating() {
-	    List<FacilityDTO> facilityList = new ArrayList<>();
-	    
-	    try (
-	        Connection con = db.getConnectionForTransaction();
-	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityOperating());
-	        ResultSet rs = ps.executeQuery()
-	    ) {
-	    	while (rs.next()) {
-	    	    FacilityDTO facility = new FacilityDTO(
-	    	        rs.getLong("facility_id"),      
-	    	        rs.getString("name"),           
-	    	        rs.getString("location"),       
-	    	        rs.getInt("capacity"),          
-	    	        rs.getString("operating_status"),  
-	    	        rs.getString("facility_type"),  
-	    	        rs.getDate("completion_date")   
-	    	    );
-	    	    facilityList.add(facility);
-	    	}
-
-	        return facilityList;
-	        
-	    } catch (SQLException e) {
-	        if(e instanceof SQLIntegrityConstraintViolationException) 
-	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
-	        e.printStackTrace();
-	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
-	    }
-	}
-	
-	
-	
-	
-	public List<FacilityDTO> findAll() {
-	    List<FacilityDTO> facilityList = new ArrayList<>();
-	    
-	    try (
-	        Connection con = db.getConnectionForTransaction();
-	        PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacility());
-	        ResultSet rs = ps.executeQuery()
-	    ) {
-	    	while (rs.next()) {
-	    	    FacilityDTO facility = new FacilityDTO(
-	    	        rs.getLong("facility_id"),      
-	    	        rs.getString("name"),           
-	    	        rs.getString("location"),       
-	    	        rs.getInt("capacity"),          
-	    	        rs.getString("operating_status"),  
-	    	        rs.getString("facility_type"),  
-	    	        rs.getDate("completion_date")   
- 
-	    	    );
-	    	    facilityList.add(facility);
-	    	}
-
-	        return facilityList;
-	        
-	    } catch (SQLException e) {
-	        if(e instanceof SQLIntegrityConstraintViolationException) 
-	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
-	        e.printStackTrace();
-	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
-	    }
-	}
-
-	
-	public int save(FacilityDTO facilityDTO) {
-		try(
+		
+	//시설타입 불러오기 
+	public List<String> findFacilityType() {
+		List<String> fTypeList = new ArrayList<>();
+		
+		String sql = "select * from facility_type";
+		try (
+				
 				Connection con = db.getConnectionForTransaction();
-				PreparedStatement ps 
-					= sp.getPreparedStatement(con, FacilityDTO.saveFacility()  , facilityDTO.getAttributeAsObjectArray());				
-		){
-			int rows = ps.executeUpdate(); 
-			if(rows == 1) {
+				PreparedStatement ps = sp.getPreparedStatement(con, sql);
+				ResultSet rs = ps.executeQuery();
+				) 
+		
+			{ while (rs.next()) {
+				String str = rs.getString("type_name");
+				System.out.println("str = " + str);
+				
+				fTypeList.add(rs.getString("type_name"));
+			}
+
+			return fTypeList;
+
+		} catch (SQLException e) {
+			if (e instanceof SQLIntegrityConstraintViolationException)
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			e.printStackTrace();
+			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		}
+	}
+	
+	
+	
+	public FacilityDTO findDetailsFacility(int seq) {
+		try (Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.getFindDetailsFacilityQuery(), seq);
+				ResultSet rs = ps.executeQuery();){
+			if (rs.next()) { // 데이터가 있는지 먼저 확인
+				  return FacilityDTO.fromResultSet(rs);
+			}
+			
+		} catch (SQLException e) {
+			if (e instanceof SQLIntegrityConstraintViolationException)
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			e.printStackTrace();
+			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		}
+		throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR);
+	}
+	
+	
+	
+
+
+	public List<FacilityDTO> findAllFacilityType(String status) {
+		List<FacilityDTO> facilityList = new ArrayList<>();
+
+		try (Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityType(),status) ;) {
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				 facilityList.add(FacilityDTO.fromResultSet(rs));
+			}
+
+			return facilityList;
+
+		} catch (SQLException e) {
+			if (e instanceof SQLIntegrityConstraintViolationException)
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			e.printStackTrace();
+			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		}
+	}
+	
+	
+
+	// 운영 중단인 시설불러오기
+	public List<FacilityDTO> findAllFacilityNon_Operating() {
+		List<FacilityDTO> facilityList = new ArrayList<>();
+
+		try (
+				Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityNon_Operating());
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				 facilityList.add(FacilityDTO.fromResultSet(rs));
+			}
+
+			return facilityList;
+
+		} catch (SQLException e) {
+			if (e instanceof SQLIntegrityConstraintViolationException)
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			e.printStackTrace();
+			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		}
+	}
+	
+	
+
+	// 운영중인 시설 불러오기
+	public List<FacilityDTO> findAllFacilityOperating() {
+		List<FacilityDTO> facilityList = new ArrayList<>();
+
+		try (
+				Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacilityOperating());
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				 facilityList.add(FacilityDTO.fromResultSet(rs));
+			}
+
+			return facilityList;
+
+		} catch (SQLException e) {
+			if (e instanceof SQLIntegrityConstraintViolationException)
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			e.printStackTrace();
+			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		}
+	}
+	
+	
+
+	public List<FacilityDTO> findAll() {
+		List<FacilityDTO> facilityList = new ArrayList<>();
+
+		try (
+				Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.findAllFacility());
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				 facilityList.add(FacilityDTO.fromResultSet(rs));
+			}
+
+			return facilityList;
+
+		} catch (SQLException e) {
+			if (e instanceof SQLIntegrityConstraintViolationException)
+				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			e.printStackTrace();
+			throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+		}
+	}
+	
+	
+
+	public int save(FacilityDTO facilityDTO) {
+		try (
+				Connection con = db.getConnectionForTransaction();
+				PreparedStatement ps = sp.getPreparedStatement(con, FacilityDTO.saveFacility(),
+						facilityDTO.getAttributeAsObjectArray());) {
+			int rows = ps.executeUpdate();
+			if (rows == 1) {
 				con.commit();
 			} else {
 				con.rollback();
 				throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
 			}
 			return rows;
-			
+
 		} catch (SQLException e) {
-			if(e instanceof SQLIntegrityConstraintViolationException) 
+			if (e instanceof SQLIntegrityConstraintViolationException)
 				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
 			e.printStackTrace();
-			
+
 		}
 		return 0;
 	}
-	
+
 }
