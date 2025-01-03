@@ -15,7 +15,7 @@ import lombok.ToString;
 	@ToString
 	
 public class PaVO {
-		private int    pa_seq;				//시퀀스
+		private int    pah_seq;				//시퀀스
 		private Date   pa_date;				//발령 일자
 		private int    user_seq;			//사원번호
 		private String user_name;			//이름
