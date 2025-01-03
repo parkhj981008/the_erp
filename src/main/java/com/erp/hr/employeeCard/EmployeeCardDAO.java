@@ -199,15 +199,14 @@ public class EmployeeCardDAO{
 						+ "    BIRTH,\r\n"
 						+ "    POSITION,\r\n"
 						+ "    MANAGER_ID\r\n"
-						+ ") VALUES (\r\n"
-						+ "    app_users_seq.nextval,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+						+ ") VALUES (app_users_seq.nextval,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 				
 
 				pstmt =  conn.prepareStatement(sql);
 					pstmt.setString(1, hvo.getUser_id());
-//					pstmt.setString(2, BCrypt.hashpw(hvo.getUser_password(), BCrypt.gensalt()) );
-					pstmt.setString(2, hvo.getUser_password());
+					pstmt.setString(2, BCrypt.hashpw(hvo.getUser_password(), BCrypt.gensalt()));
+//					pstmt.setString(2, hvo.getUser_password());
 					pstmt.setString(3, hvo.getEmail());
 					pstmt.setString(4, hvo.getAddress());
 					pstmt.setInt(5, hvo.getPhone_number());
