@@ -5,9 +5,12 @@ package com.erp.auth.service.impl;
 
 import com.erp.auth.repository.AuthRepository;
 import com.erp.auth.service.AuthService;
+import com.erp.auth.vo.AuthDTOs.CreateFeatureRoleRequestDTO;
+import com.erp.auth.vo.AuthDTOs.CreateRoleRequestDTO;
 import com.erp.auth.vo.AuthDTOs.FeaturesResponseDTO;
 import com.erp.auth.vo.AuthDTOs.LoginRequestDTO;
 import com.erp.auth.vo.AuthDTOs.LoginResponseDTO;
+import com.erp.auth.vo.AuthDTOs.PutFeatureRequestDTO;
 import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestResponse;
 import com.erp.common.security.UserInfo;
@@ -37,6 +40,26 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public FeaturesResponseDTO getFeatures() {
 		return authRepository.getFeatures();
+	}
+
+	@Override
+	public void putFeature(PutFeatureRequestDTO requestDto) {
+		authRepository.updateFeature(requestDto);
+	}
+
+	@Override
+	public void deleteFeature(int featureSeq) {
+		authRepository.deleteFeature(featureSeq);		
+	}
+
+	@Override
+	public void createRole(CreateRoleRequestDTO requestDto) {
+		authRepository.createUserRole(requestDto);
+	}
+
+	@Override
+	public void createFeatureRole(CreateFeatureRoleRequestDTO requestDto) {
+		authRepository.createFeatureRole(requestDto);
 	}
 	
 }

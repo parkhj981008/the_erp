@@ -2,7 +2,7 @@
 .modal {
 	display: none; /* 기본적으로 보이지 않음 */
 	position: fixed; /* 화면에 고정 */
-	z-index: 1; /* 모달이 다른 콘텐츠 위에 나타나게 설정 */
+	z-index: 999; /* 모달이 다른 콘텐츠 위에 나타나게 설정 */
 	left: 0;
 	top: 0;
 	width: 100%;

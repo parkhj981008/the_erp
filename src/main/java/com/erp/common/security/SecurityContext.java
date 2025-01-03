@@ -1,11 +1,18 @@
 package com.erp.common.security;
 
+import com.erp.common.rest.RestBusinessException;
+import com.erp.common.rest.RestBusinessException.StatusCode;
+
 public class SecurityContext{
 	
 	private static final ThreadLocal<UserInfo> currentUser = new ThreadLocal<>();
 
     public static UserInfo getCurrentUser() {
-        return currentUser.get();
+    	try {
+    		return currentUser.get();	
+    	} catch(Exception e) {
+    		throw new RestBusinessException(StatusCode.UNAUTHORIZED);
+    	}
     }
 
     public static void setCurrentUser(UserInfo user) {

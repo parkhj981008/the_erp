@@ -18,4 +18,10 @@ public class RestResponse<T> {
 	private String message;
 	private T data;
 	
+	public RestResponse(String message) {
+		this.resonseDate = new Date();
+		this.data = (T) message;
+		this.message = message;
+	}
+	
 }
