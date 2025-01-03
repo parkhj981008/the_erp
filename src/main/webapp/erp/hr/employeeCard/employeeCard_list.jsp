@@ -12,7 +12,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>CelestialUI Admin</title>
+  <title>인사카드</title>
   <!-- base:css -->
   <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
   <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
@@ -356,54 +356,57 @@
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">근태 입력</h4>
+                  <h4 class="card-title" style="font-size: 30px;">인사카드</h4>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">근태일자</th>
-                          <th scope="col">사원</th>
-                          <th scope="col">근태</th>
-                          <th scope="col">휴가</th>
-                          <th scope="col">근태(일/시간)</th>
-                          <th scope="col">적요</th>
+                          <th scope="col"><input type="checkbox" name="allCheck" id="allCheck"/></th>
+                          <th scope="col">사원번호</th>
+                          <th scope="col">성명</th>
+                          <th scope="col">아이디</th>
+                          <th scope="col">생년월일</th>
+                          <th scope="col">성별</th>
+                          <th scope="col">부서번호</th>
+                          <th scope="col">부서명</th>
+                          <th scope="col">직위/직급</th>
+                          <th scope="col">이메일</th>
+                          <th scope="col">내선번호</th>
+                          <th scope="col">모바일</th>
+                          <th scope="col">계정상태</th>
                         </tr>
                       </thead>
                       <tbody id="table-tbody">
+                      
+                      	<c:forEach var="hvo" items="${MY_KEY_ELIST}">
                         <tr>
-                          <td>Jacob</td>
-                          <td>53275531</td>
-                          <td>12 May 2017</td>
-                          <td><label class="badge badge-danger">Pending</label></td>
+                          <td><input type="checkbox" name="RowCheck" value="${hvo.user_seq}"/></td>
+                          <td>${hvo.user_seq}</td>
+                          <td>${hvo.user_name}</td>
+                          <td>${hvo.user_id}</td>
+                          <td>${hvo.birth}</td>
+                          <td>${hvo.gender}</td>
+                          <td>${hvo.department_id}</td>
+                          <td>${hvo.department_name}</td>
+                          <td>${hvo.position}</td>
+                          <td>${hvo.email}</td>
+                          <td>${hvo.extension_number}</td>
+                          <td>${hvo.phone_number}</td>
+                          <td>${hvo.user_status}</td>
                         </tr>
-                        <tr>
-                          <td>Messsy</td>
-                          <td>53275532</td>
-                          <td>15 May 2017</td>
-                          <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
-                        <tr>
-                          <td>John</td>
-                          <td>53275533</td>
-                          <td>14 May 2017</td>
-                          <td><label class="badge badge-info">Fixed</label></td>
-                        </tr>
-                        <tr>
-                          <td>Peter</td>
-                          <td>53275534</td>
-                          <td>16 May 2017</td>
-                          <td><label class="badge badge-success">Completed</label></td>
-                        </tr>
-                        <tr>
-                          <td>Dave</td>
-                          <td>53275535</td>
-                          <td>20 May 2017</td>
-                          <td><label class="badge badge-warning">In progress</label></td>
-                        </tr>
+                       
+                        </c:forEach>
                       </tbody>
                     </table>
+
+					<br>
+					<span style="font-size: 20px;">${MY_KEY_PAGING_HTML}</span>
+					<br><br><br><br>
+                    
                   </div>
-                  <button type="button" class="btn btn-primary" id="insertBtn">근태 입력</button>
+                  <button type="button" class="btn btn-primary" id="insertFormBtn"> 신규 등록 </button>
+                  <input  type="button" class="btn btn-primary" value="선택 삭제" onclick="deleteValue()">
+
                 </div>
               </div>
             </div>
@@ -438,6 +441,91 @@
   <script src="/erp/js/template.js"></script>
   <script src="/erp/js/settings.js"></script>
   <script src="/erp/js/todolist.js"></script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+    $( document ).ready(function() {
+        $("#insertFormBtn").click( function() {
+        	location.href = "/erp/hr/employeeCard/employeeCard_form.jsp";} );
+    });
+</script>
+
+
+<script type="text/javascript">
+	$(function() {
+        var chkObj = $("input[name='RowCheck']");
+        var rowCnt = chkObj.length;
+        
+        // 전체 선택 버튼
+        $("input[name='allCheck']").on("click", function() {
+            var isChecked = $(this).prop("checked");
+            chkObj.prop("checked", isChecked);  // 전체 체크박스를 상태에 맞게 변경
+        });
+
+        // 개별 선택 버튼
+        $("input[name='RowCheck']").on("click", function() {
+            var allChecked = chkObj.length === $("input[name='RowCheck']:checked").length;
+            $("input[name='allCheck']").prop("checked", allChecked);  // 전체 선택 체크박스 상태 변경
+        });
+	});
+</script>
+
+
+<script type="text/javascript">
+    // 삭제 메서드
+    function deleteValue() {
+        var url = "/employeeCardServlet"; // 서버 URL
+        var valueArr = [];
+        $("input[name='RowCheck']:checked").each(function() {
+            valueArr.push($(this).val());
+        });
+
+        if (valueArr.length == 0) {
+            alert("선택된 회원이 없습니다.");
+            return;
+        }
+
+        var chk = confirm("선택한 회원을 삭제하시겠습니까?");
+        if (chk) {
+            $.ajax({
+                url : url ,
+                type : "POST" ,
+                traditional : true , // 배열 전송 방식 설정
+                data : { 
+                    valueArr: valueArr ,
+                    pageGubun: "D001" // 페이지 구분자
+                },
+                //dataType : "json", // 서버에서 JSON을 반환할 것으로 예상
+                success: function(response) {
+                	// 서버 응답 데이터 확인
+                    console.log("서버 응답 데이터: ", response);
+                	
+                    // 응답의 status 값 확인
+ 					if (response.status === 1) {
+                        alert("회원이 삭제되었습니다.");
+                        location.replace("/employeeCardServlet");	//GET방식
+                    
+ 					} else if (response.status === 0) {
+                        alert("정상적으로 삭제되지 않았습니다.");
+                        
+                    } else {
+                        alert("알 수 없는 오류가 발생했습니다.");
+                    }
+                },
+                error: function(err) {
+                    console.error("에러:", err);
+                }
+            });
+        }
+    }
+</script>
+
+
+
+
+
 
 </body>
 

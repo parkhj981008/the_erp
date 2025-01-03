@@ -23,6 +23,8 @@ public class FacilityDTO {
 	private Date completionDate;
 	
 	
+
+	
 	
 	public static String getFindDetailsFacilityQuery() {
 	    return "select * from facility where facility_id = ?";
@@ -33,13 +35,10 @@ public class FacilityDTO {
 		return "select * from facility";
 	}
 	
-	public static String findAllFacilityOperating() {
-		return "select * from facility where operating_status = '운영중'";
+	public static String findAllFacilityOperatingStatus() {
+		return "select * from facility where operating_status = ?";
 	}
-	
-	public static String findAllFacilityNon_Operating() {
-		return "select * from facility where operating_status = '중단'";
-	}
+
 	
 	public static String findAllFacilityType() {
 		return "select * from facility where facility_type =?";
@@ -101,6 +100,19 @@ public class FacilityDTO {
 	        this.facilityType,
 	        this.completionDate
 	    };
+	}
+	
+	public Object[] getAttributeAsObjectArraUpdate() {	
+		return new Object[] {
+//	    	return new Object[] {
+		        this.name,
+		        this.location,
+		        this.capacity,
+		        this.operatingStatus,
+		        this.facilityType,
+		        this.completionDate,
+		        this.facilityId
+		};
 	}
 
 	

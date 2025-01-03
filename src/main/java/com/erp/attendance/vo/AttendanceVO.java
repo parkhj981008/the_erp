@@ -20,7 +20,7 @@ public class AttendanceVO {
 	private String attendanceCode;
 	private Date attendanceDate;
 	private int daysNumber;
-	private String vacationName;
+//	private String vacationName;
 	private String notes;
 	private int userSeq;
 }
