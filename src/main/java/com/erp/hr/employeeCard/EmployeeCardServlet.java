@@ -88,7 +88,7 @@ public class EmployeeCardServlet extends HttpServlet {
    				request.setAttribute("MY_KEY_HVO", hvo);		// 해당 인사카드 상세내용
    				
    				// 인사카드 상세페이지로 포워딩
-   	   			request.getRequestDispatcher("/employee_detail.jsp").forward(request, response);
+   	   			request.getRequestDispatcher("/erp/hr/employeeCard/employeeCard_detail.jsp").forward(request, response);
    	   			
    			} else {
    				response.sendRedirect("/404.html");
