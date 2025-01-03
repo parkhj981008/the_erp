@@ -106,7 +106,7 @@
 					dataType 	: "json", 	
 					//success : function(obj) {
 					success: function(obj) {
-						window.location.href = "/";
+						window.location.href = "/home";
 					},
 					error : function(err) {
 						alert(err.responseJSON.message)
