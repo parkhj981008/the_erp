@@ -6,7 +6,7 @@ import com.erp.facility.VO.MaintenanceDTO;
 
 public interface MaintenanceService {
 	int save(MaintenanceDTO maintenanceDTO);
-	public List<MaintenanceDTO> findALl();
+	public List<MaintenanceDTO> findALl(String seq);
 	int update(MaintenanceDTO maintenanceDTO);
 
 }

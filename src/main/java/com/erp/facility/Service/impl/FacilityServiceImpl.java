@@ -6,6 +6,8 @@ import com.erp.facility.Repository.FacilityRepository;
 import com.erp.facility.Service.FacilityService;
 import com.erp.facility.VO.FacilityDTO;
 import com.erp.facility.VO.InspectionDTO;
+import com.erp.facility.VO.ManagerDTO;
+import com.erp.facility.dto.FacilityAndNameDTO;
 
 public class FacilityServiceImpl implements FacilityService{
 
@@ -13,7 +15,8 @@ public class FacilityServiceImpl implements FacilityService{
 	
 	
 	@Override
-	public int save(FacilityDTO facilityDTO) {		
+	public int save(FacilityDTO facilityDTO) {	
+		
 		return facilityRepository.save(facilityDTO);	
 	}
 	
@@ -22,15 +25,6 @@ public class FacilityServiceImpl implements FacilityService{
 		return facilityRepository.findAll();
 	}
 	
-	@Override
-	public List<FacilityDTO> findAllFacilityOperating() {
-		return facilityRepository.findAllFacilityOperating();
-	}
-
-	@Override
-	public List<FacilityDTO> findAllFacilityNon_Operating() {
-		return facilityRepository.findAllFacilityNon_Operating();
-	}
 	
 	//TODO
 	@Override
@@ -38,6 +32,41 @@ public class FacilityServiceImpl implements FacilityService{
 	
 		return null;
 	}
+
+	@Override
+	public FacilityDTO findDetailsFacility(int seq) {
+		return facilityRepository.findDetailsFacility(seq);
+	}
+
+	@Override
+	public List<String> facilityType() {
+		return facilityRepository.findFacilityType();
+	}
+
+	@Override
+	public List<FacilityDTO> findTypeSelectList(String status) {
+		
+		String selectStatus = null;
+
+		if(status.equals("open")) {
+			selectStatus = "운영중";
+			
+		} else if(status.equals("close")) {
+			selectStatus = "중단";
+			
+		} else {
+			return facilityRepository.findAll();
+		}
+		
+		return facilityRepository.findAllFacilityOperatingStatus(selectStatus);
+	}
+
+	@Override
+	public int updateFacility(FacilityDTO facilityDTO) {
+		return facilityRepository.updateFacility(facilityDTO);
+	}
+
+	
 
 	
 	

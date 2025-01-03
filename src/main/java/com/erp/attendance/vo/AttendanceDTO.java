@@ -15,7 +15,7 @@ public class AttendanceDTO {
 	private Long attendanceSeq;
 	private String attendanceCode;
 	private int daysNumber;
-	private String vacationName;
+//	private String vacationName;
 	private String notes;
 	private String userName;
 }
