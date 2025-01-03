@@ -15,6 +15,55 @@ import com.erp.common.attendance.DBManager;
 import com.erp.common.attendance.OracleDBManager;
 
 public class AttendanceRepository {
+	// 전체 근태 페이징 처리
+	public List<AttendanceDTO> selectAllPaging(int startSeq, int endSeq) {
+		List<AttendanceDTO> list = new ArrayList<AttendanceDTO>();
+		
+		DBManager dbm = OracleDBManager.getInstance();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+		String sql = "SELECT * "
+		           + "FROM ( "
+		           + "    SELECT at.attendance_seq, "
+		           + "           au.user_name, "
+		           + "           at.attendance_code, "
+		           + "           at.days_number, "
+		           + "           NVL(at.notes, ' ') AS notes, "
+		           + "           ROW_NUMBER() OVER (ORDER BY at.attendance_seq ASC) AS row_num "
+		           + "    FROM attendance at "
+		           + "    JOIN app_users au ON at.user_seq = au.user_seq "
+		           + ") "
+		           + "WHERE row_num BETWEEN ? AND ? "
+		           + "ORDER BY row_num";
+		
+		pstmt = conn.prepareStatement(sql);
+
+		pstmt.setInt(1, startSeq);
+		pstmt.setInt(2, endSeq);
+		
+		rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			AttendanceDTO adto = new AttendanceDTO();
+			adto.setAttendanceSeq(rs.getLong("attendance_seq"));
+			adto.setAttendanceCode(rs.getString("attendance_code"));
+			adto.setDaysNumber(rs.getInt("days_number"));
+			adto.setNotes(rs.getString("notes"));
+			adto.setUserName(rs.getString("user_name"));
+			list.add(adto);
+		}
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbm.close(conn, pstmt, rs);
+		}
+
+		return list;
+	}
+	
 	// 전체 근태 조회
 	public List<AttendanceDTO> selectAll() {
 		List<AttendanceDTO> list = new ArrayList<AttendanceDTO>();
@@ -36,7 +85,6 @@ public class AttendanceRepository {
 				adto.setAttendanceSeq(rs.getLong("attendance_seq"));
 				adto.setAttendanceCode(rs.getString("attendance_code"));
 				adto.setDaysNumber(rs.getInt("days_number"));
-//				adto.setVacationName(rs.getString("vacation_name"));
 				adto.setNotes(rs.getString("notes"));
 				adto.setUserName(rs.getString("user_name"));
 				list.add(adto);
@@ -59,7 +107,7 @@ public class AttendanceRepository {
 		int rows = 0;
 		
 		try {
-			// ATTENDANCE_SEQ, ATTENDANCE_CODE, ATTENDANCE_DATE, DAYS_NUMBER, VACATION_NAME,
+			// ATTENDANCE_SEQ, ATTENDANCE_CODE, ATTENDANCE_DATE, DAYS_NUMBER
 			// NOTES, USER_SEQ
 			String sql = "INSERT INTO attendance VALUES (attendance_seq.nextval, ?, ?, ?, ?, ?)";
 
@@ -91,7 +139,7 @@ public class AttendanceRepository {
 		ResultSet rs = null;
 
 		try {
-			// ATTENDANCE_SEQ, ATTENDANCE_CODE, ATTENDANCE_DATE, DAYS_NUMBER, VACATION_NAME,
+			// ATTENDANCE_SEQ, ATTENDANCE_CODE, ATTENDANCE_DATE, DAYS_NUMBER
 			// NOTES, USER_SEQ
 			String sql = "SELECT a.user_seq, a.user_name, d.name\r\n" + "FROM app_users a\r\n" + "JOIN department d\r\n"
 					+ "ON a.department_id = d.department_id";
@@ -157,6 +205,6 @@ public class AttendanceRepository {
 
 	public static void main(String[] args) {
 		AttendanceRepository ar = new AttendanceRepository();
-		System.out.println(ar.selectAttendanceItems());
+		System.out.println(ar.selectAllPaging(1, 5));
 	}
 }

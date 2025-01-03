@@ -20,7 +20,7 @@ public class OracleDBManager implements DBManager {
     // private 생성자
     private OracleDBManager() {
         try {
-            props.load(OracleDBManager.class.getClassLoader().getResourceAsStream("mydb2.properties"));
+            props.load(OracleDBManager.class.getClassLoader().getResourceAsStream("mydb.properties"));
             DB_URL = props.getProperty("oracle.url");
             DB_ID = props.getProperty("oracle.id");
             DB_PW = props.getProperty("oracle.pw");

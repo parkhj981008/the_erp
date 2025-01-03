@@ -368,7 +368,6 @@
                       </thead>
                       <form id="attendanceForm">
 	                      <tbody id="table-tbody">
-	                      <!-- <input type="hidden" name="userSeq" id="userSeq"> -->
 	                      	<tr>
 	                      		<td>
 	                      			<input class="form-control" type="date" id="attendanceDate" name="attendanceDate" value="" style="line-height: 2;">
@@ -572,6 +571,7 @@
         			data: JSON.stringify(formData),
         			success: function() {
         				alert('근태 입력이 성공적으로 완료되었습니다.');
+        				window.location.href = '/erp/hr/attendance/select-attendance.jsp';
         			},
         			error: function (xhr, status, error) {
        		            console.error('오류 발생:', error);
