@@ -83,7 +83,11 @@ public class AuthServlet extends HttpServlet {
 		case "/api/v1/auth/login": {
 			UserInfo responseDto = authService.login(om.reader().readValue(jsonString, LoginRequestDTO.class));
 			response.setStatus(HttpServletResponse.SC_OK);
+			for(int i : responseDto.getRoles()) {
+				System.out.println("tes: " + i);
+			}
 			try {
+				
 				Cookie cookie = new Cookie("auth", URLEncoder.encode(
 						AES256Util.encrypt(om.writer().writeValueAsString(responseDto)), StandardCharsets.UTF_8));
 				cookie.setMaxAge(3600);

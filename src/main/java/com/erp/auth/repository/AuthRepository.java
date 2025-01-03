@@ -71,7 +71,9 @@ public class AuthRepository {
 		try (Connection con = db.getConnectionForTransaction();
 				PreparedStatement ps = sp.getPreparedStatement(con, requestDto.convertToSql(),
 						requestDto.getAttributeAsObjectArray());) {
+			System.out.println("실행2");
 			int rows = ps.executeUpdate();
+			System.out.println(rows);
 			if (rows == 1)
 				con.commit();
 			else {
@@ -111,11 +113,11 @@ public class AuthRepository {
 	private int[] getUserRole(int userSeq) {
 		try (Connection con = db.getConnection();
 				PreparedStatement ps = sp.getPreparedStatement(con,
-						"SELECT user_role_seq FROM user_roles WHERE user_seq = ?", userSeq);
+						"SELECT role_seq FROM user_roles WHERE user_seq = ?", userSeq);
 				ResultSet rs = ps.executeQuery();) {
 			List<Integer> roleList = new ArrayList<>();
 			while (rs.next()) {
-				roleList.add(rs.getInt("user_role_seq"));
+				roleList.add(rs.getInt("role_seq"));
 			}
 			if (roleList.isEmpty())
 				return new int[] { -1 };
@@ -200,6 +202,21 @@ public class AuthRepository {
 			System.out.println(e instanceof SQLIntegrityConstraintViolationException);
 			if (e instanceof SQLIntegrityConstraintViolationException)
 				throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);
+		}
+	}
+	
+	public int getRoleSeq(String url, String httpMethod) {
+		try (Connection con = db.getConnection();
+				PreparedStatement ps = sp.getPreparedStatement(con,
+						"SELECT role_seq FROM feature_roles WHERE url = ? AND method = ?", new Object[] {url, httpMethod});
+				ResultSet rs = ps.executeQuery();) {
+			int result = -1;
+			while (rs.next()) {
+				result = rs.getInt("role_seq");
+			}
+			return result;
+		} catch (SQLException e) {
 			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);
 		}
 	}
