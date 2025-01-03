@@ -55,7 +55,7 @@
 									</button>
 								</div>
 								<div class="text-center mt-4 font-weight-light">
-									계정이 없으신가요? <a href="register.html" class="text-primary">회원가입</a>
+									계정이 없으신가요? 관리자에 요청하세요! 
 								</div>
 							</form>
 						</div>

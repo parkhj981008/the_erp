@@ -19,13 +19,17 @@ public class UserSmallDTO {
 	private Long departmentId;
 	private String position;
 
-	
+	   
 	
 	   public static String getUser() {
 		   return "SELECT user_seq, user_name ,phone_number, department_id, position "
 			       + "FROM app_users "
 			       + "WHERE user_seq = ?";
 	    }
+	   
+	   public void testUserSmall() {
+		   
+	   }
 	
 	
 	   public static UserSmallDTO fromResultSet(ResultSet rs) throws SQLException {
