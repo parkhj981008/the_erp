@@ -29,6 +29,7 @@ public class AuthServiceImpl implements AuthService{
 	
 	@Override
 	public void register(RegisterRequestDTO dto) {
+		System.out.println("실행");
 		authRepository.register(dto);
 	}
 

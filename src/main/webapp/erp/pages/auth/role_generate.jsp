@@ -22,98 +22,117 @@
 <link rel="shortcut icon" href="/erp/images/favicon.png" />
 
 <style>
-    .modal {
-        display: none; /* 기본적으로 숨김 */
-        position: fixed; /* 고정 위치 */
-        z-index: 1; /* 가장 위에 표시 */
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto; /* 스크롤이 필요한 경우 */
-        background-color: rgba(0, 0, 0, 0.4); /* 배경에 투명도 */
-    }
+.modal {
+	display: none; /* 기본적으로 숨김 */
+	position: fixed; /* 고정 위치 */
+	z-index: 1; /* 가장 위에 표시 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto; /* 스크롤이 필요한 경우 */
+	background-color: rgba(0, 0, 0, 0.4); /* 배경에 투명도 */
+}
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto; /* 화면 중앙에 배치 */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 15%; /* 모달 너비 */
-    }
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto; /* 화면 중앙에 배치 */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 15%; /* 모달 너비 */
+}
 
-    .close {
-        color: #aaa;
-        font-size: 28px;
-        font-weight: bold;
-        float: right;
-        cursor: pointer;
-    }
+.close {
+	color: #aaa;
+	font-size: 28px;
+	font-weight: bold;
+	float: right;
+	cursor: pointer;
+}
 
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
 </style>
 
 </head>
 <body>
-	<div class="container-scroller">
-		<div class="col-lg-12 grid-margin stretch-card">
-			<div class="card">
-				<div class="card-body">
-					<h4 class="card-title">기능 별 권한 설정</h4>
-					<div style="display: flex; justify-content: space-between; gap: 10px;">
-					    <input type="button" value="권한 추가" style="flex: 1; padding: 8px; box-sizing: border-box;" id="add-role-modal">
-					    <input type="button" value="기능별 권한 추가" style="flex: 1; padding: 8px; box-sizing: border-box;" id="add-featurerole-modal">
-					</div>
-					<div class="table-responsive">
-						<table class="table table-hover" id="dynamicTable">
-							<thead>
-								<tr>
-									<th>주소</th>
-									<th>http 메서드</th>
-									<th>추가일</th>
-									<th>추가자</th>
-									<th>규칙</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
+	<%@ include file="/erp/layout/top_layout.jsp"%>
+
+	<!-- partial -->
+	<div class="container-fluid page-body-wrapper">
+
+		<!-- partial -->
+		<!-- partial:partials/_sidebar.html -->
+
+		<%@ include file="/erp/layout/side_layout.jsp"%>
+		<div class="container-scroller">
+			<div class="col-lg-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">기능 별 권한 설정</h4>
+						<div
+							style="display: flex; justify-content: space-between; gap: 10px;">
+							<input type="button" value="권한 추가"
+								style="flex: 1; padding: 8px; box-sizing: border-box;"
+								id="add-role-modal"> <input type="button"
+								value="기능별 권한 추가"
+								style="flex: 1; padding: 8px; box-sizing: border-box;"
+								id="add-featurerole-modal">
+						</div>
+						<div class="table-responsive">
+							<table class="table table-hover" id="dynamicTable">
+								<thead>
+									<tr>
+										<th>주소</th>
+										<th>http 메서드</th>
+										<th>추가일</th>
+										<th>추가자</th>
+										<th>규칙</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		>
 		<!-- page-body-wrapper ends -->
 	</div>
-	
-		<!-- 권한 추가 모달 -->
+	<%@ include file="/erp/layout/footer_layout.jsp"%>
+	<!-- 권한 추가 모달 -->
 	<div id="roleModal" class="modal" style="display: none;">
-	    <div class="modal-content">
-	        <span class="close" id="roleModalClose">&times;</span>
-	        <h4>권한 추가</h4>
-	        <!-- 여기서 권한 추가 폼을 만들면 됩니다 -->
-	        <input type="text" id="departmentId" placeholder="부서 ID"><br/><br/>
-	        <!-- <input type="text" id="roleHttpMethod" placeholder="HTTP 메서드"><br/><br/>
+		<div class="modal-content">
+			<span class="close" id="roleModalClose">&times;</span>
+			<h4>권한 추가</h4>
+			<!-- 여기서 권한 추가 폼을 만들면 됩니다 -->
+			<input type="text" id="departmentId" placeholder="부서 ID"><br />
+			<br />
+			<!-- <input type="text" id="roleHttpMethod" placeholder="HTTP 메서드"><br/><br/>
 	        <input type="text" id="roleUserName" placeholder="추가자"><br/><br/> -->
-	        <button id="saveRole">저장</button>
-	    </div>
+			<button id="saveRole">저장</button>
+		</div>
 	</div>
-	
+
 	<!-- 기능별 권한 추가 모달 -->
 	<div id="featureRoleModal" class="modal" style="display: none;">
-	    <div class="modal-content">
-	        <span class="close" id="featureRoleModalClose">&times;</span>
-	        <h4>기능별 권한 추가</h4>
-	        <!-- 여기서 기능별 권한 추가 폼을 만들면 됩니다 -->
-	        <input type="text" id="featureRoleUrl" placeholder="URL 주소"><br/><br/>
-	        <input type="text" id="featureRoleHttpMethod" placeholder="HTTP 메서드"><br/><br/>
-	        <input type="text" id="featureRoleContraintRoleSeq" placeholder="관련권한"><br/><br/>
-	        <button id="saveFeatureRole">저장</button>
-	    </div>
+		<div class="modal-content">
+			<span class="close" id="featureRoleModalClose">&times;</span>
+			<h4>기능별 권한 추가</h4>
+			<!-- 여기서 기능별 권한 추가 폼을 만들면 됩니다 -->
+			<input type="text" id="featureRoleUrl" placeholder="URL 주소"><br />
+			<br /> <input type="text" id="featureRoleHttpMethod"
+				placeholder="HTTP 메서드"><br />
+			<br /> <input type="text" id="featureRoleContraintRoleSeq"
+				placeholder="관련권한"><br />
+			<br />
+			<button id="saveFeatureRole">저장</button>
+		</div>
 	</div>
 
 
@@ -129,235 +148,347 @@
 	<script src="/erp/js/settings.js"></script>
 	<script src="/erp/js/todolist.js"></script>
 	<script>
-		$(document).ready(function() {
-			$(document).ready(function() {
-			    $.ajax({
-			        url: "/api/v1/auth/features",
-			        method: 'GET',
-			        contentType: "application/json",
-			        dataType: "json",
-			        success: function(obj) {
-			            let tableBody = $("#dynamicTable tbody");
-			            tableBody.empty();  
-			            
-			            $.each(obj.data.datas, function(index, item) {
-			                let date = new Date(item.createAt);  
-			                let formattedDate = date.toISOString().split('T')[0]; 
+		$(document)
+				.ready(
+						function() {
+							$(document)
+									.ready(
+											function() {
+												$
+														.ajax({
+															url : "/api/v1/auth/features",
+															method : 'GET',
+															contentType : "application/json",
+															dataType : "json",
+															success : function(
+																	obj) {
+																let tableBody = $("#dynamicTable tbody");
+																tableBody
+																		.empty();
 
-			                let row = $("<tr></tr>");
-			                row.attr("data-editable", "false"); // 기본적으로 수정 불가능
+																$
+																		.each(
+																				obj.data.datas,
+																				function(
+																						index,
+																						item) {
+																					let date = new Date(
+																							item.createAt);
+																					let formattedDate = date
+																							.toISOString()
+																							.split(
+																									'T')[0];
 
-			                let urlInput = $("<input type='text' value='" + item.url + "' disabled />");
-			                row.append("<td></td>").find("td").last().append(urlInput);
+																					let row = $("<tr></tr>");
+																					row
+																							.attr(
+																									"data-editable",
+																									"false"); // 기본적으로 수정 불가능
 
-			                let httpMethodInput = $("<input type='text' value='" + item.httpMethod + "' disabled />");
-			                row.append("<td></td>").find("td").last().append(httpMethodInput);
+																					let urlInput = $("<input type='text' value='" + item.url + "' disabled />");
+																					row
+																							.append(
+																									"<td></td>")
+																							.find(
+																									"td")
+																							.last()
+																							.append(
+																									urlInput);
 
-			                let dateInput = $("<input type='text' value='" + formattedDate + "' disabled />");
-			                row.append("<td></td>").find("td").last().append(dateInput);
+																					let httpMethodInput = $("<input type='text' value='" + item.httpMethod + "' disabled />");
+																					row
+																							.append(
+																									"<td></td>")
+																							.find(
+																									"td")
+																							.last()
+																							.append(
+																									httpMethodInput);
 
-			                let userNameInput = $("<input type='text' value='" + item.userName + "' disabled />");
-			                row.append("<td></td>").find("td").last().append(userNameInput);
+																					let dateInput = $("<input type='text' value='" + formattedDate + "' disabled />");
+																					row
+																							.append(
+																									"<td></td>")
+																							.find(
+																									"td")
+																							.last()
+																							.append(
+																									dateInput);
 
-			                let roleSeqInput = $("<input type='text' value='" + item.roleSeq + "' disabled />");
-			                row.append("<td></td>").find("td").last().append(roleSeqInput);
+																					let userNameInput = $("<input type='text' value='" + item.userName + "' disabled />");
+																					row
+																							.append(
+																									"<td></td>")
+																							.find(
+																									"td")
+																							.last()
+																							.append(
+																									userNameInput);
 
-			                let patchButtonTd = $("<td></td>");
-			                let patchButton = $("<button></button>").text("수정");
-			                patchButtonTd.append(patchButton);
-			                row.append(patchButtonTd);
+																					let roleSeqInput = $("<input type='text' value='" + item.roleSeq + "' disabled />");
+																					row
+																							.append(
+																									"<td></td>")
+																							.find(
+																									"td")
+																							.last()
+																							.append(
+																									roleSeqInput);
 
-			                let delButtonTd = $("<td></td>");
-			                let delButton = $("<button></button>").text("삭제");
-			                delButtonTd.append(delButton);
-			                row.append(delButtonTd);
+																					let patchButtonTd = $("<td></td>");
+																					let patchButton = $(
+																							"<button></button>")
+																							.text(
+																									"수정");
+																					patchButtonTd
+																							.append(patchButton);
+																					row
+																							.append(patchButtonTd);
 
-			                tableBody.append(row);
+																					let delButtonTd = $("<td></td>");
+																					let delButton = $(
+																							"<button></button>")
+																							.text(
+																									"삭제");
+																					delButtonTd
+																							.append(delButton);
+																					row
+																							.append(delButtonTd);
 
-			                patchButton.click(function() {
-			                    let isEditable = row.attr("data-editable") === "true";
+																					tableBody
+																							.append(row);
 
-			                    row.attr("data-editable", !isEditable);
+																					patchButton
+																							.click(function() {
+																								let isEditable = row
+																										.attr("data-editable") === "true";
 
-			                    row.find("input").each(function() {
-			                        $(this).prop("disabled", isEditable);
-			                    });
+																								row
+																										.attr(
+																												"data-editable",
+																												!isEditable);
 
-			                    patchButton.text(isEditable ? "수정" : "저장");
+																								row
+																										.find(
+																												"input")
+																										.each(
+																												function() {
+																													$(
+																															this)
+																															.prop(
+																																	"disabled",
+																																	isEditable);
+																												});
 
-			                   
-			                    if (!isEditable) {
-			                        patchButton.off('click'); 
-			                        patchButton.click(function() {
-			                            // 수정된 데이터 가져오기
-			                            let updatedData = {
-			                                url: urlInput.val(),
-			                                httpMethod: httpMethodInput.val(),
-			                                roleSeq: roleSeqInput.val(),
-			                                featureSeq: item.featureSeq
-			                            };
+																								patchButton
+																										.text(isEditable ? "수정"
+																												: "저장");
 
-			                            $.ajax({
-			                                url: "/api/v1/auth/feature",  
-			                                method: "PUT",  
-			                                contentType: "application/json",
-			                                data: JSON.stringify(updatedData),
-			                                dataType: 'json',
-			                                success: function(response) {
-			                                    alert("수정이 완료되었습니다.");
-			                                    console.log(response);
-			                                    patchButton.text("수정");
-			                                    row.attr("data-editable", "false");
-			                                    row.find("input").prop("disabled", true);
-			                                },
-			                                error: function(err) {
-			                                    alert("수정 중 오류가 발생했습니다.");
-			                                    console.error(err);
-			                                }
-			                            });
-			                        });
-			                    }
-			                });
+																								if (!isEditable) {
+																									patchButton
+																											.off('click');
+																									patchButton
+																											.click(function() {
+																												// 수정된 데이터 가져오기
+																												let updatedData = {
+																													url : urlInput
+																															.val(),
+																													httpMethod : httpMethodInput
+																															.val(),
+																													roleSeq : roleSeqInput
+																															.val(),
+																													featureSeq : item.featureSeq
+																												};
 
-			                // 삭제 버튼 클릭 이벤트
-			                delButton.click(function() {
-			                	$.ajax({
-		                                url: "/api/v1/auth/feature?featureSeq=" + item.featureSeq,  
-		                                method: "DELETE",  
-		                                dataType: 'json',
-		                                success: function(response) {
-		                                    alert("삭제가 완료되었습니다.");
-		                                    console.log(response);
-		                                    row.remove();
-		                                },
-		                                error: function(err) {
-		                                    alert("삭제 중 오류가 발생했습니다.");
-		                                    console.error(err);
-		                                }
-		                            });
-			                });
-			            });
-			        },
-			        error: function(err) {
-			            alert(err.responseJSON.message);
-			        }
-			    });
-			});
+																												$
+																														.ajax({
+																															url : "/api/v1/auth/feature",
+																															method : "PUT",
+																															contentType : "application/json",
+																															data : JSON
+																																	.stringify(updatedData),
+																															dataType : 'json',
+																															success : function(
+																																	response) {
+																																alert("수정이 완료되었습니다.");
+																																console
+																																		.log(response);
+																																patchButton
+																																		.text("수정");
+																																row
+																																		.attr(
+																																				"data-editable",
+																																				"false");
+																																row
+																																		.find(
+																																				"input")
+																																		.prop(
+																																				"disabled",
+																																				true);
+																															},
+																															error : function(
+																																	err) {
+																																alert("수정 중 오류가 발생했습니다.");
+																																console
+																																		.error(err);
+																															}
+																														});
+																											});
+																								}
+																							});
 
-			
-			
-			function deleteFeature(featureSeq) {
-			    $.ajax({
-			        url: '/your-api-endpoint',  // 실제 API URL로 변경
-			        method: 'POST',
-			        data: JSON.stringify({ featureSeq: featureSeq }),  // 전송할 데이터 (JSON 형식)
-			        contentType: 'application/json',
-			        dataType: 'json',
-			        success: function(response) {
-			            console.log('성공:', response);
-			            // 서버 응답에 대한 추가적인 처리 (예: 메시지 표시 등)
-			        },
-			        error: function(error) {
-			            console.error('오류:', error);
-			            // 오류 처리
-			        }
-			    });
-			}
+																					// 삭제 버튼 클릭 이벤트
+																					delButton
+																							.click(function() {
+																								$
+																										.ajax({
+																											url : "/api/v1/auth/feature?featureSeq="
+																													+ item.featureSeq,
+																											method : "DELETE",
+																											dataType : 'json',
+																											success : function(
+																													response) {
+																												alert("삭제가 완료되었습니다.");
+																												console
+																														.log(response);
+																												row
+																														.remove();
+																											},
+																											error : function(
+																													err) {
+																												alert("삭제 중 오류가 발생했습니다.");
+																												console
+																														.error(err);
+																											}
+																										});
+																							});
+																				});
+															},
+															error : function(
+																	err) {
+																alert(err.responseJSON.message);
+															}
+														});
+											});
 
-			/* $.ajax({
-				url : "/api/v1/auth/login",
-				method : 'POST',
-				data : JSON.stringify(sendFormData),
-				contentType : "application/json", 
-				dataType 	: "json", 	
-				//success : function(obj) {
-				success: function(obj) {
-					window.location.href = "/";
-				},
-				error : function(err) {
-					alert(err.responseJSON.message)
-				}
-			}); */
-		});
+							function deleteFeature(featureSeq) {
+								$.ajax({
+									url : '/your-api-endpoint', // 실제 API URL로 변경
+									method : 'POST',
+									data : JSON.stringify({
+										featureSeq : featureSeq
+									}), // 전송할 데이터 (JSON 형식)
+									contentType : 'application/json',
+									dataType : 'json',
+									success : function(response) {
+										console.log('성공:', response);
+										// 서버 응답에 대한 추가적인 처리 (예: 메시지 표시 등)
+									},
+									error : function(error) {
+										console.error('오류:', error);
+										// 오류 처리
+									}
+								});
+							}
+
+							/* $.ajax({
+								url : "/api/v1/auth/login",
+								method : 'POST',
+								data : JSON.stringify(sendFormData),
+								contentType : "application/json", 
+								dataType 	: "json", 	
+								//success : function(obj) {
+								success: function(obj) {
+									window.location.href = "/";
+								},
+								error : function(err) {
+									alert(err.responseJSON.message)
+								}
+							}); */
+						});
 	</script>
 	<script>
-		$(document).ready(function() {
-			// '권한 추가' 버튼 클릭 시 모달 띄우기
-		    $("#add-role-modal").click(function() {
-		        $("#roleModal").show(); // 권한 추가 모달 표시
-		    });
+		$(document).ready(
+				function() {
+					// '권한 추가' 버튼 클릭 시 모달 띄우기
+					$("#add-role-modal").click(function() {
+						$("#roleModal").show(); // 권한 추가 모달 표시
+					});
 
-		    // '기능별 권한 추가' 버튼 클릭 시 모달 띄우기
-		    $("#add-featurerole-modal").click(function() {
-		        $("#featureRoleModal").show(); // 기능별 권한 추가 모달 표시
-		    });
+					// '기능별 권한 추가' 버튼 클릭 시 모달 띄우기
+					$("#add-featurerole-modal").click(function() {
+						$("#featureRoleModal").show(); // 기능별 권한 추가 모달 표시
+					});
 
-		    // 권한 추가 모달 닫기 (X 버튼 클릭)
-		    $("#roleModalClose").click(function() {
-		        $("#roleModal").hide(); // 권한 추가 모달 숨기기
-		    });
+					// 권한 추가 모달 닫기 (X 버튼 클릭)
+					$("#roleModalClose").click(function() {
+						$("#roleModal").hide(); // 권한 추가 모달 숨기기
+					});
 
-		    // 기능별 권한 추가 모달 닫기 (X 버튼 클릭)
-		    $("#featureRoleModalClose").click(function() {
-		        $("#featureRoleModal").hide(); // 기능별 권한 추가 모달 숨기기
-		    });
+					// 기능별 권한 추가 모달 닫기 (X 버튼 클릭)
+					$("#featureRoleModalClose").click(function() {
+						$("#featureRoleModal").hide(); // 기능별 권한 추가 모달 숨기기
+					});
 
-		    // 모달 바깥 클릭 시 모달 닫기
-		    $(window).click(function(event) {
-		        if ($(event.target).is(".modal")) {
-		            $(".modal").hide(); // 모달 외부를 클릭하면 모든 모달 숨기기
-		        }
-		    });
-		    
-		    
-		    
-		 // 권한 추가 저장 버튼 클릭
-		    $("#saveRole").click(function() {
-		        let roleData = {
-		        	departmentId: $("#departmentId").val(),
-		        };
+					// 모달 바깥 클릭 시 모달 닫기
+					$(window).click(function(event) {
+						if ($(event.target).is(".modal")) {
+							$(".modal").hide(); // 모달 외부를 클릭하면 모든 모달 숨기기
+						}
+					});
 
-		        $.ajax({
-		            url: "/api/v1/auth/role",  
-		            method: "POST",  
-		            contentType: "application/json",
-		            data: JSON.stringify(roleData),
-		            success: function(response) {
-		                alert("권한이 추가되었습니다.");
-		                $("#roleModal").hide();  
-		            },
-		            error: function(error) {
-		                alert("권한 추가 중 오류가 발생했습니다.");
-		                console.error(error);
-		            }
-		        });
-		    });
+					// 권한 추가 저장 버튼 클릭
+					$("#saveRole").click(function() {
+						let roleData = {
+							departmentId : $("#departmentId").val(),
+						};
 
-		    // 기능별 권한 추가 저장 버튼 클릭
-		    $("#saveFeatureRole").click(function() {
-		        let featureRoleData = {
-		            url: $("#featureRoleUrl").val(),
-		            httpMethod: $("#featureRoleHttpMethod").val(),
-		            featureRoleContraintRoleSeq: $("#featureRoleContraintRoleSeq").val()
-		        };
+						$.ajax({
+							url : "/api/v1/auth/role",
+							method : "POST",
+							contentType : "application/json",
+							data : JSON.stringify(roleData),
+							success : function(response) {
+								alert("권한이 추가되었습니다.");
+								$("#roleModal").hide();
+							},
+							error : function(error) {
+								alert("권한 추가 중 오류가 발생했습니다.");
+								console.error(error);
+							}
+						});
+					});
 
-		        $.ajax({
-		            url: "/api/v1/auth/feature",  
-		            method: "POST", 
-		            contentType: "application/json",
-		            data: JSON.stringify(featureRoleData),
-		            success: function(response) {
-		                alert("기능별 권한이 추가되었습니다.");
-		                $("#featureRoleModal").hide();  
-		            },
-		            error: function(error) {
-		                alert("기능별 권한 추가 중 오류가 발생했습니다.");
-		                console.error(error);
-		            }
-		        });
-		    });
-		    
-		});
+					// 기능별 권한 추가 저장 버튼 클릭
+					$("#saveFeatureRole").click(
+							function() {
+								let featureRoleData = {
+									url : $("#featureRoleUrl").val(),
+									httpMethod : $("#featureRoleHttpMethod")
+											.val(),
+									featureRoleContraintRoleSeq : $(
+											"#featureRoleContraintRoleSeq")
+											.val()
+								};
+
+								$.ajax({
+									url : "/api/v1/auth/feature",
+									method : "POST",
+									contentType : "application/json",
+									data : JSON.stringify(featureRoleData),
+									success : function(response) {
+										alert("기능별 권한이 추가되었습니다.");
+										$("#featureRoleModal").hide();
+										location.reload();
+									},
+									error : function(error) {
+										alert("기능별 권한 추가 중 오류가 발생했습니다.");
+										console.error(error);
+									}
+								});
+							});
+
+				});
 	</script>
 </body>
 </html>

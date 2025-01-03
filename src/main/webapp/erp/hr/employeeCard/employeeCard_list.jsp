@@ -385,14 +385,28 @@
                           <td>${hvo.user_name}</td>
                           <td>${hvo.user_id}</td>
                           <td>${hvo.birth}</td>
-                          <td>${hvo.gender}</td>
+                          <td>
+						    <c:choose>
+						        <c:when test="${hvo.gender == 0}">남자</c:when>
+						        <c:when test="${hvo.gender == 1}">여자</c:when>
+						    </c:choose>
+						  </td>
                           <td>${hvo.department_id}</td>
                           <td>${hvo.department_name}</td>
                           <td>${hvo.position}</td>
                           <td>${hvo.email}</td>
                           <td>${hvo.extension_number}</td>
                           <td>${hvo.phone_number}</td>
-                          <td>${hvo.user_status}</td>
+                          <td>
+						    <c:choose>
+						        <c:when test="${hvo.user_status == 0}">활성</c:when>
+						        <c:when test="${hvo.user_status == 1}">비활성</c:when>
+						        <c:when test="${hvo.user_status == 2}">정지된 계정</c:when>
+						        <c:when test="${hvo.user_status == 3}">삭제된 계정</c:when>
+						        <c:when test="${hvo.user_status == 4}">휴먼 계정</c:when>
+						        <c:otherwise></c:otherwise>
+						    </c:choose>
+						  </td>
                         </tr>
                        
                         </c:forEach>
@@ -405,8 +419,8 @@
                     
                   </div>
                   <button type="button" class="btn btn-primary" id="insertFormBtn"> 신규 등록 </button>
-                  <input  type="button" class="btn btn-primary" value="선택 삭제" onclick="deleteValue()">
-
+                  <input  type="button" class="btn btn-primary" value="계정 비활성화" onclick="statusInactive()">
+				  <input  type="button" class="btn btn-primary" value="계정 활성화"  onclick="statusActive()">
                 </div>
               </div>
             </div>
@@ -474,8 +488,8 @@
 
 
 <script type="text/javascript">
-    // 삭제 메서드
-    function deleteValue() {
+    // 계정 비활성화 메서드
+    function statusInactive() {
         var url = "/employeeCardServlet"; // 서버 URL
         var valueArr = [];
         $("input[name='RowCheck']:checked").each(function() {
@@ -487,7 +501,7 @@
             return;
         }
 
-        var chk = confirm("선택한 회원을 삭제하시겠습니까?");
+        var chk = confirm("선택한 회원을 비활성화 하시겠습니까?");
         if (chk) {
             $.ajax({
                 url : url ,
@@ -495,7 +509,7 @@
                 traditional : true , // 배열 전송 방식 설정
                 data : { 
                     valueArr: valueArr ,
-                    pageGubun: "D001" // 페이지 구분자
+                    pageGubun: "U001"
                 },
                 //dataType : "json", // 서버에서 JSON을 반환할 것으로 예상
                 success: function(response) {
@@ -504,11 +518,64 @@
                 	
                     // 응답의 status 값 확인
  					if (response.status === 1) {
-                        alert("회원이 삭제되었습니다.");
+                        alert("회원이 비활성화 되었습니다.");
                         location.replace("/employeeCardServlet");	//GET방식
                     
  					} else if (response.status === 0) {
-                        alert("정상적으로 삭제되지 않았습니다.");
+                        alert("정상적으로 처리되지 않았습니다.");
+                        
+                    } else {
+                        alert("알 수 없는 오류가 발생했습니다.");
+                    }
+                },
+                error: function(err) {
+                    console.error("에러:", err);
+                }
+            });
+        }
+    }
+</script>
+
+
+
+
+
+<script type="text/javascript">
+    // 계정 활성화 메서드
+    function statusActive() {
+        var url = "/employeeCardServlet"; // 서버 URL
+        var valueArr = [];
+        $("input[name='RowCheck']:checked").each(function() {
+            valueArr.push($(this).val());
+        });
+
+        if (valueArr.length == 0) {
+            alert("선택된 회원이 없습니다.");
+            return;
+        }
+
+        var chk = confirm("선택한 회원을 활성화 하시겠습니까?");
+        if (chk) {
+            $.ajax({
+                url : url ,
+                type : "POST" ,
+                traditional : true , // 배열 전송 방식 설정
+                data : { 
+                    valueArr: valueArr ,
+                    pageGubun: "U000"
+                },
+                //dataType : "json", // 서버에서 JSON을 반환할 것으로 예상
+                success: function(response) {
+                	// 서버 응답 데이터 확인
+                    console.log("서버 응답 데이터: ", response);
+                	
+                    // 응답의 status 값 확인
+ 					if (response.status === 1) {
+                        alert("회원이 활성화 되었습니다.");
+                        location.replace("/employeeCardServlet");	//GET방식
+                    
+ 					} else if (response.status === 0) {
+                        alert("정상적으로 처리되지 않았습니다.");
                         
                     } else {
                         alert("알 수 없는 오류가 발생했습니다.");

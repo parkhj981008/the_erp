@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Arrays;
 
 //import javax.servlet.RequestDispatcher;
@@ -16,7 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.erp.common.constant.CommonCode.Gender;
 import com.erp.common.constant.CommonCode.UserStatus;
+import com.erp.facility.common.DtoConverter;
 import com.erp.hr.common.PagingUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -120,26 +126,49 @@ public class EmployeeCardServlet extends HttpServlet {
 
    		} else if (pageGubun.equals("I001")) {
    			
-   			BufferedReader reader = request.getReader();
-   			StringBuilder jsonData = new StringBuilder();
-   		    String line;
-   		    while ( (line = reader.readLine()) != null ) {
-   		           jsonData.append(line);
-   		    }
-   		    
-   		    // 요청값이 제대로 들어왔나 확인
-   		    String jsonString = jsonData.toString();
-   		    System.out.println("요청들어온 값: " + jsonString);
+//   			String str1 = request.getQueryString();
+//   			BufferedReader reader = request.getReader();
+//   			StringBuilder jsonData = new StringBuilder();
+//   		    String line;
+//   		    while ( (line = reader.readLine()) != null ) {
+//   		           jsonData.append(line);
+//   		    }
+//   		    
+//   		    // 요청값이 제대로 들어왔나 확인
+//   		    String jsonString = jsonData.toString();
+//   		    System.out.println("요청들어온 값: " + jsonString);
+//			System.out.println("쿼리 스트 값: " + str1);
+//			System.out.println("ddd: " + request.getContentType());
+//   			ObjectMapper om = new ObjectMapper();
+//   			
+//   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
+//   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//   			om.setDateFormat(sdf);
+//   			
+//   			//JSON 데이터를 Java 객체로 변환
+//	   		HrVO hvo = om.reader().readValue(str1, HrVO.class);
+	   		
+   			HrVO hvo  = DtoConverter.convertToDto(request, HrVO.class);
    			
-   			ObjectMapper om = new ObjectMapper();
    			
-   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
-   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-   			om.setDateFormat(sdf);
-   			
-   			//JSON 데이터를 Java 객체로 변환
-	   		HrVO hvo = om.reader().readValue(jsonString, HrVO.class);
 	   		System.out.println("Parsed HrVO: " + hvo);
+   			
+   			
+ 
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+	   		
+
    		    
 //   			HrVO hvo  = new HrVO();
 //   			try {
@@ -192,12 +221,11 @@ public class EmployeeCardServlet extends HttpServlet {
 				response.getWriter().write("{\"status\":0, \"message\":\"입력 실패\"}");
    			}
 
-
 	//e.of.I001
 			
-   	// -------------------------------------------------------- 인사카드 선택 삭제 D001
-
-		} else if (pageGubun.equals("D001")) {
+		// -------------------------------------------------------- 인사카드 계정 활성화 U000
+			
+   		} else if (pageGubun.equals("U000")) {
 //			request.setCharacterEncoding("UTF-8");
 			
 	        // 전송된 배열 데이터(valueArr) 받기
@@ -205,23 +233,23 @@ public class EmployeeCardServlet extends HttpServlet {
 	        int size = valueArr.length;
 	        
 	        System.out.println(
-	        		"삭제할 데이터: " + Arrays.toString(valueArr)
+	        		"활성화할 사원번호: " + Arrays.toString(valueArr)
 	        		); // valueArr 값 잘 들어왔는지 확인 로그
 	        
 	        
-	        boolean allDeleted = true; // 모두삭제 성공 여부 플래그
-	        int res = 0;	//삭제건수
+	        boolean allDeleted = true; // 모두 활성화 성공 여부 플래그
+	        int res = 0;	//활성화
 	        
 	        if (valueArr != null && valueArr.length > 0) {
-		        for(int i=0; i < size; i++) {
-		        	// 삭제 처리
-		        	res = edao.insaCardDelete(valueArr[i]);
+		        for (int i=0; i < size; i++) {
+		        	// 활성화 처리
+		        	res = edao.updateStatusToActive(valueArr[i]);
 		        	
-		        	// 삭제 결과 확인
-		        	System.out.println("삭제시도: " + valueArr[i] +"번 사원"+ ", 삭제결과: " + res);
+		        	// 결과 확인
+		        	System.out.println("활성화 시도: " + valueArr[i] +"번 사원"+ ", 결과: " + res);
 		        	 
 		        	
-	                if (res <= 0) { // 하나라도 삭제 실패 시
+	                if (res <= 0) { // 하나라도 처리 실패 시
 	                    allDeleted = false;
 	                    break;		//for 루프를 바로 종료
 	                }
@@ -230,18 +258,66 @@ public class EmployeeCardServlet extends HttpServlet {
 		        // 응답 타입을 JSON 객체로 설정
 		        response.setContentType("application/json; charset=UTF-8");
 		        
-		        // 모든 삭제가 이루어진 후 1 반환, 실패시 0 반환
+		        // 모든 처리가 이루어진 후 1 반환, 실패시 0 반환
 		        if (allDeleted) {
-		        	response.getWriter().write("{\"status\":1, \"message\":\"모두 삭제 성공\"}");
+		        	response.getWriter().write("{\"status\":1, \"message\":\"모두 처리 성공\"}");
 		        
 		        } else {
-		        	response.getWriter().write("{\"status\":0, \"message\":\"삭제 실패\"}");
+		        	response.getWriter().write("{\"status\":0, \"message\":\"모두 처리 실패\"}");
 		        }
 	        
 	        } else { // valueArr가 null이거나 비어있다면 에러 페이지로 이동
 	        	response.sendRedirect("/500.html");
 		    }
-		} //e.of.D001
+		 //e.of.U001
+			
+   	// -------------------------------------------------------- 인사카드 계정 비활성화 U001
+
+		} else if (pageGubun.equals("U001")) {
+//			request.setCharacterEncoding("UTF-8");
+			
+	        // 전송된 배열 데이터(valueArr) 받기
+	        String[] valueArr = request.getParameterValues("valueArr");
+	        int size = valueArr.length;
+	        
+	        System.out.println(
+	        		"비활성화할 사원번호: " + Arrays.toString(valueArr)
+	        		); // valueArr 값 잘 들어왔는지 확인 로그
+	        
+	        
+	        boolean allDeleted = true; // 모두 비활성화 성공 여부 플래그
+	        int res = 0;	//비활성화
+	        
+	        if (valueArr != null && valueArr.length > 0) {
+		        for (int i=0; i < size; i++) {
+		        	// 비활성화 처리
+		        	res = edao.updateStatusToInactive(valueArr[i]);
+		        	
+		        	// 결과 확인
+		        	System.out.println("비활성화 시도: " + valueArr[i] +"번 사원"+ ", 결과: " + res);
+		        	 
+		        	
+	                if (res <= 0) { // 하나라도 처리 실패 시
+	                    allDeleted = false;
+	                    break;		//for 루프를 바로 종료
+	                }
+		        }
+		        
+		        // 응답 타입을 JSON 객체로 설정
+		        response.setContentType("application/json; charset=UTF-8");
+		        
+		        // 모든 처리가 이루어진 후 1 반환, 실패시 0 반환
+		        if (allDeleted) {
+		        	response.getWriter().write("{\"status\":1, \"message\":\"모두 처리 성공\"}");
+		        
+		        } else {
+		        	response.getWriter().write("{\"status\":0, \"message\":\"모두 처리 실패\"}");
+		        }
+	        
+	        } else { // valueArr가 null이거나 비어있다면 에러 페이지로 이동
+	        	response.sendRedirect("/500.html");
+		    }
+		} //e.of.U001
 			
 //		 ----------------------------------------------------------- 그외
 		else {

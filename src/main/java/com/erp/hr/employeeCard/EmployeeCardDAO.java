@@ -51,13 +51,15 @@ public class EmployeeCardDAO{
 						hvo.setAddress(rs.getString("address"));
 						hvo.setPhone_number(rs.getInt("phone_number"));
 						hvo.setRegister_date(rs.getDate("register_date"));
-						hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+//						hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+						hvo.setUser_status(rs.getInt("user_status"));
 						hvo.setHire_date(rs.getDate("hire_date"));
 						hvo.setUser_name(rs.getString("user_name"));
 						hvo.setModify_date(rs.getDate("modify_date"));
 						hvo.setDepartment_id(rs.getInt("department_id"));
 						hvo.setDepartment_name(rs.getString("department_name"));	//부서명 추가
-						hvo.setGender(Gender.parseGender(rs.getString("gender")));
+						hvo.setGender(rs.getInt("gender"));
+//						hvo.setGender(Gender.parseGender(rs.getString("gender")));
 						hvo.setBirth(rs.getDate("birth"));
 						hvo.setExtension_number(rs.getInt("extension_number"));
 						hvo.setTermination_date(rs.getDate("termination_date"));
@@ -101,13 +103,15 @@ public class EmployeeCardDAO{
 					hvo.setAddress(rs.getString("address"));
 					hvo.setPhone_number(rs.getInt("phone_number"));
 					hvo.setRegister_date(rs.getDate("register_date"));
-					hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+//					hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+					hvo.setUser_status(rs.getInt("user_status"));
 					hvo.setHire_date(rs.getDate("hire_date"));
 					hvo.setUser_name(rs.getString("user_name"));
 					hvo.setModify_date(rs.getDate("modify_date"));
 					hvo.setDepartment_id(rs.getInt("department_id"));
 					hvo.setDepartment_name(rs.getString("department_name"));	//부서명 추가
-					hvo.setGender(Gender.parseGender(rs.getString("gender")));
+//					hvo.setGender(Gender.parseGender(rs.getString("gender")));
+					hvo.setGender(rs.getInt("gender"));
 					hvo.setBirth(rs.getDate("birth"));
 					hvo.setExtension_number(rs.getInt("extension_number"));
 					hvo.setTermination_date(rs.getDate("termination_date"));
@@ -151,13 +155,14 @@ public class EmployeeCardDAO{
 			hvo.setAddress(rs.getString("address"));
 			hvo.setPhone_number(rs.getInt("phone_number"));
 			hvo.setRegister_date(rs.getDate("register_date"));
-			hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+//			hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+			hvo.setUser_status(rs.getInt("user_status"));
 			hvo.setHire_date(rs.getDate("hire_date"));
 			hvo.setUser_name(rs.getString("user_name"));
 			hvo.setModify_date(rs.getDate("modify_date"));
 			hvo.setDepartment_id(rs.getInt("department_id"));
 			hvo.setDepartment_name(rs.getString("department_name"));	//부서명 추가
-			hvo.setGender(Gender.parseGender(rs.getString("gender")));
+			hvo.setGender(rs.getInt("gender"));
 			hvo.setBirth(rs.getDate("birth"));
 			hvo.setExtension_number(rs.getInt("extension_number"));
 			hvo.setTermination_date(rs.getDate("termination_date"));
@@ -175,63 +180,78 @@ public class EmployeeCardDAO{
 	
 	
 	// 인사카드 등록 Insert
-		public int insaCardInsert(HrVO hvo) {
-			DBManager dbm  = OracleDBManager.getInstance();
-			Connection conn = dbm.connect();
-			PreparedStatement pstmt = null;
-			int rows = 0;
-			try {   
-				
-				String sql = "INSERT INTO app_users(\r\n"
-						+ "    USER_SEQ,\r\n"
-						+ "    USER_ID,\r\n"
-						+ "    USER_PASSWORD,\r\n"
-						+ "    EMAIL,\r\n"
-						+ "    ADDRESS,\r\n"
-						+ "    PHONE_NUMBER,\r\n"
-						+ "    REGISTER_DATE,\r\n"
-						+ "    USER_STATUS,\r\n"
-						+ "    HIRE_DATE,\r\n"
-						+ "    USER_NAME,\r\n"
-						+ "    MODIFY_DATE,\r\n"
-						+ "    DEPARTMENT_ID,\r\n"
-						+ "    GENDER,\r\n"
-						+ "    BIRTH,\r\n"
-						+ "    POSITION,\r\n"
-						+ "    MANAGER_ID\r\n"
-						+ ") VALUES (app_users_seq.nextval,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public int insaCardInsert(HrVO hvo) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    int rows = 0;
+	    try {   
+	        String sql = "INSERT INTO app_users("
+	                + "USER_SEQ, USER_ID, USER_PASSWORD, EMAIL, ADDRESS, "
+	                + "PHONE_NUMBER, REGISTER_DATE, USER_STATUS, HIRE_DATE, "
+	                + "USER_NAME, MODIFY_DATE, DEPARTMENT_ID, GENDER, BIRTH, "
+	                + "POSITION, MANAGER_ID) "
+	                + "VALUES (app_users_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-				
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        // NULL 체크 및 값 설정
+	        if (hvo.getUser_id() == null || hvo.getUser_id().trim().isEmpty()) {
+	            throw new SQLException("USER_ID cannot be null or empty");
+	        }
+	        
+	        pstmt.setString(1, hvo.getUser_id());
+	        pstmt.setString(2, hvo.getUser_password());
+	        pstmt.setString(3, hvo.getEmail());
+	        pstmt.setString(4, hvo.getAddress());
+	        pstmt.setInt(5, hvo.getPhone_number());
+	        
+	        // 날짜 필드 null 체크
+	        if (hvo.getRegister_date() != null) {
+	            pstmt.setDate(6, new java.sql.Date(hvo.getRegister_date().getTime()));
+	        } else {
+	            pstmt.setDate(6, new java.sql.Date(System.currentTimeMillis()));
+	        }
+	        
+	        pstmt.setInt(7, hvo.getUser_status());
+	        
+	        if (hvo.getHire_date() != null) {
+	            pstmt.setDate(8, new java.sql.Date(hvo.getHire_date().getTime()));
+	        } else {
+	            pstmt.setNull(8, java.sql.Types.DATE);
+	        }
+	        
+	        pstmt.setString(9, hvo.getUser_name());
+	        
+	        if (hvo.getModify_date() != null) {
+	            pstmt.setDate(10, new java.sql.Date(hvo.getModify_date().getTime()));
+	        } else {
+	            pstmt.setDate(10, new java.sql.Date(System.currentTimeMillis()));
+	        }
+	        
+	        pstmt.setInt(11, hvo.getDepartment_id());
+	        pstmt.setInt(12, hvo.getGender());
+	        
+	        if (hvo.getBirth() != null) {
+	            pstmt.setDate(13, new java.sql.Date(hvo.getBirth().getTime()));
+	        } else {
+	            pstmt.setNull(13, java.sql.Types.DATE);
+	        }
+	        
+	        pstmt.setString(14, hvo.getPosition());
+	        pstmt.setInt(15, hvo.getManager_id());
+	                
+	        rows = pstmt.executeUpdate();
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt);
+	    }
+	    return rows;
+	}
 
-				pstmt =  conn.prepareStatement(sql);
-					pstmt.setString(1, hvo.getUser_id());
-					pstmt.setString(2, BCrypt.hashpw(hvo.getUser_password(), BCrypt.gensalt()));
-//					pstmt.setString(2, hvo.getUser_password());
-					pstmt.setString(3, hvo.getEmail());
-					pstmt.setString(4, hvo.getAddress());
-					pstmt.setInt(5, hvo.getPhone_number());
-					pstmt.setDate(6, (Date) hvo.getRegister_date() );
-					pstmt.setInt(7, hvo.getUser_status().getNum());
-					pstmt.setDate(8, (Date) hvo.getHire_date() );
-					pstmt.setString(9, hvo.getUser_name());
-					pstmt.setDate(10, (Date) hvo.getModify_date());
-					pstmt.setInt(11, hvo.getDepartment_id());
-					pstmt.setInt(12, hvo.getGender().getNum());
-					pstmt.setDate(13, (Date) hvo.getBirth() );
-//					pstmt.setInt(14, hvo.getExtension_number());
-//					pstmt.setDate(15, (Date) hvo.getTermination_date() );
-					pstmt.setString(14, hvo.getPosition());
-					pstmt.setInt(15, hvo.getManager_id());
-					
-				rows = pstmt.executeUpdate();
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				dbm.close(conn, pstmt);
-			}
-			return rows;
-		}
+
 	
 	// 인사카드 삭제 Delete (int 매개변수)
 //	public int insaCardDelete(int user_seq) {
@@ -254,19 +274,46 @@ public class EmployeeCardDAO{
 //		return rows;
 //	}
 
-	// 인사카드 선택 삭제 Delete (String 매개변수)
-	public int insaCardDelete(String user_seq) {
+//	// 인사카드 선택 삭제 Delete (String 매개변수)
+//	public int insaCardDelete(String user_seq) {
+//		DBManager dbm  = OracleDBManager.getInstance();
+//		Connection conn = dbm.connect();
+//		PreparedStatement pstmt = null;
+//		int rows = 0;
+//		try {
+//			String sql = "delete from app_users where user_seq = ?";
+//			pstmt =  conn.prepareStatement(sql);
+//			pstmt.setString(1, user_seq);
+//			
+//			rows = pstmt.executeUpdate();
+//			return rows; // 삭제된 행의 수를 반환
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return 0;
+//			
+//		} finally {
+//			dbm.close(conn, pstmt);
+//		}
+//	}
+
+	
+	
+	// 계정상태 활성화
+	public int updateStatusToActive(String user_seq) {
+		
 		DBManager dbm  = OracleDBManager.getInstance();
 		Connection conn = dbm.connect();
 		PreparedStatement pstmt = null;
 		int rows = 0;
 		try {
-			String sql = "delete from app_users where user_seq = ?";
+			String sql = "UPDATE APP_USERS\r\n"
+					+ "SET USER_STATUS = 0\r\n"
+					+ "WHERE USER_SEQ = ?";
 			pstmt =  conn.prepareStatement(sql);
 			pstmt.setString(1, user_seq);
 			
 			rows = pstmt.executeUpdate();
-			return rows; // 삭제된 행의 수를 반환
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -275,7 +322,39 @@ public class EmployeeCardDAO{
 		} finally {
 			dbm.close(conn, pstmt);
 		}
+		return rows;
 	}
+	
+	
+	
+	// 계정상태 비활성화
+	public int updateStatusToInactive(String user_seq) {
+		
+		DBManager dbm  = OracleDBManager.getInstance();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		int rows = 0;
+		try {
+			String sql = "UPDATE APP_USERS\r\n"
+					+ "SET USER_STATUS = 1\r\n"
+					+ "WHERE USER_SEQ = ?";
+			pstmt =  conn.prepareStatement(sql);
+			pstmt.setString(1, user_seq);
+			
+			rows = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+			
+		} finally {
+			dbm.close(conn, pstmt);
+		}
+		return rows;
+	}
+	
+	
+
 	
 	
 	
