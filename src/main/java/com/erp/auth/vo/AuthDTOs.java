@@ -85,4 +85,31 @@ public class AuthDTOs{
 		private int[] roles;
 	}
 	
+	
+	@NoArgsConstructor
+	@Builder
+	@AllArgsConstructor
+	@Getter
+	@Setter
+	public static class FeaturesResponseDTO{
+		List<FeatureDetail> datas;
+		@NoArgsConstructor
+		@Builder
+		@AllArgsConstructor
+		@Getter
+		@Setter
+		public static class FeatureDetail{
+			private String url;
+			private String httpMethod;
+			private Date createAt;
+			private int roleSeq;
+			private int featureSeq;
+			private String userName;
+		}
+	}
+	
+	
+	
+	
+	
 }
