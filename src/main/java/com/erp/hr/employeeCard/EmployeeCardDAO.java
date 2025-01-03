@@ -274,19 +274,46 @@ public class EmployeeCardDAO{
 //		return rows;
 //	}
 
-	// 인사카드 선택 삭제 Delete (String 매개변수)
-	public int insaCardDelete(String user_seq) {
+//	// 인사카드 선택 삭제 Delete (String 매개변수)
+//	public int insaCardDelete(String user_seq) {
+//		DBManager dbm  = OracleDBManager.getInstance();
+//		Connection conn = dbm.connect();
+//		PreparedStatement pstmt = null;
+//		int rows = 0;
+//		try {
+//			String sql = "delete from app_users where user_seq = ?";
+//			pstmt =  conn.prepareStatement(sql);
+//			pstmt.setString(1, user_seq);
+//			
+//			rows = pstmt.executeUpdate();
+//			return rows; // 삭제된 행의 수를 반환
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return 0;
+//			
+//		} finally {
+//			dbm.close(conn, pstmt);
+//		}
+//	}
+
+	
+	
+	// 계정상태 활성화
+	public int updateStatusToActive(String user_seq) {
+		
 		DBManager dbm  = OracleDBManager.getInstance();
 		Connection conn = dbm.connect();
 		PreparedStatement pstmt = null;
 		int rows = 0;
 		try {
-			String sql = "delete from app_users where user_seq = ?";
+			String sql = "UPDATE APP_USERS\r\n"
+					+ "SET USER_STATUS = 0\r\n"
+					+ "WHERE USER_SEQ = ?";
 			pstmt =  conn.prepareStatement(sql);
 			pstmt.setString(1, user_seq);
 			
 			rows = pstmt.executeUpdate();
-			return rows; // 삭제된 행의 수를 반환
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -295,7 +322,39 @@ public class EmployeeCardDAO{
 		} finally {
 			dbm.close(conn, pstmt);
 		}
+		return rows;
 	}
+	
+	
+	
+	// 계정상태 비활성화
+	public int updateStatusToInactive(String user_seq) {
+		
+		DBManager dbm  = OracleDBManager.getInstance();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		int rows = 0;
+		try {
+			String sql = "UPDATE APP_USERS\r\n"
+					+ "SET USER_STATUS = 1\r\n"
+					+ "WHERE USER_SEQ = ?";
+			pstmt =  conn.prepareStatement(sql);
+			pstmt.setString(1, user_seq);
+			
+			rows = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+			
+		} finally {
+			dbm.close(conn, pstmt);
+		}
+		return rows;
+	}
+	
+	
+
 	
 	
 	
