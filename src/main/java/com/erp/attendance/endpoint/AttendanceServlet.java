@@ -49,6 +49,22 @@ public class AttendanceServlet extends HttpServlet {
 			out.write(jsonStr);
 			break;
 		}
+		// 전체 근태 페이징 처리
+		case "/v1/attendance/selectAllPaging": {
+
+			AttendanceRepository ar = new AttendanceRepository();
+			List<AttendanceDTO> list = ar.selectAll();
+
+			response.setContentType("application/json; charset=UTF-8");
+
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonStr = mapper.writeValueAsString(list);
+
+			PrintWriter out = response.getWriter();
+			out.write(jsonStr);
+			break;
+		}
+
 		// 전체 직원 조회
 		case "/v1/attendance/selectAllEmployee": {
 			AttendanceRepository ar = new AttendanceRepository();
