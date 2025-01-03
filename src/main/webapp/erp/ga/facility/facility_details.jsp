@@ -276,29 +276,25 @@ $(document).ready(function() {
 
     function updateMaintenanceTable(maintenance) {
         let tbody = "";
-        // 기존 "유지보수 이력이 없습니다" 행 제거
-        $("tbody tr td[colspan='5']").parent().remove();
         
-        // 새로운 행 추가
         tbody += "<tr>";
         tbody += "<td>" + maintenance.maintenanceId + "</td>";
+        // 날짜가 이미 'YYYY-MM-DD' 형식으로 오므로 그대로 사용
         tbody += "<td>" + maintenance.workingDate + "</td>";
         tbody += "<td>" + maintenance.workDetail + "</td>";
         tbody += "<td>";
         
-        // 상태에 따른 뱃지 색상 설정
         let badgeClass = maintenance.workStatus === '완료' ? 'bg-success' : 
                         maintenance.workStatus === '진행중' ? 'bg-warning' : 'bg-secondary';
         tbody += "<span class='badge " + badgeClass + " rounded-pill'>" + maintenance.workStatus + "</span>";
         tbody += "</td>";
         
-        // 비용에 천단위 콤마 추가
         tbody += "<td>" + Number(maintenance.workCost).toLocaleString() + "원</td>";
         tbody += "</tr>";
 
-        // 테이블 최상단에 새로운 행 추가
         $("#maintenanceTable tbody").prepend(tbody);
     }
+
 });
 </script>
 

@@ -2,7 +2,6 @@ package com.erp.facility.endpoint;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.erp.common.rest.RestBusinessException;
 import com.erp.common.rest.RestBusinessException.StatusCode;
@@ -24,9 +25,7 @@ import com.erp.facility.Service.impl.ManagerServiceImpl;
 import com.erp.facility.VO.FacilityDTO;
 import com.erp.facility.VO.MaintenanceDTO;
 import com.erp.facility.VO.ManagerDTO;
-import com.erp.facility.dto.FacilityAndNameDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static com.erp.facility.common.DtoConverter.convertToDto;
 
@@ -48,7 +47,7 @@ public class FacilityServlet extends HttpServlet {
 
 		// 아무것도 없다면 list로 보내기
 		if (pathInfo == null) {
-
+			
 			response.sendRedirect("/facility/list");
 
 			// 시설관리 리스트 보기
@@ -213,8 +212,8 @@ public class FacilityServlet extends HttpServlet {
 		        
 		        // 저장 후 해당 시설의 전체 유지보수 목록 조회
 		        List<MaintenanceDTO> mList = maintenanceService.findALl(String.valueOf(maintenance.getFacilityId()));
-		        
-//		        mList.forEach(i -> System.out.println(i));
+//		        System.out.println("maintenance = " + actionPage);
+		        mList.forEach(i -> System.out.println(i));
 		        
 		        // 응답 데이터 구성
 		        Map<String, Object> responseData = new HashMap<>();

@@ -1,13 +1,19 @@
 package com.erp.common.constant;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class CommonCode{
 	public static enum Gender{
-		MALE("남성", 0)
-		, FEMALE("여성", 1);
+		@JsonProperty("남성")
+		MALE("남성", 0),
+		
+		@JsonProperty("여성")
+		FEMALE("여성", 1);
+		
 		
 		private final String desc;
 		private final int num;
