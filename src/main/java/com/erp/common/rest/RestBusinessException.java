@@ -38,6 +38,7 @@ public class RestBusinessException extends RuntimeException {
 		, UNEXPECTED_ERROR("예상치 못한 오류", 400)
 		, USER_NOT_EXISTS("없는 사용자입니다.", 400)
 		, UNAUTHORIZED("로그인이 필요합니다.", 401)
+		, FORBIDDEN("권한이 부족합니다.", 403)
 		
 		;
 		

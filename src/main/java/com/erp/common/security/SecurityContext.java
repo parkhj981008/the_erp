@@ -11,7 +11,8 @@ public class SecurityContext{
     	try {
     		return currentUser.get();	
     	} catch(Exception e) {
-    		throw new RestBusinessException(StatusCode.UNAUTHORIZED);
+    		setCurrentUser(new UserInfo(-1, new int[] {-1}));
+    		return getCurrentUser();
     	}
     }
 

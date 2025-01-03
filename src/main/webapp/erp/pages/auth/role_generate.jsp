@@ -348,7 +348,8 @@
 		            data: JSON.stringify(featureRoleData),
 		            success: function(response) {
 		                alert("기능별 권한이 추가되었습니다.");
-		                $("#featureRoleModal").hide();  
+		                $("#featureRoleModal").hide();
+		                location.reload();
 		            },
 		            error: function(error) {
 		                alert("기능별 권한 추가 중 오류가 발생했습니다.");
