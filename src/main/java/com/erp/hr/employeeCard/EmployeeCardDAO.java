@@ -141,7 +141,12 @@ public class EmployeeCardDAO{
 		HrVO hvo = new HrVO();
 		
 		try {
-			String sql = "select * from app_users where user_seq = ?";
+			String sql = "select a.* , d.name as department_name\r\n"
+					+ "from(select *\r\n"
+					+ "     from app_users\r\n"
+					+ "     where user_seq = ?) a, department d\r\n"
+					+ "where a.department_id = d.department_id(+)";
+			
 			pstmt =  conn.prepareStatement(sql);
 			pstmt.setInt(1, user_seq);
 			

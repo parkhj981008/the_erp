@@ -12,7 +12,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>인사발령</title>
+  <title>인사발령 조회</title>
   <!-- base:css -->
   <link rel="stylesheet" href="/erp/vendors/typicons.font/font/typicons.css">
   <link rel="stylesheet" href="/erp/vendors/css/vendor.bundle.base.css">
@@ -356,12 +356,13 @@
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title" style="font-size: 30px;">인사발령</h4>
+                  <h4 class="card-title" style="font-size: 30px;">인사발령 조회</h4>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
                           <th scope="col"><input type="checkbox" name="allCheck" id="allCheck"/></th>
+                          <th scope="col">내역 번호</th>
                           <th scope="col">발령일자</th>
                           <th scope="col">사원번호</th>
                           <th scope="col">이름</th>
@@ -378,7 +379,8 @@
                       
                       	<c:forEach var="pavo" items="${MY_KEY_PALIST}">
                         <tr>
-                          <td><input type="checkbox" name="RowCheck" value="${pavo.pa_seq}"/></td>
+                          <td><input type="checkbox" name="RowCheck" value="${pavo.pah_seq}"/></td>
+                          <td>${pavo.pah_seq}</td>
                           <td>${pavo.pa_date}</td>
                           <td>${pavo.user_seq}</td>
                           <td>${pavo.user_name}</td>
@@ -388,7 +390,7 @@
                           <td>${pavo.assigned_dept}</td>
                           <td>${pavo.assigned_position}</td>
                           <td>${pavo.assignment_type}</td>
-                          <td>${pavo.desc}</td>
+                          <td>${pavo.notes}</td>
                           
                         </tr>
                        
@@ -445,8 +447,9 @@
 <script>
     $( document ).ready(function() {
         $("#insertFormBtn").click( function() {
-        	location.href = "/erp/hr/personnelAppointments/personnelAppointments_list.jsp";} );
-    });
+        	location.href = "/erp/hr/personnelAppointments/personnelAppointments_form.jsp"
+    	});
+});        
 </script>
 
 
