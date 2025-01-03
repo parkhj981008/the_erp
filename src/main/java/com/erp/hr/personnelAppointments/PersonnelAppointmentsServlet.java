@@ -47,7 +47,7 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
    				currentPage = Integer.parseInt(currentPageStr);
    				//현재페이지 값 세팅
    			}
-   			//총게시글수는 DB에 가서 가져와
+   			//총개수는 DB에 가서 가져와
    			int totRecord = padao.totalSelect().size();
    			
    			//내맘대로 보여줄개수 설정
@@ -143,22 +143,12 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
    			
    			// 응답 타입을 JSON 객체로 설정
    			response.setContentType("application/json; charset=UTF-8");
-   	        
-			HashMap<String, String> responseMap = new HashMap<String, String>();
-			ObjectMapper mapper = new ObjectMapper();
-			
+
    			//정상적으로 DB에 입력 된 경우
 			if (res > 0) {
-				responseMap.put("success", "complete");
-				responseMap.put("message", "인사발령 내역 등록 성공");
-				String jsonStr = mapper.writeValueAsString(responseMap);
-				response.getWriter().write(jsonStr);
-   			
+				response.getWriter().write("{\"status\":1, \"message\":\"인사발령 등록 성공\"}");
 			} else {
-				responseMap.put("success", "failed");
-				responseMap.put("message", "인사발령 내역 등록 실패");
-				String jsonStr = mapper.writeValueAsString(responseMap);
-				response.getWriter().write(jsonStr);
+	        	response.getWriter().write("{\"status\":0, \"message\":\"인사발령 등록 실패\"}");
    			}
 
 
