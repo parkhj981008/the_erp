@@ -27,29 +27,27 @@
 
 <body>
 
+	<div class="container-scroller">
+		<%@ include file="/erp/layout/top_layout.jsp"%>
+		<div class="container-fluid page-body-wrapper">
+			<!-- 사이드바 -->
+			<nav class="sidebar sidebar-offcanvas" id="sidebar">
+				<%@ include file="/erp/layout/side_layout.jsp"%>
+			</nav>
 
-<div class="container-scroller">
-    <%@ include file="/erp/layout/top_layout.jsp"%>
-    <div class="container-fluid page-body-wrapper">
-        <!-- 사이드바 -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
-            <%@ include file="/erp/layout/side_layout.jsp"%>
-        </nav>
-        
-        <!-- 메인 패널 -->
-        <div class="main-panel">
-            <div class="content-wrapper">
-                <div class="card h-100">
-                    <div class="card-body p-0">
-                        <img src="https://cdn.pixabay.com/photo/2024/08/03/10/09/business-8941891_1280.jpg" 
-                             style="width: 100%; height: 100%; object-fit: cover;" alt="Business Image">
-                    </div>
-                </div>
-            </div>
-            <%@ include file="/erp/layout/footer_layout.jsp"%>
-        </div>
-    </div>
-</div>
+			<!-- 메인 패널 -->
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="card h-100">
+						<div class="card-body p-0">
+							<img src="https://cdn.pixabay.com/photo/2024/08/03/10/09/business-8941891_1280.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Business Image">
+						</div>
+					</div>
+				</div>
+				<%@ include file="/erp/layout/footer_layout.jsp"%>
+			</div>
+		</div>
+	</div>
 
 
 

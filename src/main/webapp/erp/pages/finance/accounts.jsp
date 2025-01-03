@@ -211,7 +211,6 @@ table th {
 <link rel="shortcut icon" href="/erp/images/favicon.png" />
 </head>
 <body>
-	<div>
 		<div class="main-panel">
 			<div class="content-wrapper">
 				<div class="row">
@@ -223,6 +222,7 @@ table th {
 									<code> </code>
 								</p>
 								<div class="table-responsive">
+								<section id="accountListContainer">
 									<table>
 										<thead>
 											<tr>
@@ -245,14 +245,14 @@ table th {
 															style="margin: 0;">
 															<input type="hidden" name="account_id"
 																value="${account.account_id}">
-															<button type="submit">
-																삭제</button>
+															 <button class="deleteAccountBtn" data-account-id="${account.account_id}">삭제</button>
 														</form>
 													</td>
 												</tr>
 											</c:forEach>
 										</tbody>
 									</table>
+</section>
 									<div class="form-container">
 										<form action="/finance/add_account" method="post"
 											class="form-horizontal">
@@ -276,7 +276,7 @@ table th {
 													name="parent_type" id="parent_type" class="form-control"
 													placeholder=" " required>
 											</div>
-											<button type="submit" class="btn btn-primary">계정 추가</button>
+											<button id="addAccountBtn" type="button">계정 추가</button>
 										</form>
 									</div>
 								</div>
@@ -304,5 +304,101 @@ table th {
 		<!-- End plugin js for this page -->
 		<!-- Custom js for this page-->
 		<!-- End custom js for this page-->
+		<script>
+		$(document).ready(function() {
+		    // 계정 추가 버튼 클릭 이벤트
+		    $("#addAccountBtn").click(function(event) {
+		        event.preventDefault(); // 기본 동작 방지
+
+		        const accountId = $("#account_id").val();
+		        const accountName = $("#account_name").val();
+		        const accountType = $("#account_type").val();
+		        const parentType = $("#parent_type").val();
+
+		        // 계정 추가 AJAX 요청
+		        $.ajax({
+		            url: "/finance/add_account",
+		            type: "POST",
+		            data: {
+		                account_id: accountId,
+		                account_name: accountName,
+		                account_type: accountType,
+		                parent_type: parentType
+		            },
+		            success: function(response) {
+		                console.log("서버 응답:", response);
+		                if (response.trim() === "success") {
+		                    alert("계정이 성공적으로 추가되었습니다.");
+
+		                    // 입력 필드 초기화
+		                    $("#account_id").val('');
+		                    $("#account_name").val('');
+		                    $("#account_type").val('');
+		                    $("#parent_type").val('');
+
+		                    // 목록 갱신 호출
+		                    updateAccountList();
+		                } else {
+		                    alert("계정 추가에 실패했습니다. 서버 응답: " + response);
+		                }
+		            },
+		            error: function(xhr, status, error) {
+		                console.error("AJAX 요청 실패:", error);
+		                alert("서버와의 통신에 문제가 발생했습니다.");
+		            }
+		        });
+		    });
+
+		    // 계정 삭제 버튼 클릭 이벤트
+		    $(document).on("click", ".deleteAccountBtn", function (event) {
+		        event.preventDefault(); // 기본 폼 동작 방지
+
+		        const accountId = $(this).data("account-id");
+
+		        if (!confirm("이 계정을 삭제하시겠습니까?")) {
+		            return; // 사용자가 삭제 취소
+		        }
+
+		        // 계정 삭제 AJAX 요청
+		        $.ajax({
+		            url: "/finance/delete_account",
+		            type: "POST",
+		            data: { account_id: accountId },
+		            success: function (response) {
+		                console.log("서버 응답:", response);
+
+		                if (response.trim() == "success") {
+		                    alert("계정이 성공적으로 삭제되었습니다.");
+		                    updateAccountList();
+		                } else {
+		                    alert("계정 삭제에 실패했습니다. 서버 응답: " + response);
+		                }
+		            },
+		            error: function (xhr, status, error) {
+		                console.error("AJAX 요청 실패:", error);
+		                alert("서버와의 통신에 문제가 발생했습니다.");
+		            }
+		        });
+		    });
+
+		    
+		    // 계정 목록 갱신 함수
+		    function updateAccountList() {
+		        $.ajax({
+		            url: "/finance/accounts",
+		            type: "GET",
+		            success: function(html) {
+		                // 반환된 HTML에서 accountListContainer 내용만 업데이트
+		                const updatedContent = $(html).find("#accountListContainer").html();
+		                $("#accountListContainer").html(updatedContent);
+		            },
+		            error: function(xhr, status, error) {
+		                console.error("목록 갱신 실패:", error);
+		                alert("목록을 갱신하는 데 실패했습니다.");
+		            }
+		        });
+		    }
+		});
+</script>
 </body>
 </html>
