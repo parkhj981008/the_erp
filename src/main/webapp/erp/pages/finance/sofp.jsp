@@ -48,15 +48,31 @@
     .centered-header h2 {
         font-size: 26px;
         font-weight: bold;
+        text-align: center;
     }
     .sub-header {
         font-size: 18px!important;
+        text-align: center;
     }
 </style>
 </head>
 <body>
-    <div>
-        <div class="main-panel">
+<div class="container-scroller">
+	
+			<!-- partial:partials/_navbar.html -->
+	
+	
+			<%@ include file="/erp/layout/top_layout.jsp"%>
+	
+			<!-- partial -->
+			<div class="container-fluid page-body-wrapper">
+	
+				<!-- partial -->
+				<!-- partial:partials/_sidebar.html -->
+	
+				<%@ include file="/erp/layout/side_layout.jsp"%>
+	 <div class="parent-div" style="width:100%;">
+	        <div class="main-panel" style="width: 70%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -66,13 +82,13 @@
                                     <h2>재무상태표</h2>
                                 </div>
                                 <div class="sub-header">
-                                    <p>2024년 12월 31일 현재.</p>
-                                    <p>회사명: <c:out value="${companyName}" /></p>
+                                    <p>2024년 12월 31일 현재</p>
+                                    <p>회사명: KOSTA<c:out value="${companyName}" /></p>
                                 </div>
 
-					            <table>
+					            <table style="width: 90%;">
 					                <thead>
-					                    <tr>
+					                    <tr style=" text-align: center;">
 					                        <th>부모계정</th>
 					                        <th>계정유형</th>
 					                        <th>계정명</th>

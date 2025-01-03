@@ -112,15 +112,38 @@ public class FinanceDAO {
 		ResultSet rs = null;
 		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
 		try {
-			String query = "SELECT "
-		             + "VOUCHER_DATE, "
-		             + "DESCRIPT, "
-		             + "ACCOUNT_ID, "
-		             + "ACCOUNT_NAME, "
-		             + "DEBIT, "
-		             + "CREDIT "
-		             + "FROM "
-		             + "VOUCHER";
+			String query = "WITH running_totals AS ( " +
+				    "    SELECT " +
+				    "        voucher_date, descript, account_id, account_name, debit, credit, " +
+				    "        SUM(debit) OVER (PARTITION BY voucher_date ORDER BY ROWNUM) AS running_debit, " +
+				    "        SUM(credit) OVER (PARTITION BY voucher_date ORDER BY ROWNUM) AS running_credit " +
+				    "    FROM voucher " +
+				    "), " +
+				    "voucher_with_groups AS ( " +
+				    "    SELECT " +
+				    "        voucher_date, descript, account_id, account_name, debit, credit, " +
+				    "        CASE " +
+				    "            WHEN running_debit = running_credit THEN 1 " +
+				    "            ELSE 0 " +
+				    "        END AS match_flag " +
+				    "    FROM running_totals " +
+				    "), " +
+				    "final_voucher_num AS ( " +
+				    "    SELECT " +
+				    "        voucher_date, descript, account_id, account_name, debit, credit, " +
+				    "        SUM(CASE WHEN match_flag = 0 THEN 0 ELSE 1 END) " +
+				    "            OVER (PARTITION BY voucher_date ORDER BY ROWNUM) AS voucher_num " +
+				    "    FROM voucher_with_groups " +
+				    ") " +
+				    "SELECT " +
+				    "    voucher_date, " +
+				    "    descript, " +
+				    "    account_id, " +
+				    "    account_name, " +
+				    "    debit, " +
+				    "    credit " +
+				    "FROM final_voucher_num " +
+				    "ORDER BY voucher_date, voucher_num";
         	System.out.println(query);
         	
         	

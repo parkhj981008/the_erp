@@ -79,19 +79,20 @@ button.delete-button:hover {
 	border-color: #ff4d4d !important;
 }
 button.submit-button {
-	background-color: #f2f2f2 !important;
-	color: #000 !important;
-	padding: 10px !important;
-	cursor: pointer !important;
-	text-align: right !important;
-	float: right;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    width: 70px;
+}
+button.submit-button:hover {
+    background-color: #0056b3;
 }
 
-button.submit-button:hover {
-	background-color: #ff4d4d !important;
-	color: white !important;
-	border-color: #ff4d4d !important;
-}
 </style>
 <!-- base:css -->
 <link rel="stylesheet"
@@ -102,8 +103,22 @@ button.submit-button:hover {
 <link rel="shortcut icon" href="/erp/images/favicon.png" />
 </head>
 <body>
-	<div>
-		<div class="main-panel">
+<div class="container-scroller">
+	
+			<!-- partial:partials/_navbar.html -->
+	
+	
+			<%@ include file="/erp/layout/top_layout.jsp"%>
+	
+			<!-- partial -->
+			<div class="container-fluid page-body-wrapper">
+	
+				<!-- partial -->
+				<!-- partial:partials/_sidebar.html -->
+	
+				<%@ include file="/erp/layout/side_layout.jsp"%>
+	<div class="parent-div" style="width:100%;">
+        <div class="main-panel" style="width: 90%;">
 			<div class="content-wrapper">
 				<div class="row">
 					<div class="col-lg-12 grid-margin stretch-card">
@@ -155,8 +170,7 @@ button.submit-button:hover {
 																<input type="hidden" name="account_id"
 																	value="${vo.account_id}">
 
-																<button type="submit" class="delete-button"
-																	style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+																<button type="submit" class="delete-button" border: none; padding: 5px 10px; cursor: pointer;">
 																	삭제</button>
 															</form>
 														</c:if></td>
@@ -216,8 +230,7 @@ button.submit-button:hover {
 											</div>
 
 											<div class="table-container">
-												<table border="1"
-													style="margin-top: 20px; width: 100%; text-align: center;">
+												<table style="margin-top: 20px; width:100%; text-align: center;">
 													<thead>
 														<tr>
 															<th>차변 계정 ID</th>
@@ -242,12 +255,11 @@ button.submit-button:hover {
 																name="credit_account_name" required></td>
 															<td><input type="number" id="credit" name="credit"
 																required></td>
+															<td><button type="submit" class="submit-button" style="text-align: center;">입력</button></td>
 														</tr>
 													</tbody>
 												</table>
-												<button type="submit" class="submit-button"
-													style="text-align: center; margin-top: -20px; background-color: #f2f2f2; color: black; border: none; padding: 30px 30px; cursor: pointer;">
-													입력</button>
+											
 											</div>
 										</form>
 									</div>
@@ -258,6 +270,8 @@ button.submit-button:hover {
 				</div>
 			</div>
 		</div>
+	</div>
+			</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 	<!-- container-scroller -->
