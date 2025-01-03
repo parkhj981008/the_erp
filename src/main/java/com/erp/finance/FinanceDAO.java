@@ -112,15 +112,38 @@ public class FinanceDAO {
 		ResultSet rs = null;
 		ArrayList<FinanceVO> fList = new ArrayList<FinanceVO>();
 		try {
-			String query = "SELECT "
-		             + "VOUCHER_DATE, "
-		             + "DESCRIPT, "
-		             + "ACCOUNT_ID, "
-		             + "ACCOUNT_NAME, "
-		             + "DEBIT, "
-		             + "CREDIT "
-		             + "FROM "
-		             + "VOUCHER";
+			String query = "WITH running_totals AS ( " +
+				    "    SELECT " +
+				    "        voucher_date, descript, account_id, account_name, debit, credit, " +
+				    "        SUM(debit) OVER (PARTITION BY voucher_date ORDER BY ROWNUM) AS running_debit, " +
+				    "        SUM(credit) OVER (PARTITION BY voucher_date ORDER BY ROWNUM) AS running_credit " +
+				    "    FROM voucher " +
+				    "), " +
+				    "voucher_with_groups AS ( " +
+				    "    SELECT " +
+				    "        voucher_date, descript, account_id, account_name, debit, credit, " +
+				    "        CASE " +
+				    "            WHEN running_debit = running_credit THEN 1 " +
+				    "            ELSE 0 " +
+				    "        END AS match_flag " +
+				    "    FROM running_totals " +
+				    "), " +
+				    "final_voucher_num AS ( " +
+				    "    SELECT " +
+				    "        voucher_date, descript, account_id, account_name, debit, credit, " +
+				    "        SUM(CASE WHEN match_flag = 0 THEN 0 ELSE 1 END) " +
+				    "            OVER (PARTITION BY voucher_date ORDER BY ROWNUM) AS voucher_num " +
+				    "    FROM voucher_with_groups " +
+				    ") " +
+				    "SELECT " +
+				    "    voucher_date, " +
+				    "    descript, " +
+				    "    account_id, " +
+				    "    account_name, " +
+				    "    debit, " +
+				    "    credit " +
+				    "FROM final_voucher_num " +
+				    "ORDER BY voucher_date, voucher_num";
         	System.out.println(query);
         	
         	
@@ -148,30 +171,34 @@ public class FinanceDAO {
 	// 전표입력 기능
 	public boolean addVoucher(FinanceVO vo) {
 	    DBManager dbm = OracleDBManager.getInstance();
-	    Connection conn = dbm.connect();
+	    Connection conn = null;
 	    PreparedStatement pstmt = null;
-	    boolean isSuccess = false;
+	    String accountName = getAccountNameById(vo.getAccount_id()); // ACCOUNT_ID로 ACCOUNT_NAME 조회
+
+	    if (accountName == null) {
+	        System.out.println("ACCOUNT_NAME을 조회할 수 없습니다: " + vo.getAccount_id());
+	        return false; // ACCOUNT_ID가 유효하지 않은 경우 삽입 중단
+	    }
 
 	    try {
-	        String query = "INSERT INTO VOUCHER (VOUCHER_DATE, DESCRIPT, ACCOUNT_ID, ACCOUNT_NAME, DEBIT, CREDIT) " +
-	                   "VALUES (?, ?, ?, ?, ?, ?)";
+	        conn = dbm.connect();
+	        String query = "INSERT INTO VOUCHER (VOUCHER_DATE, DESCRIPT, ACCOUNT_ID, ACCOUNT_NAME, DEBIT, CREDIT) VALUES (?, ?, ?, ?, ?, ?)";
 	        pstmt = conn.prepareStatement(query);
+
 	        pstmt.setString(1, vo.getVoucher_date());
 	        pstmt.setString(2, vo.getDescript());
 	        pstmt.setString(3, vo.getAccount_id());
-	        pstmt.setString(4, vo.getAccount_name());
+	        pstmt.setString(4, accountName); // 조회한 ACCOUNT_NAME 설정
 	        pstmt.setLong(5, vo.getDebit());
 	        pstmt.setLong(6, vo.getCredit());
 
-	        int rows = pstmt.executeUpdate();
-	        isSuccess = rows > 0;
+	        return pstmt.executeUpdate() > 0;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
-	        dbm.close(conn, pstmt, null);
+	        dbm.close(conn, pstmt, null); // 자원 해제
 	    }
-
-	    return isSuccess;
+	    return false;
 	}
 	// 전표 입력시 계정 이름을 조회하는 메서드
 	public String getAccountNameById(String accountId) {
@@ -200,26 +227,24 @@ public class FinanceDAO {
 	//전표 삭제 기능
 	public boolean deleteVoucher(String voucherDate, String descript, String accountId) {
 	    DBManager dbm = OracleDBManager.getInstance();
-	    Connection conn = dbm.connect();
+	    Connection conn = null;
 	    PreparedStatement pstmt = null;
-	    boolean isDeleted = false;
 
 	    try {
+	        conn = dbm.connect();
 	        String query = "DELETE FROM VOUCHER WHERE VOUCHER_DATE = ? AND DESCRIPT = ? AND ACCOUNT_ID = ?";
 	        pstmt = conn.prepareStatement(query);
 	        pstmt.setString(1, voucherDate);
 	        pstmt.setString(2, descript);
 	        pstmt.setString(3, accountId);
 
-	        int rows = pstmt.executeUpdate();
-	        isDeleted = rows > 0;
+	        return pstmt.executeUpdate() > 0;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    } finally {
-	        dbm.close(conn, pstmt, null);
+	        dbm.close(conn, pstmt, null); // 자원 해제
 	    }
-
-	    return isDeleted;
+	    return false;
 	}
 
 	// 계정별원장

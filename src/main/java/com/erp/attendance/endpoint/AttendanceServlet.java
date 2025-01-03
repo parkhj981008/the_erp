@@ -19,9 +19,9 @@ import com.erp.attendance.vo.AllEmployeeDTO;
 import com.erp.attendance.vo.AttendanceDTO;
 import com.erp.attendance.vo.AttendanceItemsDTO;
 import com.erp.attendance.vo.InsertAttendanceDTO;
-import com.erp.auth.vo.AuthDTOs.RegisterRequestDTO;
 import com.erp.common.rest.RestBusinessException;
 import com.erp.common.rest.RestBusinessException.StatusCode;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebServlet("/v1/attendance/*")
@@ -40,15 +40,14 @@ public class AttendanceServlet extends HttpServlet {
 			AttendanceRepository ar = new AttendanceRepository();
 			List<AttendanceDTO> list = ar.selectAll();
 
-			response.setContentType("application/json; charset=UTF-8");
+			 // 데이터를 request에 저장
+		    request.setAttribute("attendanceList", list);
 
-			ObjectMapper mapper = new ObjectMapper();
-			String jsonStr = mapper.writeValueAsString(list);
-
-			PrintWriter out = response.getWriter();
-			out.write(jsonStr);
-			break;
+		    // JSP 페이지로 포워딩
+		    request.getRequestDispatcher("/erp/hr/attendance/select-attendance.jsp").forward(request, response);
+		    break;
 		}
+		
 		// 전체 근태 페이징 처리
 		case "/v1/attendance/selectAllPaging": {
 
@@ -91,7 +90,6 @@ public class AttendanceServlet extends HttpServlet {
 			out.write(jsonStr);
 			break;
 		}
-
 		default:
 			throw new RestBusinessException(StatusCode.BAD_REQUEST);
 		}
@@ -110,13 +108,13 @@ public class AttendanceServlet extends HttpServlet {
 			sb.append(line);
 		}
 
-		String jsonData = sb.toString();
-		ObjectMapper mapper = new ObjectMapper();
-		InsertAttendanceDTO idto = mapper.readValue(jsonData, InsertAttendanceDTO.class);
-
 		switch (request.getRequestURI()) {
 		// 근태 입력
 		case "/v1/attendance/insert": {
+			String jsonData = sb.toString();
+			ObjectMapper mapper = new ObjectMapper();
+			InsertAttendanceDTO idto = mapper.readValue(jsonData, InsertAttendanceDTO.class);
+			
 			Date date = null;
 			try {
 				date = idto.getAttendanceDate();
@@ -147,6 +145,30 @@ public class AttendanceServlet extends HttpServlet {
 			String jsonStr = mapper.writeValueAsString(responseMap);
 			PrintWriter out = response.getWriter();
 			out.write(jsonStr);
+			break;
+		}
+		// 특정 근태 삭제
+		case "/v1/attendance/delete": {
+			String jsonData = sb.toString();
+			System.out.println("jsonData: " + jsonData);
+			ObjectMapper mapper = new ObjectMapper(); 
+			
+			try {
+		        // JSON에서 "attendanceSeqs" 키로 전달된 값을 List<Integer>로 파싱
+		        Map<String, List<Integer>> requestMap = mapper.readValue(jsonData, new TypeReference<Map<String, List<Integer>>>() {});
+		        List<Integer> attendanceSeqs = requestMap.get("attendanceSeqs");
+
+		        AttendanceRepository ar = new AttendanceRepository();
+		        for (int seq : attendanceSeqs) {
+		            ar.deleteAttendance(seq);                
+		        }
+
+		        response.setStatus(HttpServletResponse.SC_OK);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		        response.getWriter().write("{\"error\": \"Failed to process the request.\"}");
+		    }
 			break;
 		}
 		default:

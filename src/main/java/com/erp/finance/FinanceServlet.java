@@ -115,49 +115,49 @@ public class FinanceServlet extends HttpServlet {
 		}
 		// 전표 입력 기능
 		if (uri.equals("/finance/add_voucher")) {
+	        String voucherDate = request.getParameter("voucher_date");
+	        String descript = request.getParameter("descript");
+	        String debitAccountId = request.getParameter("debit_account_id");
+	        Long debitAmount = Long.parseLong(request.getParameter("debit"));
+	        String creditAccountId = request.getParameter("credit_account_id");
+	        Long creditAmount = Long.parseLong(request.getParameter("credit"));
 
-			String voucherDate = request.getParameter("voucher_date");
-			String descript = request.getParameter("descript");
-			String debitAccountId = request.getParameter("debit_account_id");
-			Long debitAmount = Long.parseLong(request.getParameter("debit"));
-			String creditAccountId = request.getParameter("credit_account_id");
-			Long creditAmount = Long.parseLong(request.getParameter("credit"));
-			String debitAccountName = dao.getAccountNameById(debitAccountId);
-			String creditAccountName = dao.getAccountNameById(creditAccountId);
+	        FinanceVO debitVO = FinanceVO.builder()
+	                .voucher_date(voucherDate)
+	                .descript(descript)
+	                .account_id(debitAccountId)
+	                .debit(debitAmount)
+	                .credit(0L)
+	                .build();
 
-			FinanceVO debitVO = FinanceVO.builder().voucher_date(voucherDate).descript(descript)
-					.account_id(debitAccountId).account_name(debitAccountName).debit(debitAmount).credit(0L).build();
-			boolean debitSuccess = dao.addVoucher(debitVO);
+	        FinanceVO creditVO = FinanceVO.builder()
+	                .voucher_date(voucherDate)
+	                .descript(descript)
+	                .account_id(creditAccountId)
+	                .debit(0L)
+	                .credit(creditAmount)
+	                .build();
 
-			FinanceVO creditVO = FinanceVO.builder().voucher_date(voucherDate).descript(descript)
-					.account_id(creditAccountId).account_name(creditAccountName).debit(0L).credit(creditAmount).build();
-			boolean creditSuccess = dao.addVoucher(creditVO);
+	        boolean debitSuccess = dao.addVoucher(debitVO);
+	        boolean creditSuccess = dao.addVoucher(creditVO);
 
-			if (debitSuccess && creditSuccess) {
-				response.sendRedirect("/finance/general_ledger");
-			} else {
-				response.getWriter().write("Failed to add voucher");
-			}
-		} else {
-			response.getWriter().write("Unsupported POST request");
-		}
+	        response.setContentType("text/plain");
+	        response.setCharacterEncoding("UTF-8");
+	        response.getWriter().write(debitSuccess && creditSuccess ? "success" : "fail");
+	        }
 		// 전표 삭제 기능
 		if (uri.equals("/finance/delete_voucher")) {
+	        String voucherDate = request.getParameter("voucher_date");
+	        String descript = request.getParameter("descript");
+	        String accountId = request.getParameter("account_id");
 
-			String voucherDate = request.getParameter("voucher_date");
-			String descript = request.getParameter("descript");
-			String accountId = request.getParameter("account_id");
+	        boolean isDeleted = dao.deleteVoucher(voucherDate, descript, accountId);
 
-			boolean isDeleted = dao.deleteVoucher(voucherDate, descript, accountId);
-
-			if (isDeleted) {
-				response.sendRedirect("/finance/general_ledger");
-			} else {
-				response.getWriter().write("Failed to delete voucher");
-			}
-		} else {
-			response.getWriter().write("Unsupported POST request");
-		}
-
+	        response.setContentType("text/plain");
+	        response.setCharacterEncoding("UTF-8");
+	        response.getWriter().write(isDeleted ? "success" : "fail");
+	        return;
+	    }
 	}
+
 }

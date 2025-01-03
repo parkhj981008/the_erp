@@ -49,15 +49,31 @@
     .centered-header h2 {
         font-size: 26px;
         font-weight: bold;
+        text-align: center;
     }
     .sub-header {
         font-size: 18px!important;
+         text-align: center;
     }
 </style>
 </head>
 <body>
-    <div>
-        <div class="main-panel">
+<div class="container-scroller">
+	
+			<!-- partial:partials/_navbar.html -->
+	
+	
+			<%@ include file="/erp/layout/top_layout.jsp"%>
+	
+			<!-- partial -->
+			<div class="container-fluid page-body-wrapper">
+	
+				<!-- partial -->
+				<!-- partial:partials/_sidebar.html -->
+	
+				<%@ include file="/erp/layout/side_layout.jsp"%>
+   <div class="parent-div" style="width:100%;">
+        <div class="main-panel" style="width: 70%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -68,12 +84,12 @@
                                 </div>
                                 <div class="sub-header">
                                     <p>제 1기 2024/01/01 부터 2024/12/31 까지</p>
-                                    <p>회사명: <c:out value="${companyName}" /></p>
+                                    <p>회사명: KOSTA<c:out value="${companyName}" /></p>
                                 </div>
 
-                                <table>
+                                <table style="width: 90%;">
                                     <thead>
-                                        <tr>
+                                        <tr style="text-align: center;">
                                             <th>재무제표 표시명</th>
                                             <th>계정명</th>
                                             <th>차변</th>
@@ -113,6 +129,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 </body>

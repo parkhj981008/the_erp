@@ -38,12 +38,36 @@
         .numeric {
             text-align: right;
         }
+        .account-info {
+        font-size: 17px;
+        margin-bottom: 20px;
+        text-align: center;
+    	}
+        .centered-header h2 {
+        font-size: 26px;
+        font-weight: bold;
+        text-align: center;
+   	 	}
     </style>
 
-</head><body>
-
-    <div>
-        <div class="main-panel">
+</head>
+<body>
+<div class="container-scroller">
+	
+			<!-- partial:partials/_navbar.html -->
+	
+	
+			<%@ include file="/erp/layout/top_layout.jsp"%>
+	
+			<!-- partial -->
+			<div class="container-fluid page-body-wrapper">
+	
+				<!-- partial -->
+				<!-- partial:partials/_sidebar.html -->
+	
+				<%@ include file="/erp/layout/side_layout.jsp"%>
+     <div class="parent-div" style="width:100%;">
+        <div class="main-panel" style="width: 70%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -63,7 +87,7 @@
         </div>
         <table>
             <thead>
-                <tr>
+                <tr style="text-align: center;">
                     <th>날짜</th>
                     <th>적요</th>
                     <th>차변</th>
@@ -131,6 +155,8 @@
             </div>
         </div>
     </div>
+    </div>
+        </div>
     </div>
 </body>
 </html>

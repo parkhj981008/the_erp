@@ -18,43 +18,36 @@ public class AttendanceRepository {
 	// 전체 근태 페이징 처리
 	public List<AttendanceDTO> selectAllPaging(int startSeq, int endSeq) {
 		List<AttendanceDTO> list = new ArrayList<AttendanceDTO>();
-		
+
 		DBManager dbm = OracleDBManager.getInstance();
 		Connection conn = dbm.connect();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-		String sql = "SELECT * "
-		           + "FROM ( "
-		           + "    SELECT at.attendance_seq, "
-		           + "           au.user_name, "
-		           + "           at.attendance_code, "
-		           + "           at.days_number, "
-		           + "           NVL(at.notes, ' ') AS notes, "
-		           + "           ROW_NUMBER() OVER (ORDER BY at.attendance_seq ASC) AS row_num "
-		           + "    FROM attendance at "
-		           + "    JOIN app_users au ON at.user_seq = au.user_seq "
-		           + ") "
-		           + "WHERE row_num BETWEEN ? AND ? "
-		           + "ORDER BY row_num";
-		
-		pstmt = conn.prepareStatement(sql);
+			String sql = "SELECT * " + "FROM ( " + "    SELECT at.attendance_seq, " + "           au.user_name, "
+					+ "           at.attendance_code, " + "           at.days_number, "
+					+ "           NVL(at.notes, ' ') AS notes, "
+					+ "           ROW_NUMBER() OVER (ORDER BY at.attendance_seq ASC) AS row_num "
+					+ "    FROM attendance at " + "    JOIN app_users au ON at.user_seq = au.user_seq " + ") "
+					+ "WHERE row_num BETWEEN ? AND ? " + "ORDER BY row_num";
 
-		pstmt.setInt(1, startSeq);
-		pstmt.setInt(2, endSeq);
-		
-		rs = pstmt.executeQuery();
-		
-		while (rs.next()) {
-			AttendanceDTO adto = new AttendanceDTO();
-			adto.setAttendanceSeq(rs.getLong("attendance_seq"));
-			adto.setAttendanceCode(rs.getString("attendance_code"));
-			adto.setDaysNumber(rs.getInt("days_number"));
-			adto.setNotes(rs.getString("notes"));
-			adto.setUserName(rs.getString("user_name"));
-			list.add(adto);
-		}
-		
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, startSeq);
+			pstmt.setInt(2, endSeq);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				AttendanceDTO adto = new AttendanceDTO();
+				adto.setAttendanceSeq(rs.getLong("attendance_seq"));
+				adto.setAttendanceCode(rs.getString("attendance_code"));
+				adto.setDaysNumber(rs.getInt("days_number"));
+				adto.setNotes(rs.getString("notes"));
+				adto.setUserName(rs.getString("user_name"));
+				list.add(adto);
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -63,7 +56,7 @@ public class AttendanceRepository {
 
 		return list;
 	}
-	
+
 	// 전체 근태 조회
 	public List<AttendanceDTO> selectAll() {
 		List<AttendanceDTO> list = new ArrayList<AttendanceDTO>();
@@ -105,7 +98,7 @@ public class AttendanceRepository {
 		Connection conn = dbm.connect();
 		PreparedStatement pstmt = null;
 		int rows = 0;
-		
+
 		try {
 			// ATTENDANCE_SEQ, ATTENDANCE_CODE, ATTENDANCE_DATE, DAYS_NUMBER
 			// NOTES, USER_SEQ
@@ -174,15 +167,9 @@ public class AttendanceRepository {
 		ResultSet rs = null;
 
 		try {
-			String sql = "SELECT \r\n"
-					+ "    ROWNUM AS row_number, \r\n"
-					+ "    attendance_code, \r\n"
-					+ "    attendance_name\r\n"
-					+ "FROM (\r\n"
-					+ "    SELECT * \r\n"
-					+ "    FROM attendance_items \r\n"
-					+ "    ORDER BY attendance_items_seq\r\n"
-					+ ")";
+			String sql = "SELECT \r\n" + "    ROWNUM AS row_number, \r\n" + "    attendance_code, \r\n"
+					+ "    attendance_name\r\n" + "FROM (\r\n" + "    SELECT * \r\n" + "    FROM attendance_items \r\n"
+					+ "    ORDER BY attendance_items_seq\r\n" + ")";
 
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -201,6 +188,23 @@ public class AttendanceRepository {
 		}
 
 		return list;
+	}
+
+	public void deleteAttendance(int attendanceSeq) {
+		DBManager dbm = OracleDBManager.getInstance();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+
+		try {
+			String sql = "DELETE FROM attendance WHERE attendance_seq = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, attendanceSeq);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbm.close(conn, pstmt);
+		}
 	}
 
 	public static void main(String[] args) {
