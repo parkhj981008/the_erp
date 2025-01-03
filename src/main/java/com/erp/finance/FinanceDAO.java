@@ -78,7 +78,6 @@ public class FinanceDAO {
 	    } finally {
 	        dbm.close(conn, pstmt, null);
 	    }
-
 	    return isSuccess;
 	}
 	
