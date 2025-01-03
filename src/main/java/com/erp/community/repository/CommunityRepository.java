@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -34,54 +36,53 @@ import com.erp.community.vo.ChatDTOs.createChatRoomResponseDto;
 public class CommunityRepository {
 	private static final DBManager db = new OracleDBManager();
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
-	
+
 	public createChatRoomResponseDto createChatRoom(ChatMessage chatMessage) {
 		PreparedStatementVO psVO = chatMessage.toCreateChatRoom();
-		String[] strArray = chatMessage.getMessage().replace("{", "").replace("}", "").replace("\"", "").split(",\\s*");
-        int[] intArray = Arrays.stream(strArray)
-                               .mapToInt(Integer::parseInt)
-                               .toArray();
-        Connection con = null;
-        PreparedStatement createRoomPS = null;
-        createChatRoomResponseDto response = new createChatRoomResponseDto();
-		try{
+		Connection con = null;
+		PreparedStatement createRoomPS = null;
+		createChatRoomResponseDto response = new createChatRoomResponseDto();
+		try {
 			con = db.getConnectionForTransaction();
 			createRoomPS = sp.getPreparedStatement(con, psVO.getSql(), psVO.getAttribute());
 			int rows = createRoomPS.executeUpdate();
-			if(rows != 1) throw new SQLException();
-			
-			for(int i = 0; i < intArray.length; i++) {
-				PreparedStatementVO psVO2 = chatMessage.toCreateChatRoom(i);
-				try(
-						PreparedStatement createRoomDetailPS = sp.getPreparedStatement(con, psVO2.getSql(), psVO2.getAttribute());
-						){
-					int rows2 = createRoomPS.executeUpdate();
-					if(rows2 != 1) throw new SQLException();
-				}
+			if (rows != 1)
+				throw new SQLException();
+			PreparedStatementVO psVO2 = chatMessage.toCreateChatRoom(Integer.parseInt(chatMessage.getMessage()));
+			try (PreparedStatement createRoomDetailPS = sp.getPreparedStatement(con, psVO2.getSql(),
+					psVO2.getAttribute());) {
+				int rows2 = createRoomDetailPS.executeUpdate();
+				if (rows2 != 1)
+					throw new SQLException();
 			}
 			
-			try(
-					PreparedStatement getChatRoomPS = sp.getPreparedStatement(con, "SELECT * FROM chat_rooms WHERE chat_room_seq = ?", new Object[]{"chat_room_seq.CURRVAL"});
-					ResultSet rs = getChatRoomPS.executeQuery();
-					){
-				while(rs.next()) {
-					response.setChatRoomSeq(rs.getInt("chat_room_seq")); 
-					response.setRoomName(rs.getString("room_name"));
-				}
-			}
 			con.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
-				 if (con != null) {
-		                con.rollback();
-		            }
+				if (con != null) {
+					con.rollback();
+				}
 			} catch (SQLException e1) {
 				throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);
 			}
-			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);			
+			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);
 		} finally {
 			db.close(con, createRoomPS);
 		}
 		return response;
+	}
+
+	public int[] getAvailableUsers() {
+		List<Integer> users = new ArrayList<>();
+		try (Connection con = db.getConnection();
+				PreparedStatement ps = sp.getPreparedStatement(con, "SELECT user_seq FROM app_users", new Object[0]);
+				ResultSet rs = ps.executeQuery();) {
+			while (rs.next()) {
+				users.add(rs.getInt("user_seq"));
+			}
+			return users.stream().mapToInt(Integer::intValue).toArray();
+		} catch (SQLException e) {
+			throw new RestBusinessException(StatusCode.DATABASE_UKNOWN_ERROR, e);
+		}
 	}
 }
