@@ -25,7 +25,7 @@ public class FinanceServlet extends HttpServlet {
 		String uri = request.getRequestURI();
 
 		// 계정관리
-		if (uri.equals("/finance/accounts")) {
+		if (uri.equals("/finance/accounts")) {	
 			List<FinanceVO> fList1 = dao.AccountsList();
 			request.setAttribute("KEY_ACCOUNTS_FLIST", fList1);
 			request.getRequestDispatcher("/erp/pages/finance/accounts.jsp").forward(request, response);
