@@ -1,3 +1,30 @@
+<%-- 	<%
+	String currentPage = request.getRequestURI();
+	System.out.println("currentPage = " + currentPage);
+
+	String loginPage = "/erp/pages/auth/Login.jsp";
+
+	if (!currentPage.equals(loginPage)) {
+		Cookie[] cookies = request.getCookies();
+		boolean hasAuthCookie = false;
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+		if (cookie.getName().equals("auth")) {
+			hasAuthCookie = true;
+			break;
+		}
+			}
+		}
+
+		if (!hasAuthCookie && !response.isCommitted()) {
+			response.sendRedirect(loginPage);
+			return;
+		}
+	}
+	%> --%>
+
+
  <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
           

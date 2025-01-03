@@ -120,64 +120,64 @@ public class EmployeeCardServlet extends HttpServlet {
 
    		} else if (pageGubun.equals("I001")) {
    			
-//   			BufferedReader reader = request.getReader();
-//   			StringBuilder jsonData = new StringBuilder();
-//   		    String line;
-//   		    while ( (line = reader.readLine()) != null ) {
-//   		           jsonData.append(line);
-//   		    }
-//   		    
-//   		    //값이 제대로 들어왔나 확인
-//   		    String jsonString = jsonData.toString();
-//   		    System.out.println("들어온 값: " + jsonString);
-//   			
-//   			ObjectMapper om = new ObjectMapper();
-//   			
-//   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
-//   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//   			om.setDateFormat(sdf);
-//   			
-//   			//JSON 데이터를 Java 객체로 변환
-//		   		HrVO vo = om.reader().readValue(jsonString, HrVO.class);
-//		   		System.out.println("Parsed HrVO: " + vo);
+   			BufferedReader reader = request.getReader();
+   			StringBuilder jsonData = new StringBuilder();
+   		    String line;
+   		    while ( (line = reader.readLine()) != null ) {
+   		           jsonData.append(line);
+   		    }
    		    
-   			HrVO hvo  = new HrVO();
-   			try {
-	   	   		String v_userid 		 = request.getParameter("user_id");		//employeeCard_form의 name값이 user_id인 것
-	   	   		String v_user_password 	 = request.getParameter("user_password");
-	   	   		String v_email 			 = request.getParameter("email");
-	   	   		String v_address 		 = request.getParameter("address");
-	   	   		int v_phone_number 		 = Integer.parseInt(request.getParameter("phone_number").trim());
-	   	   		Date v_register_date 	 = java.sql.Date.valueOf(request.getParameter("register_date"));
-	   	   		UserStatus v_user_status = UserStatus.parseUserStatus(request.getParameter("user_status"));
-	   	   		Date v_hire_date 		 = java.sql.Date.valueOf(request.getParameter("hire_date"));
-	   	   		String v_user_name 		 = request.getParameter("user_name");
-	   	   		Date v_modify_date 		 = java.sql.Date.valueOf(request.getParameter("modify_date"));
-	   	   		int v_department_id 	 = Integer.parseInt(request.getParameter("department_id"));
-	   	   		Gender v_gender 		 = Gender.parseGender(request.getParameter("gender"));
-	   	   		Date v_birth 			 = java.sql.Date.valueOf(request.getParameter("birth"));
-	   	   		String v_position 		 = request.getParameter("position");
-	   	   		int v_manager_id 		 = Integer.parseInt(request.getParameter("manager_id"));
-   		
-	   			hvo.setUser_id(v_userid);
-				hvo.setUser_password(v_user_password);
-				hvo.setEmail(v_email);
-				hvo.setAddress(v_address);
-				hvo.setPhone_number(v_phone_number);
-				hvo.setRegister_date(v_register_date);
-				hvo.setUser_status(v_user_status);
-				hvo.setHire_date(v_hire_date);
-				hvo.setUser_name(v_user_name);
-				hvo.setModify_date(v_modify_date);
-				hvo.setDepartment_id(v_department_id);
-				hvo.setGender(v_gender);
-				hvo.setBirth(v_birth);
-				hvo.setPosition(v_position);
-				hvo.setManager_id(v_manager_id);
-	   			
-   			} catch (IllegalArgumentException e) {
-   				e.printStackTrace(); // 개발 중에는 자세한 예외를 출력
-   			}
+   		    // 요청값이 제대로 들어왔나 확인
+   		    String jsonString = jsonData.toString();
+   		    System.out.println("요청들어온 값: " + jsonString);
+   			
+   			ObjectMapper om = new ObjectMapper();
+   			
+   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
+   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+   			om.setDateFormat(sdf);
+   			
+   			//JSON 데이터를 Java 객체로 변환
+	   		HrVO hvo = om.reader().readValue(jsonString, HrVO.class);
+	   		System.out.println("Parsed HrVO: " + hvo);
+   		    
+//   			HrVO hvo  = new HrVO();
+//   			try {
+//	   	   		String v_userid 		 = request.getParameter("user_id");		//employeeCard_form의 name값이 user_id인 것
+//	   	   		String v_user_password 	 = request.getParameter("user_password");
+//	   	   		String v_email 			 = request.getParameter("email");
+//	   	   		String v_address 		 = request.getParameter("address");
+//	   	   		int v_phone_number 		 = Integer.parseInt(request.getParameter("phone_number").trim());
+//	   	   		Date v_register_date 	 = java.sql.Date.valueOf(request.getParameter("register_date"));
+//	   	   		UserStatus v_user_status = UserStatus.parseUserStatus(request.getParameter("user_status"));
+//	   	   		Date v_hire_date 		 = java.sql.Date.valueOf(request.getParameter("hire_date"));
+//	   	   		String v_user_name 		 = request.getParameter("user_name");
+//	   	   		Date v_modify_date 		 = java.sql.Date.valueOf(request.getParameter("modify_date"));
+//	   	   		int v_department_id 	 = Integer.parseInt(request.getParameter("department_id"));
+//	   	   		Gender v_gender 		 = Gender.parseGender(request.getParameter("gender"));
+//	   	   		Date v_birth 			 = java.sql.Date.valueOf(request.getParameter("birth"));
+//	   	   		String v_position 		 = request.getParameter("position");
+//	   	   		int v_manager_id 		 = Integer.parseInt(request.getParameter("manager_id"));
+//   		
+//	   			hvo.setUser_id(v_userid);
+//				hvo.setUser_password(v_user_password);
+//				hvo.setEmail(v_email);
+//				hvo.setAddress(v_address);
+//				hvo.setPhone_number(v_phone_number);
+//				hvo.setRegister_date(v_register_date);
+//				hvo.setUser_status(v_user_status);
+//				hvo.setHire_date(v_hire_date);
+//				hvo.setUser_name(v_user_name);
+//				hvo.setModify_date(v_modify_date);
+//				hvo.setDepartment_id(v_department_id);
+//				hvo.setGender(v_gender);
+//				hvo.setBirth(v_birth);
+//				hvo.setPosition(v_position);
+//				hvo.setManager_id(v_manager_id);
+//	   			
+//   			} catch (IllegalArgumentException e) {
+//   				e.printStackTrace();
+//   			}
 	   			
    			int res = edao.insaCardInsert(hvo);
    			
