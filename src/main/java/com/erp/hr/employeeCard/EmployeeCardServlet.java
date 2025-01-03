@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Arrays;
 
 //import javax.servlet.RequestDispatcher;
@@ -16,7 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.erp.common.constant.CommonCode.Gender;
 import com.erp.common.constant.CommonCode.UserStatus;
+import com.erp.facility.common.DtoConverter;
 import com.erp.hr.common.PagingUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -120,26 +126,49 @@ public class EmployeeCardServlet extends HttpServlet {
 
    		} else if (pageGubun.equals("I001")) {
    			
-   			BufferedReader reader = request.getReader();
-   			StringBuilder jsonData = new StringBuilder();
-   		    String line;
-   		    while ( (line = reader.readLine()) != null ) {
-   		           jsonData.append(line);
-   		    }
-   		    
-   		    // 요청값이 제대로 들어왔나 확인
-   		    String jsonString = jsonData.toString();
-   		    System.out.println("요청들어온 값: " + jsonString);
+//   			String str1 = request.getQueryString();
+//   			BufferedReader reader = request.getReader();
+//   			StringBuilder jsonData = new StringBuilder();
+//   		    String line;
+//   		    while ( (line = reader.readLine()) != null ) {
+//   		           jsonData.append(line);
+//   		    }
+//   		    
+//   		    // 요청값이 제대로 들어왔나 확인
+//   		    String jsonString = jsonData.toString();
+//   		    System.out.println("요청들어온 값: " + jsonString);
+//			System.out.println("쿼리 스트 값: " + str1);
+//			System.out.println("ddd: " + request.getContentType());
+//   			ObjectMapper om = new ObjectMapper();
+//   			
+//   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
+//   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//   			om.setDateFormat(sdf);
+//   			
+//   			//JSON 데이터를 Java 객체로 변환
+//	   		HrVO hvo = om.reader().readValue(str1, HrVO.class);
+	   		
+   			HrVO hvo  = DtoConverter.convertToDto(request, HrVO.class);
    			
-   			ObjectMapper om = new ObjectMapper();
    			
-   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
-   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-   			om.setDateFormat(sdf);
-   			
-   			//JSON 데이터를 Java 객체로 변환
-	   		HrVO hvo = om.reader().readValue(jsonString, HrVO.class);
 	   		System.out.println("Parsed HrVO: " + hvo);
+   			
+   			
+ 
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+   			
+	   		
+
    		    
 //   			HrVO hvo  = new HrVO();
 //   			try {

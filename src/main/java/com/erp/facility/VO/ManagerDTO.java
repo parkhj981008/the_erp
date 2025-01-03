@@ -31,7 +31,7 @@ public class ManagerDTO {
     
     public static String findByUserSeq() {
     	return "SELECT  a.USER_SEQ FROM app_users a "
-    			+ "WHERE a.user_seq = ? and a.user_status = 1"
+    			+ "WHERE a.user_seq = ? and a.user_status = 0"
     			+ "AND NOT EXISTS ("
     			+ "    SELECT 1 FROM facility_manager m "
     			+ "    WHERE m.user_seq = ? "
