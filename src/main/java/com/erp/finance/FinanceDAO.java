@@ -246,7 +246,7 @@ public class FinanceDAO {
 	        pstmt.setString(1, vo.getVoucher_date());
 	        pstmt.setString(2, vo.getDescript());
 	        pstmt.setString(3, vo.getAccount_id());
-	        pstmt.setString(4, accountName); // 조회한 ACCOUNT_NAME 설정
+	        pstmt.setString(4, vo.getAccount_name()); // 조회한 ACCOUNT_NAME 설정
 	        pstmt.setLong(5, vo.getDebit());
 	        pstmt.setLong(6, vo.getCredit());
 

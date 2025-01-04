@@ -38,7 +38,10 @@ body {
 	font-size: 18px;
 }
 .scroll-button {
-    position: static;  /* fixed에서 static으로 변경 */
+	
+    top: 150px; /* 하단에서 20px 위 */
+    right: 60px; /* 오른쪽에서 20px 왼쪽 */
+    position: fixed;
     padding: 10px 15px;
     font-size: 16px;
     color: white;
@@ -46,9 +49,9 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    z-index: 1000; /* 다른 요소 위에 표시 */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 
 .scroll-button:hover {
     background-color: #0056b3;
@@ -56,7 +59,7 @@ body {
 
 
 table {
-	width: 50%;
+	width: 60%;
 	margin: 20px auto;
 	border-collapse: collapse;
 }
@@ -193,6 +196,18 @@ button.submit-button:hover {
     margin: 0;
     color: #ccc; /* 약간 밝은 회색 */
 }
+body {
+        margin: 0;
+        padding: 0;
+    }
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: calc(100% - 0px); /* Adjust the footer width */
+        text-align: center;
+        background-color: #f8f9fa; /* Optional: Footer background color */
+        padding: 10px 0;
+    }
 </style>
 <!-- base:css -->
 <link rel="stylesheet"
@@ -355,6 +370,9 @@ button.submit-button:hover {
 							</div>
 						</div>
 					</div>
+					
+			<%@ include file="/erp/layout/footer_layout.jsp"%>
+					
 				</div>
 			</div>
 		</div>
@@ -397,10 +415,17 @@ button.submit-button:hover {
 												const debitAccountId = $(
 														"#debit_account_id")
 														.val();
+												const debitAccountName = $(
+												"#debit_account_name")
+												.val();
 												const debitAmount = $("#debit")
 														.val();
 												const creditAccountId = $(
 														"#credit_account_id")
+														.val();
+
+												const creditAccountName = $(
+														"#credit_account_name")
 														.val();
 												const creditAmount = $(
 														"#credit").val();
@@ -413,8 +438,10 @@ button.submit-button:hover {
 																voucher_date : voucherDate,
 																descript : descript,
 																debit_account_id : debitAccountId,
+																debit_account_name : debitAccountName,
 																debit : debitAmount,
 																credit_account_id : creditAccountId,
+																credit_account_name : creditAccountName,
 																credit : creditAmount
 															},
 															success : function(
@@ -422,6 +449,38 @@ button.submit-button:hover {
 																if (response
 																		.trim() === "success") {
 																	alert("전표가 성공적으로 추가되었습니다.");
+																	
+																	$(
+																	"#voucher_date")
+																	.val(
+																			'');
+															$(
+																	"#descript")
+																	.val(
+																			'');
+															$(
+																	"#debit_account_id")
+																	.val(
+																			'');
+															$(
+															"#debit_account_name")
+															.val(
+																	'');
+															$(
+																	"#debit")
+																	.val(
+																			'');
+															$(
+															"#credit_account_id")
+															.val(
+																	'');
+															$(
+															"#credit_account_name")
+															.val(
+																	'');
+															$("#credit").val(
+																	'');
+															
 																	updateVoucherList();
 																} else {
 																	alert("전표 추가에 실패했습니다.");
@@ -501,5 +560,6 @@ button.submit-button:hover {
 		    });
 		});
 	</script>
+	
 </body>
 </html>
