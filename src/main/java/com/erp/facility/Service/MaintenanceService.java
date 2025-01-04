@@ -6,7 +6,9 @@ import com.erp.facility.VO.MaintenanceDTO;
 
 public interface MaintenanceService {
 	int save(MaintenanceDTO maintenanceDTO);
-	public List<MaintenanceDTO> findALl(String seq);
+	public List<MaintenanceDTO> findALl(String seq);	
 	int update(MaintenanceDTO maintenanceDTO);
+	MaintenanceDTO findOneMax(String seq);
+	
 
 }

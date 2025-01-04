@@ -36,7 +36,6 @@ public class FinanceDAO {
 			String query = "SELECT ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_TYPE, PARENT_TYPE " +
 						   "FROM ACCOUNTS " +
 						   "ORDER BY ACCOUNT_ID ASC";
-        	System.out.println(query);
         	
 			pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
@@ -55,6 +54,65 @@ public class FinanceDAO {
 		}
 		return fList;
     }
+	
+	// Accounts 테이블의 총 레코드 수 조회
+	public int getAccountsTotalCount() {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    int totalCount = 0;
+
+	    try {
+	        String query = "SELECT COUNT(*) AS total FROM ACCOUNTS";
+	        pstmt = conn.prepareStatement(query);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            totalCount = rs.getInt("total");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, rs);
+	    }
+	    return totalCount;
+	}
+	// 페이징에 맞는 데이터 조회
+	public List<FinanceVO> getAccountsByPage(int startSeq, int endSeq) {
+	    DBManager dbm = OracleDBManager.getInstance();
+	    Connection conn = dbm.connect();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    List<FinanceVO> fList = new ArrayList<>();
+
+	    try {
+	        String query = "SELECT * FROM ( " +
+	                       "    SELECT ROWNUM AS rnum, A.* FROM ( " +
+	                       "        SELECT ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_TYPE, PARENT_TYPE " +
+	                       "        FROM ACCOUNTS ORDER BY ACCOUNT_ID ASC " +
+	                       "    ) A WHERE ROWNUM <= ? " +
+	                       ") WHERE rnum >= ?";
+	        pstmt = conn.prepareStatement(query);
+	        pstmt.setInt(1, endSeq);
+	        pstmt.setInt(2, startSeq);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            FinanceVO vo = new FinanceVO();
+	            vo.setAccount_id(rs.getString("ACCOUNT_ID"));
+	            vo.setAccount_name(rs.getString("ACCOUNT_NAME"));
+	            vo.setAccount_type(rs.getString("ACCOUNT_TYPE"));
+	            vo.setParent_type(rs.getString("PARENT_TYPE"));
+	            fList.add(vo);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbm.close(conn, pstmt, rs);
+	    }
+	    return fList;
+	}
+	
 	// 계정 추가 기능
 	public boolean addAccount(FinanceVO vo) {
 	    DBManager dbm = OracleDBManager.getInstance();
@@ -144,7 +202,7 @@ public class FinanceDAO {
 				    "    credit " +
 				    "FROM final_voucher_num " +
 				    "ORDER BY voucher_date, voucher_num";
-        	System.out.println(query);
+        	//System.out.println(query);
         	
         	
         	
@@ -176,7 +234,7 @@ public class FinanceDAO {
 	    String accountName = getAccountNameById(vo.getAccount_id()); // ACCOUNT_ID로 ACCOUNT_NAME 조회
 
 	    if (accountName == null) {
-	        System.out.println("ACCOUNT_NAME을 조회할 수 없습니다: " + vo.getAccount_id());
+	        //System.out.println("ACCOUNT_NAME을 조회할 수 없습니다: " + vo.getAccount_id());
 	        return false; // ACCOUNT_ID가 유효하지 않은 경우 삽입 중단
 	    }
 
@@ -325,7 +383,7 @@ public class FinanceDAO {
 				    "FROM COMBINED " +
 				    "ORDER BY  " +
 				    "    ACCOUNT_ID, RN";
-        	System.out.println(query);
+        	//System.out.println(query);
         	
         	
         	
@@ -377,7 +435,7 @@ public class FinanceDAO {
 				    "WHERE a.parent_type IN ('자산', '부채', '자본') " +
 				    "GROUP BY a.account_name, a.account_type, a.parent_type, a.account_id " +
 				    "ORDER BY a.account_id";
-        	System.out.println(query);
+        	//System.out.println(query);
         	
 			pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
@@ -491,7 +549,7 @@ public class FinanceDAO {
 				    "    END, " +
 				    "    ACCOUNT_ID, " +
 				    "    ACCOUNT_NAME";
-        	System.out.println(query);
+        	//System.out.println(query);
         	
         	pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();

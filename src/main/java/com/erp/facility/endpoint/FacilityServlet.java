@@ -1,5 +1,6 @@
 package com.erp.facility.endpoint;
 
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -85,10 +86,6 @@ public class FacilityServlet extends HttpServlet {
 			}
 			
 			
-			
-			
-			
-
 		} else if (pathInfo.equals("/create")) {
 
 			// 시설 타입 테이블호출
@@ -149,7 +146,7 @@ public class FacilityServlet extends HttpServlet {
 			FacilityDTO facility = convertToDto(request, FacilityDTO.class);
 			facilityService.save(facility);
 
-			System.out.println("facilityDTO : 저장완료");
+//			System.out.println("facilityDTO : 저장완료");
 			response.sendRedirect("/facility/list");
 
 		} else if (actionPage.equals("status")) {
@@ -208,18 +205,21 @@ public class FacilityServlet extends HttpServlet {
 		        MaintenanceDTO maintenance = mapper.readValue(request.getReader(), MaintenanceDTO.class);
 		        
 		        // 저장 처리
-		        int result = maintenanceService.save(maintenance);
+		        int result = maintenanceService.save(maintenance);		       	        
+		        String fSeq = String.valueOf(maintenance.getFacilityId());
 		        
 		        // 저장 후 해당 시설의 전체 유지보수 목록 조회
-		        List<MaintenanceDTO> mList = maintenanceService.findALl(String.valueOf(maintenance.getFacilityId()));
-//		        System.out.println("maintenance = " + actionPage);
-		        mList.forEach(i -> System.out.println(i));
-		        
-		        // 응답 데이터 구성
+		        List<MaintenanceDTO> mList = maintenanceService.findALl(fSeq);
+		        MaintenanceDTO dto = maintenanceService.findOneMax(fSeq);
 		        Map<String, Object> responseData = new HashMap<>();
+//		        System.out.println("dto : "+ dto);	  		        
+//		        System.out.println("dto.getWorkingDate().toString() : "+ dto.getWorkingDate().toString());	  		        
+		        // 응답 데이터 구성
 		        responseData.put("success", result == 1);
-		        responseData.put("maintenance", maintenance);
+		        responseData.put("maintenance", dto!=null ? dto : maintenance);	               
 		        responseData.put("maintenanceList", mList);
+
+		        
 		        
 		        // JSON 응답 전송
 		        mapper.writeValue(out, responseData);
