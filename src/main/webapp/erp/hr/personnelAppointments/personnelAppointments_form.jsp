@@ -305,6 +305,12 @@ h2{
                       		<!-- 모달창 열기 버튼 -->
                   
                   <div class="table-responsive">
+                  
+                  <!-- 폼 -->
+                  <form id="myForm" name="myForm" action="/PAServlet" method="POST">
+                  	<input type="hidden" id="pageGubun" name="pageGubun" value="I001">
+                  
+                  	
                     <table class="table">
                       <thead>
                         <tr>
@@ -371,8 +377,8 @@ h2{
                       		
                       		<td>
                       			<select type="text" id="assignment_type" name="assignment_type" class="form-control">
-                      			  <option>부서이동</option>
-			                      <option>승진</option>
+                      			  <option value="1">부서이동</option>
+			                      <option value="2">승진</option>
                       			</select>
                       		</td>
                       		
@@ -382,9 +388,12 @@ h2{
 						<tr>	
                       </tbody>
                     </table>
+                    </form>
+                    
+                    
                   </div>
                 </div>
-	            	<button type="button" class="btn btn-primary" id="submitBtn"> 발령 등록 </button>
+	            	<button type="submit" class="btn btn-primary" id="submitBtn"> 발령 등록 </button>
               </div>
             </div>
           </div>
@@ -545,7 +554,7 @@ $(document).ready(function() {
     });
     
     
- 	// "선택" 버튼 클릭 시 동작
+ 	// 모달창 내 사원검색 후 사원 "선택" 버튼 클릭 시 동작
     $(document).on('click', '.select_btn', function() {
         const user_seq 			= $(this).data('user_seq');
         const user_name 		= $(this).data('user_name');
@@ -562,14 +571,56 @@ $(document).ready(function() {
         $('.modal').removeClass('on');
     });
 
+
+ 	// 발령 등록 (I001)
+    $("#submitBtn").click(function() {
+
+        if ($("#pa_date").val() == "") {
+            alert("발령일자를 선택해주세요");
+
+        } else if ($("#user_seq").val() == "") {
+            alert("사원을 선택해주세요");
+
+        } else if ($("#notes").val() == "") {
+            alert("설명을 입력해주세요");
+            $("#notes").focus();
+
+        }
+        
+        var jsonObj = {
+        		"pa_date" 			: $("#pa_date").val(),
+        		"user_seq" 			: $("#user_seq").val(),
+        		"before_dept" 		: $("#before_dept").val(),
+        		"before_position" 	: $("#before_position").val(),
+        		"assigned_dept" 	: $("#assigned_dept").val(),
+        		"assigned_position" : $("#assigned_position").val(),
+        		"assignment_type" 	: $("#assignment_type").val(),
+        		"notes" 			: $("#notes").val()
+        		};
+
+        
+        var jsonStr = JSON.stringify(jsonObj);
+        
+        
+        $.ajax({
+            url : "/PAServlet?pageGubun=I001",
+            method : 'POST',
+            contentType : "application/json; charset=UTF-8" ,	//내가보내는거 json임을 명시
+            
+            data : jsonStr ,  
+            
+            success: function(obj) {
+                console.log("서버응답값:" + obj.status + obj.message);
+            },
+            error: function(err) {
+                console.log("에러:" + err);
+            }
+        });
+    });
+
+	
 });
 </script>
-
-
-
-
-
-
 
 
 
