@@ -26,26 +26,15 @@
 </head>
 <body>
 	<div class="container-scroller">
-
 		<!-- partial:partials/_navbar.html -->
-
-
 		<%@ include file="/erp/layout/top_layout.jsp"%>
-
 		<!-- partial -->
 		<div class="container-fluid page-body-wrapper">
 			<!-- partial:partials/_settings-panel.html -->
-
-			<!-- partial -->
 			<!-- partial:partials/_sidebar.html -->
-
 			<%@ include file="/erp/layout/side_layout.jsp"%>
-
-
 			<!-- partial -->
 			<div class="main-panel">
-
-
 				<div class="content-wrapper py-4">
 					<div class="container">
 						<div class="card shadow-sm">
@@ -228,7 +217,7 @@
 	<script src="/erp/js/dashboard.js"></script>
 	<!-- End custom js for this page-->
 
-<script>
+	<script>
 $(document).ready(function() {
     // 추가 버튼 클릭 시
     $("#addMaintenanceBtn").click(function() {
@@ -275,12 +264,13 @@ $(document).ready(function() {
     });
 
     function updateMaintenanceTable(maintenance) {
-        let tbody = "";
+        // 타임스탬프를 날짜 형식으로 변환
+        let workingDate = new Date(maintenance.workingDate).toISOString().split('T')[0];
         
+        let tbody = "";
         tbody += "<tr>";
         tbody += "<td>" + maintenance.maintenanceId + "</td>";
-        // 날짜가 이미 'YYYY-MM-DD' 형식으로 오므로 그대로 사용
-        tbody += "<td>" + maintenance.workingDate + "</td>";
+        tbody += "<td>" + workingDate + "</td>"; // 변환된 날짜 사용
         tbody += "<td>" + maintenance.workDetail + "</td>";
         tbody += "<td>";
         
@@ -294,6 +284,7 @@ $(document).ready(function() {
 
         $("#maintenanceTable tbody").prepend(tbody);
     }
+
 
 });
 </script>

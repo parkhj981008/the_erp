@@ -27,6 +27,34 @@
 </head>
 
 <body>
+
+<%
+String currentPage = request.getRequestURI();
+System.out.println("currentPage = " + currentPage);
+
+String loginPage = "/erp/pages/auth/Login.jsp";
+
+if (!currentPage.equals(loginPage)) {
+	Cookie[] cookies = request.getCookies();
+	boolean hasAuthCookie = false;
+
+	if (cookies != null) {
+		for (Cookie cookie : cookies) {
+	if (cookie.getName().equals("auth")) {
+		hasAuthCookie = true;
+		break;
+	}
+		}
+	}
+
+	if (!hasAuthCookie && !response.isCommitted()) {
+		response.sendRedirect(loginPage);
+		return;
+	}
+}
+%>
+
+
   <div class="container-scroller">
   <div class="container-fluid page-body-wrapper full-page-wrapper">
     <div class="content-wrapper d-flex align-items-center auth px-0">

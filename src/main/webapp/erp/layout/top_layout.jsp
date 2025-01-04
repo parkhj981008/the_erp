@@ -1,7 +1,7 @@
 
 <%
 String currentPage = request.getRequestURI();
-System.out.println("currentPage = " + currentPage);
+/* System.out.println("currentPage = " + currentPage);*/
 
 String loginPage = "/erp/pages/auth/Login.jsp";
 

@@ -23,6 +23,10 @@ public class MaintenanceRepository {
 	private static final StatementProvider sp = new StatementProviderDefaultImpl();
 	
 	
+	
+	
+	
+	
 	public int save(MaintenanceDTO maintenance) {
 		try(
 			Connection con = db.getConnectionForTransaction();
@@ -46,6 +50,32 @@ public class MaintenanceRepository {
 		}
 		return 0;
 	}
+	
+	
+	
+	public MaintenanceDTO findOneMax(String facilityId) {
+	    
+	    try (
+	        Connection con = db.getConnectionForTransaction();
+	        PreparedStatement ps = sp.getPreparedStatement(con, MaintenanceDTO.findAllMaintenance(),facilityId);
+	        ResultSet rs = ps.executeQuery()
+	    ) {
+	    	
+	    	if (rs.next()) { // 데이터가 있는지 먼저 확인
+				  return MaintenanceDTO.fromResultSet(rs);
+			}	    		    	
+	        return null;
+	        
+	    } catch (SQLException e) {
+	        if(e instanceof SQLIntegrityConstraintViolationException) 
+	            throw new RestBusinessException(StatusCode.CONSTRAINT_VIOLATION);
+	        e.printStackTrace();
+	        throw new RestBusinessException(StatusCode.UNEXPECTED_ERROR);
+	    }
+	}
+	
+	
+	
 	
 	
 	public List<MaintenanceDTO> findMaintenance(String facilityId) {
