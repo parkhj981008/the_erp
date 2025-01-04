@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+//import java.util.Date;
 
 import com.erp.hr.common.DBManager;
 import com.erp.hr.common.OracleDBManager;
@@ -38,7 +39,7 @@ public class PersonnelAppointmentsDAO {
 						pvo.setPa_date(rs.getDate("pa_date"));
 						pvo.setUser_seq(rs.getInt("user_seq"));
 						pvo.setUser_name(rs.getString("user_name"));
-						pvo.setBirth(rs.getDate("birth"));
+						
 						pvo.setBefore_dept(rs.getString("before_dept"));
 						pvo.setBefore_position(rs.getString("before_position"));
 						pvo.setAssigned_dept(rs.getString("assigned_dept"));
@@ -84,7 +85,7 @@ public class PersonnelAppointmentsDAO {
 					pvo.setPa_date(rs.getDate("pa_date"));
 					pvo.setUser_seq(rs.getInt("user_seq"));
 					pvo.setUser_name(rs.getString("user_name"));
-					pvo.setBirth(rs.getDate("birth"));
+					
 					pvo.setBefore_dept(rs.getString("before_dept"));
 					pvo.setBefore_position(rs.getString("before_position"));
 					pvo.setAssigned_dept(rs.getString("assigned_dept"));
@@ -129,7 +130,7 @@ public class PersonnelAppointmentsDAO {
 			pvo.setPa_date(rs.getDate("pa_date"));
 			pvo.setUser_seq(rs.getInt("user_seq"));
 			pvo.setUser_name(rs.getString("user_name"));
-			pvo.setBirth(rs.getDate("birth"));
+			
 			pvo.setBefore_dept(rs.getString("before_dept"));
 			pvo.setBefore_position(rs.getString("before_position"));
 			pvo.setAssigned_dept(rs.getString("assigned_dept"));
@@ -169,7 +170,11 @@ public class PersonnelAppointmentsDAO {
 
 
 			pstmt =  conn.prepareStatement(sql);
-				pstmt.setDate(1, (Date) pvo.getPa_date());
+			
+				pstmt.setDate(1, pvo.getPa_date());
+				
+//				pstmt.setDate(1, new java.sql.Date(pvo.getPa_date().getTime()));
+				
 				pstmt.setInt(2, pvo.getUser_seq());
 				pstmt.setString(3, pvo.getBefore_dept());
 				pstmt.setString(4, pvo.getBefore_position());
@@ -237,7 +242,7 @@ public class PersonnelAppointmentsDAO {
 	
 	
 	
-	// DAO 테스트	
+//	// DAO 테스트	
 //	public static void main(String[] args) {
 //  	
 //		PersonnelAppointmentsDAO padao = new PersonnelAppointmentsDAO();
@@ -265,14 +270,14 @@ public class PersonnelAppointmentsDAO {
 //        PaVO pvo = new PaVO();  // PaVO 객체 생성
 //
 //        // PaVO 객체에 테스트 데이터를 세팅
-//        pvo.setPah_date(java.sql.Date.valueOf("2025-05-01"));  // 예시 날짜
-//        pvo.setUser_seq(155);  			// 예시 user_seq
-//        pvo.setBefore_dept("개발1팀");  	// 예시 이전 부서
-//        pvo.setBefore_position("사원");  // 예시 이전 직급
-//        pvo.setAssigned_dept("개발2팀");  // 예시 배정 부서
-//        pvo.setAssigned_position("사원");  // 예시 배정 직급
-//        pvo.setAssignment_type(1);  // 예시 배정 유형 (부서 이동)
-//        pvo.setNotes("부서이동");  // 설명
+//        pvo.setPa_date(java.sql.Date.valueOf("2025-05-01"));  // 예시 날짜
+//        pvo.setUser_seq(160);  			// 예시 user_seq
+//        pvo.setBefore_dept("인사팀");  	// 예시 이전 부서
+//        pvo.setBefore_position("대리");  // 예시 이전 직급
+//        pvo.setAssigned_dept("인사팀");  // 예시 배정 부서
+//        pvo.setAssigned_position("과장");  // 예시 배정 직급
+//        pvo.setAssignment_type(2);  // 예시 배정 유형
+//        pvo.setNotes("또승진이에요");  // 설명
 //
 //        // PaDAO의 insert 메소드 실행
 //        int rows = paDAO.insert(pvo);

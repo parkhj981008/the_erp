@@ -1,6 +1,6 @@
 package com.erp.hr.personnelAppointments;
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

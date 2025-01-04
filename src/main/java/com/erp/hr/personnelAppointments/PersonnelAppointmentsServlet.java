@@ -2,6 +2,7 @@ package com.erp.hr.personnelAppointments;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.erp.facility.common.DtoConverter;
 import com.erp.hr.common.PagingUtil;
+import com.erp.hr.employeeCard.HrVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -130,16 +133,22 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
    			
    			ObjectMapper om = new ObjectMapper();
    			
-   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
-   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-   			om.setDateFormat(sdf);
+//   			ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
+//   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//   			om.setDateFormat(sdf);
    			
-   			//JSON 데이터를 Java 객체로 변환
-   			PaVO pavo = om.reader().readValue(jsonString, PaVO.class);
+			//JSON 데이터를 Java 객체로 변환
+			PaVO pvo = om.reader().readValue(jsonString, PaVO.class);
    			
-   			System.out.println("Parsed PaVO: " + pavo);
    			
-   			int res = padao.insert(pavo);
+   			
+//   		PaVO pvo  = DtoConverter.convertToDto(request, PaVO.class);
+   			
+
+   			
+   			System.out.println("Parsed PaVO: " + pvo);
+   			
+   			int res = padao.insert(pvo);
    			
    			// 응답 타입을 JSON 객체로 설정
    			response.setContentType("application/json; charset=UTF-8");
@@ -147,6 +156,7 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
    			//정상적으로 DB에 입력 된 경우
 			if (res > 0) {
 				response.getWriter().write("{\"status\":1, \"message\":\"인사발령 등록 성공\"}");
+				response.sendRedirect("/erp/hr/personnelAppointments/personnelAppointments_list.jsp");
 			} else {
 	        	response.getWriter().write("{\"status\":0, \"message\":\"인사발령 등록 실패\"}");
    			}
