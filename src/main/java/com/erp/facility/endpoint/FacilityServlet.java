@@ -194,7 +194,7 @@ public class FacilityServlet extends HttpServlet {
 
 		} else if (actionPage.equals("maintenance")) {
 			
-			System.out.println("maintenance = " + actionPage);
+//			System.out.println("maintenance = " + actionPage);
 		    response.setContentType("application/json");
 		    response.setCharacterEncoding("UTF-8");
 		    PrintWriter out = response.getWriter();

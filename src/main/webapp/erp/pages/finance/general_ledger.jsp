@@ -38,10 +38,7 @@ body {
 	font-size: 18px;
 }
 .scroll-button {
-	
-    top: 150px; /* 하단에서 20px 위 */
-    right: 60px; /* 오른쪽에서 20px 왼쪽 */
-    position: fixed;
+    position: static;  /* fixed에서 static으로 변경 */
     padding: 10px 15px;
     font-size: 16px;
     color: white;
@@ -49,9 +46,9 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    z-index: 1000; /* 다른 요소 위에 표시 */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 .scroll-button:hover {
     background-color: #0056b3;
