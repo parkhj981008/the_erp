@@ -543,12 +543,12 @@ h2{
                       		 <td>
                       			<input type="text" id="notes" name="notes" class="form-control" placeholder="설명을 입력해주세요">
                       		 </td>
-                      		 
 						<tr>	
                       </tbody>
                     </table>
                   </div>
                 </div>
+	            	<button type="button" class="btn btn-primary" id="submitBtn"> 발령 등록 </button>
               </div>
             </div>
           </div>

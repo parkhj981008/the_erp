@@ -26,6 +26,8 @@
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
+    <%@ include file="/erp/layout/top_layout.jsp" %>
+    
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
           <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo.svg" alt="logo"/></a>
@@ -203,6 +205,9 @@
         </div>
       <!-- partial -->
       <!-- partial:../../partials/_sidebar.html -->
+      <%@ include file="/erp/layout/side_layout.jsp" %>
+      
+      
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
@@ -432,6 +437,7 @@
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
+        <%@ include file="/erp/layout/footer_layout.jsp" %>
         <footer class="footer">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
               <span class="text-center text-sm-left d-block d-sm-inline-block">Copyright Â© <a href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com</a> 2020</span>
