@@ -154,15 +154,15 @@
        			$('#attendanceCodeSelect').change(function() {
        				selectedValue = $(this).val().toLowerCase().trim();
        				rows = $('#table-tbody tr'); 
-       				console.log('rows: ' + rows.attendanceCode);
+       				//console.log('rows: ' + rows.attendanceCode);
        				
-       				console.log('선택된 근태코드:', selectedValue); // 선택된 근태코드 로그
+       				//console.log('선택된 근태코드:', selectedValue); // 선택된 근태코드 로그
        				
        				let isExist = false; 
        				
 	       			rows.each(function() {
 	       			  const codeLabel = $(this).find('.code').text().trim(); // 근태코드 값
-	       			  console.log('label: ' + codeLabel);
+	       			  //console.log('label: ' + codeLabel);
 	
 	       		      // 선택된 값이 '전체'이거나 근태코드가 선택된 값과 같으면 표시, 아니면 숨김
 	       		      if (selectedValue === 'all' || codeLabel === selectedValue) {
@@ -184,7 +184,7 @@
        			// 근태 삭제
        			$('#delete-selected').click(function() {
        				checkedRows = $('.row-checkbox:checked');
-       				console.log(checkedRows);
+       				//console.log(checkedRows);
        				
        				if (checkedRows.length === 0) {
        			      alert('삭제할 항목을 선택하세요.');
@@ -194,11 +194,11 @@
        				seqList = [];
        				checkedRows.each(function() {
        					attendanceSeq = $(this).closest('tr').find('.attendance-seq').val();
-       					console.log(attendanceSeq);
+       					//console.log(attendanceSeq);
        					seqList.push(attendanceSeq);
        				});
        				
-       				console.log(seqList);
+       				//console.log(seqList);
        				
        				$.ajax({
        					url: '/v1/attendance/delete',
@@ -214,7 +214,7 @@
 	       			      });
 	       			    },
 	       			    error: function (error) {
-	       			    	console.log(JSON.stringify({ attendanceSeqs: seqList }));
+	       			    	//console.log(JSON.stringify({ attendanceSeqs: seqList }));
 	       			      alert('삭제 중 오류가 발생했습니다.');
 	       			      console.error(error);
        			    	}

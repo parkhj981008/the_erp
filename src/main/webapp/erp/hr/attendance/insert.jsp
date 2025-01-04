@@ -143,7 +143,7 @@
 	       					$('#modal-tbody').empty();
 	       					var html = '';
 	       					$.each(data, function(i, vo) {
-	      						console.log(vo);
+	      						//console.log(vo);
 	      						html += '<tr style="cursor: pointer;">';
 	      						html += '<td>' + vo.userSeq + '</td>';
 	      						html += '<td>' + vo.userName + '</td>';
@@ -171,7 +171,7 @@
 	       					$('#selectAttendanceCodeModal-tbody').empty();
 	       					var html = '';
 	       					$.each(data, function(i, vo) {
-	      						console.log(vo);
+	      						//console.log(vo);
 	      						html += '<tr style="cursor: pointer;">';
 	      						html += '<td>' + vo.rownum + '</td>';
 	      						html += '<td>' + vo.attendanceCode + '</td>';
@@ -214,7 +214,7 @@
        			$(document).on('click', '#searchUserModal-tbody tr', function () {
        			  const selectedUserSeq = $(this).find('td:nth-child(1)').text();
        			  const selectedUserName = $(this).find('td:nth-child(2)').text();
-       			  console.log(selectedUserSeq, selectedUserName);
+       			  //console.log(selectedUserSeq, selectedUserName);
        			  
        			  $('#insertModal').modal('hide');
        			  
@@ -245,7 +245,7 @@
        			// 근태 항목 동적으로 추가된 요소에 이벤트 위임
        			$(document).on('click', '#selectAttendanceCodeModal-tbody tr', function () {
        			  const selectedCodeName = $(this).find('td:nth-child(3)').text();
-       			  console.log(selectedCodeName);
+       			  //console.log(selectedCodeName);
        			  
        			  $('#insertModal').modal('hide');
        			  
@@ -270,9 +270,40 @@
         	$('#insertBtn').click(function() {
         		var formDataArray = $('#attendanceForm').serializeArray();
         		var formData = {};
-        	    $.each(formDataArray, function(_, field) {
+        		
+        		 // 순차적으로 입력 확인
+        	    for (var i = 0; i < formDataArray.length; i++) {
+        	        var field = formDataArray[i];
+
+        	        // 'notes'는 검증 제외
+        	        if (field.name !== 'notes' && !field.value.trim()) {
+        	            var fieldLabel;
+        	            switch (field.name) {
+        	                case 'attendanceDate':
+        	                    fieldLabel = '근태일자';
+        	                    break;
+        	                case 'userName':
+        	                    fieldLabel = '사원';
+        	                    break;
+        	                case 'attendanceCode':
+        	                    fieldLabel = '근태';
+        	                    break;
+        	                case 'daysNumber':
+        	                    fieldLabel = '근태(일/시간)';
+        	                    break;
+        	                default:
+        	                    fieldLabel = field.name;
+        	            }
+
+        	            // 경고 메시지 표시 및 포커스 이동
+        	            alert(fieldLabel + '를(을) 입력해주세요.');
+        	            $('[name="' + field.name + '"]').focus();
+        	            return; // 중단
+        	        }
+
+        	        // 입력값 저장
         	        formData[field.name] = field.value;
-        	    });
+        	    }
         	    
         		$.ajax({
         			url: '/v1/attendance/insert',
