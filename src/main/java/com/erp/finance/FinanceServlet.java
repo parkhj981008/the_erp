@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import com.erp.finance.common.PagingUtil;
 
 /**
  * Servlet implementation class ChatMsgServlet
@@ -26,14 +27,34 @@ public class FinanceServlet extends HttpServlet {
 
 		// 계정관리
 		if (uri.equals("/finance/accounts")) {	
-			List<FinanceVO> fList1 = dao.AccountsList();
-			request.setAttribute("KEY_ACCOUNTS_FLIST", fList1);
-			request.getRequestDispatcher("/erp/pages/finance/accounts.jsp").forward(request, response);
-			// 전표관리
+			int currentPage = 1;
+		    String currentPageStr = request.getParameter("currentPage");
+		    if (currentPageStr != null && !currentPageStr.isEmpty()) {
+		        currentPage = Integer.parseInt(currentPageStr);
+		    }
+
+		    int blockCount = 10; // 한 페이지당 출력할 레코드 수
+		    int blockPage = 5;   // 한 블록당 출력할 페이지 수
+		    int totRecord = dao.getAccountsTotalCount(); // 전체 레코드 수 조회
+
+		    PagingUtil pg = new PagingUtil("/finance/accounts", currentPage, totRecord, blockCount, blockPage);
+
+		    // 페이징에 맞는 데이터 조회
+		    List<FinanceVO> fList1 = dao.getAccountsByPage(pg.getStartSeq(), pg.getEndSeq());
+
+		    // 데이터 및 페이징 HTML을 request에 추가
+		    request.setAttribute("KEY_ACCOUNTS_FLIST", fList1);
+		    request.setAttribute("MY_KEY_PAGING_HTML", pg.getPagingHtml().toString());
+
+		    // JSP로 포워드
+		    request.getRequestDispatcher("/erp/pages/finance/accounts.jsp").forward(request, response);
+		
+		    // 전표관리
 		} else if (uri.equals("/finance/general_ledger")) {
 			List<FinanceVO> fList2 = dao.SlipList();
 			request.setAttribute("KEY_SLIP_FLIST", fList2);
 			request.getRequestDispatcher("/erp/pages/finance/general_ledger.jsp").forward(request, response);
+		
 			// 계정별원장
 		} else if (uri.equals("/finance/sum_FinanceList")) {
 			List<FinanceVO> fList3 = dao.sumFinanceList();
@@ -41,11 +62,13 @@ public class FinanceServlet extends HttpServlet {
 			Map<String, List<FinanceVO>> groupedData = dao.getFinanceDataGroupedByAccountId();
 			request.setAttribute("groupedData", groupedData);
 			request.getRequestDispatcher("/erp/pages/finance/sum_FinanceList.jsp").forward(request, response);
+		
 			// 재무상태표
 		} else if (uri.equals("/finance/sofp")) {
 			List<FinanceVO> fList4 = dao.SoFPList();
 			request.setAttribute("KEY_STATE_FLIST", fList4);
 			request.getRequestDispatcher("/erp/pages/finance/sofp.jsp").forward(request, response);
+		
 			// 손익계산서
 		} else if (uri.equals("/finance/income_Statement")) {
 			List<FinanceVO> fList5 = dao.sumIncomeList();
@@ -78,19 +101,19 @@ public class FinanceServlet extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 
 			if (isAdded) {
-				System.out.println("응답: success");
+				//System.out.println("응답: success");
 				response.getWriter().write("success");
 			} else {
-				System.out.println("응답: fail");
+				//System.out.println("응답: fail");
 				response.getWriter().write("fail");
 			}
 			return;
 
 		}
-		System.out.println("account_id: " + request.getParameter("account_id"));
-		System.out.println("account_name: " + request.getParameter("account_name"));
-		System.out.println("account_type: " + request.getParameter("account_type"));
-		System.out.println("parent_type: " + request.getParameter("parent_type"));
+//		System.out.println("account_id: " + request.getParameter("account_id"));
+//		System.out.println("account_name: " + request.getParameter("account_name"));
+//		System.out.println("account_type: " + request.getParameter("account_type"));
+//		System.out.println("parent_type: " + request.getParameter("parent_type"));
 
 		// 계정 삭제 기능
 		if (uri.equals("/finance/delete_account")) {

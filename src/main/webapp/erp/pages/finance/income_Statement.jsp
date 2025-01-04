@@ -55,6 +55,50 @@
         font-size: 18px!important;
          text-align: center;
     }
+    #sidebar {
+        position: fixed; /* 화면에 고정 */
+        top: 0;          /* 화면 상단 기준 위치 */
+        left: 0;         /* 화면 왼쪽 기준 위치 */
+        width: 250px;    /* 사이드바 너비 */
+        height: 100vh;   /* 전체 화면 높이 */
+        overflow-y: auto; /* 내용이 넘치면 스크롤 가능 */
+        color: #fff;    /* 글자 색상 */
+    }
+
+    .main-content {
+        margin-left: 250px; /* 사이드바 너비만큼 메인 콘텐츠 밀기 */
+    }
+    
+.sidebar-profile {
+    margin-top: 60px; /* 위쪽에 여백 추가 */
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    color: #fff; /* 텍스트 색상 */
+    border-radius: 8px;
+}
+
+.sidebar-profile-image img {
+    border-radius: 50%; /* 프로필 이미지를 원형으로 */
+    width: 50px; /* 이미지 크기 */
+    height: 50px;
+}
+
+.sidebar-profile-name {
+    margin-left: 10px; /* 이미지와 텍스트 간 간격 */
+}
+
+.sidebar-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.sidebar-designation {
+    font-size: 14px;
+    margin: 0;
+    color: #ccc; /* 약간 밝은 회색 */
+}
 </style>
 </head>
 <body>
@@ -72,8 +116,9 @@
 				<!-- partial:partials/_sidebar.html -->
 	
 				<%@ include file="/erp/layout/side_layout.jsp"%>
+				<div class="main-content" style="width: calc(100% - 250px); margin-left: 250px;">
    <div class="parent-div" style="width:100%;">
-        <div class="main-panel" style="width: 70%;">
+        <div class="main-panel" style="width: 80%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -129,6 +174,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
         </div>
