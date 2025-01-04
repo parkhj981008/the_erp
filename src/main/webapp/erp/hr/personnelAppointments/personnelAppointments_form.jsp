@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="/erp/images/favicon.png" />
-
+  
+  
 <!-- 모달 -->
 <style>
 
@@ -45,20 +46,22 @@ h2{
     box-shadow: 3px 4px 11px 0px #00000040;
 }
 
-/*모달 팝업 영역 스타일링*/
+/*모달 팝업 배경 영역 스타일링*/
 .modal {
-/*팝업 배경*/
 	display: none; /*평소에는 보이지 않도록*/
     position: absolute;
     top:0;
     left: 0;
     width: 100%;
     height: 100vh;
-    overflow: hidden;
     background: rgba(0,0,0,0.5);
+    overflow: hidden;
+    z-index: 1000; /* 모달의 z-index 값 */
 }
+
+
+/* 팝업 내부 스타일 */
 .modal .modal_popup {
-/*팝업*/
     position: absolute;
     top: 50%;
     left: 50%;
@@ -66,6 +69,11 @@ h2{
     padding: 20px;
     background: #ffffff;
     border-radius: 20px;
+    width: 400px; /* 모달 창의 너비 */
+    height: auto; /* 내용에 따라 높이 자동 조절 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto; /* 내용이 많을 경우 스크롤 */
+    z-index: 1010;
 }
 
 .modal .modal_popup .close_btn {
@@ -83,6 +91,23 @@ h2{
     display: block;
 }
 
+/* 테이블 스타일 */
+#resultTable {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 겹침 제거 */
+    text-align: left;
+    margin-top: 10px;
+}
+
+#resultTable th, #resultTable td {
+    border: 1px solid #ddd; /* 테두리 색상 */
+    padding: 8px; /* 셀 간격 */
+}
+
+#resultTable th {
+    background-color: #f4f4f4; /* 헤더 배경 색 */
+    font-weight: bold;
+}
 </style>
     
 </head>
@@ -432,8 +457,6 @@ h2{
                         <tr>
                           <th scope="col">발령일자 선택</th>
                           <th scope="col">사원 검색</th>
-                          <th scope="col">이전 부서</th>
-                          <th scope="col">이전 직급</th>
                           <th scope="col">발령 부서</th>
                           <th scope="col">발령 직급</th>
                           <th scope="col">발령구분</th>
@@ -457,35 +480,6 @@ h2{
                       		</td>
                       		<!-- 모달창 열기 버튼 -->
 							
-							
-                      		
-                      		
-                      		
-                      		<td>
-                      			<select class="form-control form-control-lg" name="before_dept" id="before_dept">
-				                    <option>인사부</option>
-				                    <option>개발부</option>
-									<option>회계</option>
-									<option>총무</option>
-									<option>공공영업1팀</option>
-									<option>공공영업2팀</option>
-									<option>기업영업1팀</option>
-									<option>기업영업2팀</option>
-			                    </select>
-                      		</td>
-                      		
-                      		
-                      		<td>
-			                    <select class="form-control form-control-lg" name="before_position" id="before_position">
-			                      <option>사원</option>
-			                      <option>대리</option>
-			                      <option>과장</option>
-			                      <option>차장</option>
-			                      <option>부장</option>
-			                      <option>팀장</option>
-			                      <option>대표이사</option>
-			                    </select>
-                      		</td>
                       		
                       		
                       		<td>
@@ -539,14 +533,48 @@ h2{
 		  <!--모달 팝업-->
 			<div class="modal">
 			    <div class="modal_popup">
-			        <h3>사원 검색</h3>
-			        <p>사원을 검색하세요</p>
-			        
-			        검색 : <input type="text" name="searchStr" id="searchStr">
-			        <br><br>
+			        <h4>사원 검색</h4>
+			        <p>사원을 검색하여 선택해주세요</p>
+			        <br>
+			        <form id="searchForm"> 
+			        <table>
+			        	<tr>
+				        	<td>
+						        검색구분 : <select name="searchGubun" id="searchGubun">
+											<option value="user_name">이름</option>
+											<option value="user_seq">사원번호</option>
+										</select>
+					        </td>
+					        <td>
+					        	검색 : <input type="text" name="searchStr" id="searchStr">
+					        </td>
+					        
+			        	</tr>
+			        </table>
+			        </form>
+					
+
+					<br>
+
+				        <!-- 검색 결과 테이블 -->
+						<table id="resultTable">
+						    <thead>
+						        <tr>
+						            <th>사번</th>
+						            <th>이름</th>
+						            <th>부서</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <!-- 동적으로 추가된 행들이 들어갈 곳 -->
+						    </tbody>
+						</table>
+										
+				        <br><br>
+
 			        <button type="button" class="close_btn">닫기</button>
-			    </div>
-			</div>
+			    </div> <!-- 모달팝업 div -->
+			</div> <!-- 모달 div -->
 			<!-- 모달 팝업-->
 
 
@@ -603,6 +631,65 @@ h2{
 	    modal.classList.remove('on');
 	});
 </script>
+
+
+
+<script>
+$(document).ready(function() {
+
+	
+    // jQuery 동적 이벤트 바인딩
+    $(document).on('keyup', "#searchStr", function() {
+        var str = $("#searchStr").val();
+        if (str != "") {
+            var formData = $("#searchForm").serialize(); // k=v&k=v
+            console.log(formData);
+
+            $.ajax({
+                url : "/restSearch",
+                method : 'POST',
+                data : formData,
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
+                //dataType: "json", 	
+                success : function(obj) {
+                	console.log(obj);  // vo 구조 확인
+                	
+                	
+                    // 결과 테이블의 tbody 부분 초기화
+                    $("#resultTable tbody").empty();
+
+                    // 검색 결과 추가
+					var htmlStr
+					
+					$(obj).map(function(i, vo) {
+						htmlStr += "<tr>";
+						htmlStr += "<td>"+vo.user_seq+"</td>";
+						htmlStr += "<td>"+vo.user_name+"</td>";
+						htmlStr += "<td>"+vo.department_name+"</td>";
+						htmlStr += "</tr>";
+					});
+
+					$("#resultTable tbody").html(htmlStr);
+
+                },
+                error : function(err) {
+                    console.log("에러:" + err);
+                }
+            });
+        }
+    });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
 
 
 
