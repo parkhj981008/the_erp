@@ -67,7 +67,7 @@
 	
 				<%@ include file="/erp/layout/side_layout.jsp"%>
      <div class="parent-div" style="width:100%;">
-        <div class="main-panel" style="width: 70%;">
+        <div class="main-panel" style="width: 80%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">

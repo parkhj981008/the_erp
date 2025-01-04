@@ -72,7 +72,7 @@
 	
 				<%@ include file="/erp/layout/side_layout.jsp"%>
 	 <div class="parent-div" style="width:100%;">
-	        <div class="main-panel" style="width: 70%;">
+	        <div class="main-panel" style="width: 80%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -101,7 +101,7 @@
     <c:forEach var="vo" items="${KEY_STATE_FLIST}" varStatus="status">
         <!-- Parent Type가 바뀌는 경우 합계 행 추가 -->
         <c:if test="${previousParentType != '' && vo.parent_type != previousParentType}">
-            <tr>
+            <tr style=" text-align: center;">
                 <td><strong>${previousParentType} 합계</strong></td>
                 <td></td>
                 <td></td>
@@ -111,7 +111,7 @@
             </tr>
             <c:set var="currentSum" value="0" />
         </c:if>
-        <tr>
+        <tr style=" text-align: center;">
             <td>
                 <c:choose>
                     <c:when test="${vo.parent_type != previousParentType}">
@@ -138,7 +138,7 @@
         </tr>
         <!-- 마지막 항목에서 합계 출력 -->
         <c:if test="${status.last}">
-            <tr>
+            <tr style=" text-align: center;">
                 <td><strong>${previousParentType} 합계</strong></td>
                 <td></td>
                 <td></td>
