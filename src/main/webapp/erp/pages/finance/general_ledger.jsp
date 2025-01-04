@@ -37,6 +37,26 @@ body {
 	justify-content: space-between;
 	font-size: 18px;
 }
+.scroll-button {
+	
+    top: 150px; /* 하단에서 20px 위 */
+    right: 60px; /* 오른쪽에서 20px 왼쪽 */
+    position: fixed;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000; /* 다른 요소 위에 표시 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-button:hover {
+    background-color: #0056b3;
+}
+
 
 table {
 	width: 50%;
@@ -94,6 +114,44 @@ button.submit-button {
 button.submit-button:hover {
 	background-color: #0056b3;
 }
+
+.table-container, .form-group{
+	display: flex; /* Flexbox 레이아웃 활성화 */
+    align-items: center; /* 세로 정렬을 가운데로 맞춤 */
+    gap: 20px; /* red-section과 blue-section 사이 간격 */
+	
+	
+	.red-section {
+	    flex: 1; /* red-section이 가능한 공간을 차지 */
+	}
+	
+	.blue-section {
+	    flex: 0; /* blue-section은 고정 크기를 유지 */
+	}
+	
+	input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button
+		{
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	
+	input[type="number"] {
+		-moz-appearance: textfield;
+	}
+	
+	input, textarea {
+		border: 1px solid #ccc;
+		padding: 10px;
+		border-radius: 4px;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	input:focus, textarea:focus {
+		border: 2px solid #007bff;
+		box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+	}
+}
 </style>
 <!-- base:css -->
 <link rel="stylesheet"
@@ -119,16 +177,16 @@ button.submit-button:hover {
 
 			<%@ include file="/erp/layout/side_layout.jsp"%>
 			<div class="parent-div" style="width: 100%;">
-				<div class="main-panel" style="width: 90%;">
+				<div class="main-panel" style="width: 100%;">
 					<div class="content-wrapper">
 						<div class="row">
 							<div class="col-lg-12 grid-margin stretch-card">
 								<div class="card">
 									<div class="card-body">
 										<h4 class="card-title">전표 관리</h4>
-										<p class="card-description">
-											2024년
-											<code> </code>
+										<p class="card-description" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+										    <span>2024년</span>
+										    <button id="scrollToBottom" class="scroll-button">전표 추가</button>
 										</p>
 										<div class="table-responsive">
 											<div id="voucherListContainer">
@@ -197,31 +255,6 @@ button.submit-button:hover {
 											<hr>
 											<div
 												style="margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box;">
-												<style>
-input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button
-	{
-	-webkit-appearance: none;
-	margin: 0;
-}
-
-input[type="number"] {
-	-moz-appearance: textfield;
-}
-
-input, textarea {
-	border: 1px solid #ccc;
-	padding: 10px;
-	border-radius: 4px;
-	width: 100%;
-	box-sizing: border-box;
-}
-
-input:focus, textarea:focus {
-	outline: none;
-	border: 2px solid #007bff;
-	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-</style>
 												<h3 style="text-align: center;">전표 추가</h3>
 												<form id="addVoucherForm" onsubmit="return false;">
 													<div class="form-group">
@@ -234,8 +267,9 @@ input:focus, textarea:focus {
 													</div>
 
 													<div class="table-container">
+													 <div class="red-section">
 														<table
-															style="margin-top: 20px; width: 100%; text-align: center;">
+															style="margin-top: 20px; border: 1px solid #ccc; width: 100%; text-align: center;">
 															<thead>
 																<tr>
 																	<th>차변 계정 ID</th>
@@ -260,14 +294,18 @@ input:focus, textarea:focus {
 																		name="credit_account_name" required></td>
 																	<td><input type="number" id="credit" name="credit"
 																		required></td>
-																	<td><button id="addVoucherBtn" type="submit"
-																			class="submit-button" style="text-align: center;">입력</button></td>
+																	
+																		
 																</tr>
 															</tbody>
 														</table>
+															</div>
+																<div class="blue-section">
+																<button id="addVoucherBtn" type="submit" class="submit-button" style="text-align: center;">입력</button>
+																</div>
+														</div>		
 
-													</div>
-												</form>
+													</form>
 											</div>
 										</div>
 									</div>
@@ -385,7 +423,7 @@ input:focus, textarea:focus {
             }
         },
         error: function (xhr, status, error) {
-            console.error("AJAX 요청 실패:", error);
+            //console.error("AJAX 요청 실패:", error);
             alert("서버와의 통신 중 문제가 발생했습니다.");
         }
     });
@@ -405,13 +443,20 @@ input:focus, textarea:focus {
 														.html(updatedContent); // 화면에 목록 갱신
 											},
 											error : function(xhr, status, error) {
-												console.error("목록 갱신 실패:",
-														error);
+												//console.error("목록 갱신 실패:", error);
 												alert("목록을 갱신하는 데 문제가 발생했습니다.");
 											}
 										});
 							}
 						});
+	</script>
+	<script>
+		document.getElementById("scrollToBottom").addEventListener("click", function() {
+		    window.scrollTo({
+		        top: document.body.scrollHeight, // 문서 전체 높이로 이동
+		        behavior: "smooth" // 부드럽게 스크롤
+		    });
+		});
 	</script>
 </body>
 </html>
