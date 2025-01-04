@@ -87,6 +87,17 @@ h2{
     transition: box-shadow 0.2s;
 }
 
+.select_btn {
+    display: block;
+    padding: 10px 20px;
+    background-color: rgb(116, 0, 0);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
 .modal.on {
     display: block;
 }
@@ -451,12 +462,21 @@ h2{
                 
                   <h4 class="card-title" style="font-size: 30px;">인사발령 등록</h4>
                   
+                      		<!-- 모달창 열기 버튼 -->
+						    <section>
+						        <button type="button" class="modal_btn">사원검색</button>
+						    </section>
+                      		<!-- 모달창 열기 버튼 -->
+                  
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
                           <th scope="col">발령일자 선택</th>
-                          <th scope="col">사원 검색</th>
+                          <th scope="col">사원 번호</th>
+                          <th scope="col">이름</th>
+                          <th scope="col">기존 부서</th>
+                          <th scope="col">기존 직급</th>
                           <th scope="col">발령 부서</th>
                           <th scope="col">발령 직급</th>
                           <th scope="col">발령구분</th>
@@ -471,16 +491,21 @@ h2{
                       			<input type="date" id="pa_date" name="pa_date" class="form-control">
                       		</td>
                       		
-                      		
-                      		<!-- 모달창 열기 버튼 -->
                       		<td>
-							    <section>
-							        <button type="button" class="modal_btn" id="user_seq" name="user_seq">사원검색</button>
-							    </section>
+    							<input type="text" class="form-control" id="user_seq" name="user_seq" readonly>
                       		</td>
-                      		<!-- 모달창 열기 버튼 -->
-							
                       		
+                      		<td>
+    							<input type="text" class="form-control" id="user_name" name="user_name" readonly>
+                      		</td>
+                      		
+                      		<td>
+                      			<input type="text" class="form-control" name="before_dept" id="before_dept" readonly>
+                      		</td>
+                      		
+                      		<td>
+                      			<input type="text" class="form-control" name="before_position" id="before_position" readonly>
+                      		</td>
                       		
                       		<td>
                       			<select class="form-control form-control-lg" name="assigned_dept" id="assigned_dept">
@@ -497,7 +522,7 @@ h2{
                       	
                       		
                       		<td>
-                   			  	<select class="form-control form-control-lg" name="before_position" id="before_position">
+                   			  	<select class="form-control form-control-lg" name="assigned_position" id="assigned_position">
 			                      <option>사원</option>
 			                      <option>대리</option>
 			                      <option>과장</option>
@@ -518,12 +543,12 @@ h2{
                       		 <td>
                       			<input type="text" id="notes" name="notes" class="form-control" placeholder="설명을 입력해주세요">
                       		 </td>
-                      		 
 						<tr>	
                       </tbody>
                     </table>
                   </div>
                 </div>
+	            	<button type="button" class="btn btn-primary" id="submitBtn"> 발령 등록 </button>
               </div>
             </div>
           </div>
@@ -563,16 +588,19 @@ h2{
 						            <th>사번</th>
 						            <th>이름</th>
 						            <th>부서</th>
+						            <th>직급</th>
+						            <th>선택</th>
 						        </tr>
 						    </thead>
 						    <tbody>
-						        <!-- 동적으로 추가된 행들이 들어갈 곳 -->
+						        <!-- 행들이 들어갈 곳 -->
 						    </tbody>
 						</table>
 										
 				        <br><br>
 
 			        <button type="button" class="close_btn">닫기</button>
+			        <br>
 			    </div> <!-- 모달팝업 div -->
 			</div> <!-- 모달 div -->
 			<!-- 모달 팝업-->
@@ -659,14 +687,19 @@ $(document).ready(function() {
                     $("#resultTable tbody").empty();
 
                     // 검색 결과 추가
-					var htmlStr
+					var htmlStr = "";
 					
 					$(obj).map(function(i, vo) {
 						htmlStr += "<tr>";
-						htmlStr += "<td>"+vo.user_seq+"</td>";
-						htmlStr += "<td>"+vo.user_name+"</td>";
-						htmlStr += "<td>"+vo.department_name+"</td>";
-						htmlStr += "</tr>";
+	                    htmlStr += "<td>" + vo.user_seq + "</td>";
+	                    htmlStr += "<td>" + vo.user_name + "</td>";
+	                    htmlStr += "<td>" + vo.department_name + "</td>";
+	                    htmlStr += "<td>" + vo.position + "</td>";
+	                    htmlStr += "<td><button class='select_btn' data-user_seq='" + vo.user_seq + 
+	                               "' data-user_name='" + vo.user_name + 
+	                               "' data-department_name='" + vo.department_name + 
+	                               "' data-position='" + vo.position + "'>선택</button></td>";
+	                    htmlStr += "</tr>";
 					});
 
 					$("#resultTable tbody").html(htmlStr);
@@ -677,6 +710,24 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+    
+    
+ 	// "선택" 버튼 클릭 시 동작
+    $(document).on('click', '.select_btn', function() {
+        const user_seq 			= $(this).data('user_seq');
+        const user_name 		= $(this).data('user_name');
+        const department_name 	= $(this).data('department_name');
+        const position 			= $(this).data('position');
+
+        // 이전 페이지의 입력 필드에 값 채우기
+        $('#user_seq').val(user_seq);
+        $('#user_name').val(user_name);
+        $('#before_dept').val(department_name);
+        $('#before_position').val(position);
+
+        // 모달 창 닫기
+        $('.modal').removeClass('on');
     });
 
 });
