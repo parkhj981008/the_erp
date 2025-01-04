@@ -34,7 +34,7 @@ public class PersonnelAppointmentsDAO {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 					PaVO pvo = new PaVO();
-						pvo.setPa_seq(rs.getInt("pah_seq"));
+						pvo.setPah_seq(rs.getInt("pah_seq"));
 						pvo.setPa_date(rs.getDate("pa_date"));
 						pvo.setUser_seq(rs.getInt("user_seq"));
 						pvo.setUser_name(rs.getString("user_name"));
@@ -67,7 +67,12 @@ public class PersonnelAppointmentsDAO {
 		ResultSet rs = null;
 		
 		try {
-			String sql = "";
+			String sql = "select p.* , a.user_name as user_name, a.birth as birth\r\n"
+					+ "from (select personnel_appointments_history.* ,\r\n"
+					+ "	  ROW_NUMBER() OVER (ORDER BY pah_seq DESC) AS rnum\r\n"
+					+ "	  from personnel_appointments_history) p, app_users a\r\n"
+					+ "where p.user_seq = a.user_seq(+)\r\n"
+					+ "and p.rnum between ? and ?";
 			pstmt =  conn.prepareStatement(sql);
 			pstmt.setInt(1, startSeq);
 			pstmt.setInt(2, endSeq);
@@ -75,7 +80,7 @@ public class PersonnelAppointmentsDAO {
 			
 			while(rs.next()) {
 				PaVO pvo = new PaVO();
-					pvo.setPa_seq(rs.getInt("pah_seq"));
+					pvo.setPah_seq(rs.getInt("pah_seq"));
 					pvo.setPa_date(rs.getDate("pa_date"));
 					pvo.setUser_seq(rs.getInt("user_seq"));
 					pvo.setUser_name(rs.getString("user_name"));
@@ -120,7 +125,7 @@ public class PersonnelAppointmentsDAO {
 			rs = pstmt.executeQuery();
 			rs.next();	//한건만 있을때
 			
-			pvo.setPa_seq(rs.getInt("pah_seq"));
+			pvo.setPah_seq(rs.getInt("pah_seq"));
 			pvo.setPa_date(rs.getDate("pa_date"));
 			pvo.setUser_seq(rs.getInt("user_seq"));
 			pvo.setUser_name(rs.getString("user_name"));
@@ -260,7 +265,7 @@ public class PersonnelAppointmentsDAO {
 //        PaVO pvo = new PaVO();  // PaVO 객체 생성
 //
 //        // PaVO 객체에 테스트 데이터를 세팅
-//        pvo.setPa_date(java.sql.Date.valueOf("2025-05-01"));  // 예시 날짜
+//        pvo.setPah_date(java.sql.Date.valueOf("2025-05-01"));  // 예시 날짜
 //        pvo.setUser_seq(155);  			// 예시 user_seq
 //        pvo.setBefore_dept("개발1팀");  	// 예시 이전 부서
 //        pvo.setBefore_position("사원");  // 예시 이전 직급
