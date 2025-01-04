@@ -48,10 +48,10 @@ public class OracleDBManager implements DBManager {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             conn = DriverManager.getConnection(DB_URL, DB_ID, DB_PW);
             
-            if(conn != null)
-                System.out.println("오라클 연결성공");
-            else
-                System.out.println("오라클 연결실패");
+//            if(conn != null)
+//                System.out.println("오라클 연결성공");
+//            else
+//                System.out.println("오라클 연결실패");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {

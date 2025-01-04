@@ -207,8 +207,8 @@ public class AttendanceRepository {
 		}
 	}
 
-	public static void main(String[] args) {
-		AttendanceRepository ar = new AttendanceRepository();
-		System.out.println(ar.selectAllPaging(1, 5));
-	}
+	/*
+	 * public static void main(String[] args) { AttendanceRepository ar = new
+	 * AttendanceRepository(); System.out.println(ar.selectAllPaging(1, 5)); }
+	 */
 }

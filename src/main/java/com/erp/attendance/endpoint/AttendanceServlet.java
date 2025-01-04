@@ -118,7 +118,7 @@ public class AttendanceServlet extends HttpServlet {
 			Date date = null;
 			try {
 				date = idto.getAttendanceDate();
-				System.out.println(date);
+				// System.out.println(date);
 			} catch (IllegalArgumentException e) {
 				// 형식이 맞지 않는 경우 오류 처리
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -126,7 +126,7 @@ public class AttendanceServlet extends HttpServlet {
 				return;
 			}
 
-			System.out.println(idto);
+			// System.out.println(idto);
 			AttendanceRepository ar = new AttendanceRepository();
 
 			int rows = ar.insertAttendance(idto);
@@ -150,7 +150,7 @@ public class AttendanceServlet extends HttpServlet {
 		// 특정 근태 삭제
 		case "/v1/attendance/delete": {
 			String jsonData = sb.toString();
-			System.out.println("jsonData: " + jsonData);
+			// System.out.println("jsonData: " + jsonData);
 			ObjectMapper mapper = new ObjectMapper(); 
 			
 			try {
