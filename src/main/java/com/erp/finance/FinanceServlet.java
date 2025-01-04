@@ -141,14 +141,17 @@ public class FinanceServlet extends HttpServlet {
 	        String voucherDate = request.getParameter("voucher_date");
 	        String descript = request.getParameter("descript");
 	        String debitAccountId = request.getParameter("debit_account_id");
+	        String debitAccountName = request.getParameter("debit_account_name");
 	        Long debitAmount = Long.parseLong(request.getParameter("debit"));
 	        String creditAccountId = request.getParameter("credit_account_id");
+	        String creditAccountName = request.getParameter("credit_account_name");
 	        Long creditAmount = Long.parseLong(request.getParameter("credit"));
 
 	        FinanceVO debitVO = FinanceVO.builder()
 	                .voucher_date(voucherDate)
 	                .descript(descript)
 	                .account_id(debitAccountId)
+	                .account_name(debitAccountName)
 	                .debit(debitAmount)
 	                .credit(0L)
 	                .build();
@@ -157,6 +160,7 @@ public class FinanceServlet extends HttpServlet {
 	                .voucher_date(voucherDate)
 	                .descript(descript)
 	                .account_id(creditAccountId)
+	                .account_name(creditAccountName)
 	                .debit(0L)
 	                .credit(creditAmount)
 	                .build();

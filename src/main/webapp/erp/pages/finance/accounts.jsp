@@ -56,9 +56,10 @@ body {
 }
 
 table {
-	width: 50%;
+	width: 100%;
 	margin: 20px auto;
 	border-collapse: collapse;
+            table-layout: fixed;
 }
 
 th, td {
@@ -210,6 +211,18 @@ table th {
     margin: 0;
     color: #ccc; /* 약간 밝은 회색 */
 }
+body {
+        margin: 0;
+        padding: 0;
+    }
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: calc(100% - 0px); /* Adjust the footer width */
+        text-align: center;
+        background-color: #f8f9fa; /* Optional: Footer background color */
+        padding: 10px 0;
+    }
 </style>
 <!-- base:css -->
 <link rel="stylesheet"
@@ -317,6 +330,8 @@ table th {
 							</div>
 						</div>
 					</div>
+			<%@ include file="/erp/layout/footer_layout.jsp"%>
+					
 				</div>
 			</div>
 			</div>
