@@ -20,11 +20,18 @@ public class MaintenanceServiceImpl implements MaintenanceService{
 	public List<MaintenanceDTO> findALl(String seq) {
 		return maintenanceRepository.findMaintenance(seq);
 	}
+	
+	
 
 	@Override
 	public int update(MaintenanceDTO maintenanceDTO) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public MaintenanceDTO findOneMax(String seq) {
+		return maintenanceRepository.findOneMax(seq);
 	}
 
 

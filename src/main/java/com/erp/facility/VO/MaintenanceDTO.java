@@ -20,9 +20,20 @@ public class MaintenanceDTO {
     private String workStatus;
     private String workCost;
 
+    public static String finOneMaxMaintenance() {
+    	return "SELECT * FROM ("
+    			+ "    SELECT * "
+    			+ "    FROM facility_maintenance "
+    			+ "    WHERE facility_id = ? "
+    			+ "    ORDER BY maintenance_id DESC"
+    			+ ") "
+    			+ "WHERE ROWNUM = 1"
+    			+ "";
+    }
     public static String findAllMaintenance() {
         return "select * from facility_maintenance where facility_id = ? order by maintenance_id desc";
     }
+    
     
     public static String getInsertMaintenanceQuery() {
         return "INSERT INTO facility_maintenance "

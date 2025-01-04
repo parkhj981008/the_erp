@@ -36,7 +36,7 @@ public class FinanceDAO {
 			String query = "SELECT ACCOUNT_ID, ACCOUNT_NAME, ACCOUNT_TYPE, PARENT_TYPE " +
 						   "FROM ACCOUNTS " +
 						   "ORDER BY ACCOUNT_ID ASC";
-        	System.out.println(query);
+//        	System.out.println(query);
         	
 			pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
@@ -144,7 +144,7 @@ public class FinanceDAO {
 				    "    credit " +
 				    "FROM final_voucher_num " +
 				    "ORDER BY voucher_date, voucher_num";
-        	System.out.println(query);
+//        	System.out.println(query);
         	
         	
         	
@@ -176,7 +176,7 @@ public class FinanceDAO {
 	    String accountName = getAccountNameById(vo.getAccount_id()); // ACCOUNT_ID로 ACCOUNT_NAME 조회
 
 	    if (accountName == null) {
-	        System.out.println("ACCOUNT_NAME을 조회할 수 없습니다: " + vo.getAccount_id());
+//	        System.out.println("ACCOUNT_NAME을 조회할 수 없습니다: " + vo.getAccount_id());
 	        return false; // ACCOUNT_ID가 유효하지 않은 경우 삽입 중단
 	    }
 
@@ -325,7 +325,7 @@ public class FinanceDAO {
 				    "FROM COMBINED " +
 				    "ORDER BY  " +
 				    "    ACCOUNT_ID, RN";
-        	System.out.println(query);
+//        	System.out.println(query);
         	
         	
         	
@@ -377,7 +377,7 @@ public class FinanceDAO {
 				    "WHERE a.parent_type IN ('자산', '부채', '자본') " +
 				    "GROUP BY a.account_name, a.account_type, a.parent_type, a.account_id " +
 				    "ORDER BY a.account_id";
-        	System.out.println(query);
+//        	System.out.println(query);
         	
 			pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
@@ -491,7 +491,7 @@ public class FinanceDAO {
 				    "    END, " +
 				    "    ACCOUNT_ID, " +
 				    "    ACCOUNT_NAME";
-        	System.out.println(query);
+//        	System.out.println(query);
         	
         	pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();

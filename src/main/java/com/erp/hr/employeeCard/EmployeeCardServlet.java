@@ -1,11 +1,7 @@
 package com.erp.hr.employeeCard;
 
 import java.io.*;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Arrays;
 
 //import javax.servlet.RequestDispatcher;
@@ -15,15 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.erp.common.constant.CommonCode.Gender;
-import com.erp.common.constant.CommonCode.UserStatus;
+
 import com.erp.facility.common.DtoConverter;
 import com.erp.hr.common.PagingUtil;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 
 @WebServlet("/employeeCardServlet")
@@ -35,13 +26,11 @@ public class EmployeeCardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html; charset=UTF-8");
 
    		String pageGubun = request.getParameter("pageGubun");
    		EmployeeCardDAO edao = new EmployeeCardDAO();
    	
-   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
+//   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
    		
    		
    		//	 -------------------------------------------------------- 인사카드 전체 목록보기 (페이징)
@@ -107,14 +96,14 @@ public class EmployeeCardServlet extends HttpServlet {
 //   	response.setContentType("text/html; charset=UTF-8");
    		
 
-		System.out.println("POST 메서드 호출됨");
+//		System.out.println("POST 메서드 호출됨");
 
 		//페이지 구분자부터 받기
    		String pageGubun = request.getParameter("pageGubun");
    		
 
    		EmployeeCardDAO edao = new EmployeeCardDAO();
-   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
+//   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
    		
 
    		if (pageGubun == null) {
@@ -125,49 +114,22 @@ public class EmployeeCardServlet extends HttpServlet {
    		// ----------------------------------------------------------- 인사카드 등록 I
 
    		} else if (pageGubun.equals("I001")) {
+   				   		
+   			HrVO hvo  = DtoConverter.convertToDto(request, HrVO.class);  			
+//	   		System.out.println("Parsed HrVO: " + hvo);
    			
-//   			String str1 = request.getQueryString();
-//   			BufferedReader reader = request.getReader();
-//   			StringBuilder jsonData = new StringBuilder();
-//   		    String line;
-//   		    while ( (line = reader.readLine()) != null ) {
-//   		           jsonData.append(line);
-//   		    }
-//   		    
-//   		    // 요청값이 제대로 들어왔나 확인
-//   		    String jsonString = jsonData.toString();
-//   		    System.out.println("요청들어온 값: " + jsonString);
-//			System.out.println("쿼리 스트 값: " + str1);
-//			System.out.println("ddd: " + request.getContentType());
-//   			ObjectMapper om = new ObjectMapper();
-//   			
-//   			//ObjectMapper가 필드를 자동으로 Date 타입으로 변환하도록 추가적인 설정
-//   			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//   			om.setDateFormat(sdf);
-//   			
-//   			//JSON 데이터를 Java 객체로 변환
-//	   		HrVO hvo = om.reader().readValue(str1, HrVO.class);
-	   		
-   			HrVO hvo  = DtoConverter.convertToDto(request, HrVO.class);
+   			int res = edao.insaCardInsert(hvo);
    			
-   			
-	   		System.out.println("Parsed HrVO: " + hvo);
-   			
-   			
- 
-   			
-   			
-   			
-   			
-   			
-   			
-   			
-   			
-   			
-   			
-   			
-   			
-	   		
+   			// 응답 타입을 JSON 객체로 설정
+   			response.setContentType("application/json; charset=UTF-8");
+   	        
+			
+   			// 정상적으로 DB에 입력시 1 반환, 실패시 0 반환
+			if (res > 0) {
+				response.getWriter().write("{\"status\":1, \"message\":\"정상 입력됨\"}");
+			} else {
+				response.getWriter().write("{\"status\":0, \"message\":\"입력 실패\"}");
+   			}
 
    		    
 //   			HrVO hvo  = new HrVO();
@@ -208,18 +170,7 @@ public class EmployeeCardServlet extends HttpServlet {
 //   				e.printStackTrace();
 //   			}
 	   			
-   			int res = edao.insaCardInsert(hvo);
-   			
-   			// 응답 타입을 JSON 객체로 설정
-   			response.setContentType("application/json; charset=UTF-8");
-   	        
-			
-   			// 정상적으로 DB에 입력시 1 반환, 실패시 0 반환
-			if (res > 0) {
-				response.getWriter().write("{\"status\":1, \"message\":\"정상 입력됨\"}");
-			} else {
-				response.getWriter().write("{\"status\":0, \"message\":\"입력 실패\"}");
-   			}
+   		
 
 	//e.of.I001
 			
