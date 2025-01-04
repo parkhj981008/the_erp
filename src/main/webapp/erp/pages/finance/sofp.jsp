@@ -98,7 +98,21 @@
     margin: 0;
     color: #ccc; /* 약간 밝은 회색 */
 }
+body {
+        margin: 0;
+        padding: 0;
+    }
+    .footer {
+        position: relative;
+        bottom: 0;
+        left: 0px; /* Sidebar width */
+        width: calc(100% - 0px); /* Adjust the footer width */
+        text-align: center;
+        background-color: #f8f9fa; /* Optional: Footer background color */
+        padding: 10px 0;
+    }
 </style>
+
 </head>
 <body>
 <div class="container-scroller">
@@ -117,7 +131,7 @@
 				<%@ include file="/erp/layout/side_layout.jsp"%>
 			<div class="main-content" style="width: calc(100% - 250px); margin-left: 250px;">
 	 <div class="parent-div" style="width:100%;">
-	        <div class="main-panel" style="width: 80%;">
+	        <div class="main-panel" style="width: 100%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -150,9 +164,9 @@
                 <td><strong>${previousParentType} 합계</strong></td>
                 <td></td>
                 <td></td>
-                <td class="numeric">
+                <td class="numeric"><strong>
                     <fmt:formatNumber value="${currentSum}" type="number" groupingUsed="true" />
-                </td>
+                </strong></td>
             </tr>
             <c:set var="currentSum" value="0" />
         </c:if>
@@ -179,7 +193,7 @@
             <td class="numeric">
                 <fmt:formatNumber value="${vo.diff}" type="number" groupingUsed="true" />
                 <c:set var="currentSum" value="${currentSum + vo.diff}" />
-            </td>
+           </td>
         </tr>
         <!-- 마지막 항목에서 합계 출력 -->
         <c:if test="${status.last}">
@@ -187,22 +201,25 @@
                 <td><strong>${previousParentType} 합계</strong></td>
                 <td></td>
                 <td></td>
-                <td class="numeric">
+                <td class="numeric"><strong>
                     <fmt:formatNumber value="${currentSum}" type="number" groupingUsed="true" />
-                </td>
+                 </strong></td>
             </tr>
         </c:if>
     </c:forEach>
 </tbody>
 					            </table>
+					            
 					       </div>
                         </div>
                     </div>
                 </div>
             </div>
+			<%@ include file="/erp/layout/footer_layout.jsp"%>
             </div>
         </div>
     </div>
+    
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="/erp/vendors/js/vendor.bundle.base.js"></script>
     <script src="/erp/js/off-canvas.js"></script>
@@ -210,5 +227,6 @@
     <script src="/erp/js/template.js"></script>
     <script src="/erp/js/settings.js"></script>
     <script src="/erp/js/todolist.js"></script>
+    
 </body>
 </html>

@@ -92,6 +92,18 @@
     margin: 0;
     color: #ccc; /* 약간 밝은 회색 */
 }
+body {
+        margin: 0;
+        padding: 0;
+    }
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: calc(100% - 0px); /* Adjust the footer width */
+        text-align: center;
+        background-color: #f8f9fa; /* Optional: Footer background color */
+        padding: 10px 0;
+    }
     </style>
 
 </head>
@@ -112,7 +124,7 @@
 				<%@ include file="/erp/layout/side_layout.jsp"%>
 				<div class="main-content" style="width: calc(100% - 250px); margin-left: 250px;">
      <div class="parent-div" style="width:100%;">
-        <div class="main-panel" style="width: 80%;">
+        <div class="main-panel" style="width: 100%;">
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
@@ -199,30 +211,20 @@
                 </div>
             </div>
         </div>
+        
+			<%@ include file="/erp/layout/footer_layout.jsp"%>
+        
         </div>
     </div>
     </div>
         </div>
     </div>
-</body>
-</html>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<!-- container-scroller -->
-<!-- base:js -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="/erp/vendors/js/vendor.bundle.base.js"></script>
-<!-- endinject -->
-<!-- Plugin js for this page-->
-<!-- End plugin js for this page-->
-<!-- inject:js -->
 <script src="/erp/js/off-canvas.js"></script>
 <script src="/erp/js/hoverable-collapse.js"></script>
 <script src="/erp/js/template.js"></script>
 <script src="/erp/js/settings.js"></script>
 <script src="/erp/js/todolist.js"></script>
-<!-- endinject -->
-<!-- plugin js for this page -->
-<!-- End plugin js for this page -->
-<!-- Custom js for this page-->
-<!-- End custom js for this page-->
 </body>
 </html>
