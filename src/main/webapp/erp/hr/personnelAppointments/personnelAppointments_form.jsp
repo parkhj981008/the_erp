@@ -21,48 +21,69 @@
   <link rel="stylesheet" href="/erp/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="/erp/images/favicon.png" />
-  
-  <!-- 모달창 스타일링 -->
-  <style>
-     .modal{
-         position:absolute;
-         display:none;
-         
-         justify-content: center;
-         top:0;
-         left:0;
 
-         width:100%;
-         height:100%;
+<!-- 모달 -->
+<style>
 
-         
+h2{
+    text-align: center;
+}
 
-         background-color: rgba(0,0,0,0.4);
-     }
-  </style>
-  
-  <!-- 모달창 body 부분 스타일링 -->
-  <style>
-  .modal_body{
-            position:absolute;
-            top:50%; //모달을 화면가운데 놓기위함. 
-        
+.modal_btn {
+    display: block;
+    margin: 40px auto;
+    padding: 10px 20px;
+    background-color: royalblue;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
 
-            width:400px;  //모달의 가로크기 
-            height:600px; //모달의 세로크기 
+.modal_btn:hover {
+    box-shadow: 3px 4px 11px 0px #00000040;
+}
 
-            padding:40px;  
+/*모달 팝업 영역 스타일링*/
+.modal {
+/*팝업 배경*/
+	display: none; /*평소에는 보이지 않도록*/
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0,0,0,0.5);
+}
+.modal .modal_popup {
+/*팝업*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+}
 
-            text-align: center;
+.modal .modal_popup .close_btn {
+    display: block;
+    padding: 10px 20px;
+    background-color: rgb(116, 0, 0);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
 
-            background-color: rgb(255,255,255); //모달창 배경색 흰색
-            border-radius:10px; //테두리 
-            box-shadow:0 2px 3px 0 rgba(34,36,38,0.15); //테두리 그림자 
+.modal.on {
+    display: block;
+}
 
-            transform:translateY(-50%); //모듈창열었을때 위치설정 가운데로 
-        }
- </style>
- 
+</style>
     
 </head>
 
@@ -393,20 +414,24 @@
       
       <!-- partial -->
    <div class="main-panel">
+   
         <div class="content-wrapper">
+        
           <div class="row">
           
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
+              
                 <div class="card-body">
+                
                   <h4 class="card-title" style="font-size: 30px;">인사발령 등록</h4>
+                  
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">발령일자</th>
-                          <th scope="col">사원번호</th>
-                          <th scope="col">이름</th>
+                          <th scope="col">발령일자 선택</th>
+                          <th scope="col">사원 검색</th>
                           <th scope="col">이전 부서</th>
                           <th scope="col">이전 직급</th>
                           <th scope="col">발령 부서</th>
@@ -424,14 +449,16 @@
                       		</td>
                       		
                       		
+                      		<!-- 모달창 열기 버튼 -->
                       		<td>
-                      			<input type="text" id="user_seq" name="user_seq" class="form-control">
+							    <section>
+							        <button type="button" class="modal_btn" id="user_seq" name="user_seq">사원검색</button>
+							    </section>
                       		</td>
+                      		<!-- 모달창 열기 버튼 -->
+							
+							
                       		
-                      		
-                      		<td>
-                      			<input type="text" id="user_name" name="user_name" class="form-control">
-                      		</td>
                       		
                       		
                       		<td>
@@ -440,7 +467,6 @@
 				                    <option>개발부</option>
 									<option>회계</option>
 									<option>총무</option>
-									<option>영업팀</option>
 									<option>공공영업1팀</option>
 									<option>공공영업2팀</option>
 									<option>기업영업1팀</option>
@@ -464,11 +490,10 @@
                       		
                       		<td>
                       			<select class="form-control form-control-lg" name="assigned_dept" id="assigned_dept">
-                      			<option>인사부</option>
+                      				<option>인사부</option>
 				                    <option>개발부</option>
 									<option>회계</option>
 									<option>총무</option>
-									<option>영업팀</option>
 									<option>공공영업1팀</option>
 									<option>공공영업2팀</option>
 									<option>기업영업1팀</option>
@@ -497,22 +522,36 @@
                       		</td>
                       		
                       		 <td>
-                      			<input type="text" id="notes" name="notes" class="form-control">
+                      			<input type="text" id="notes" name="notes" class="form-control" placeholder="설명을 입력해주세요">
                       		 </td>
                       		 
 						<tr>	
                       </tbody>
                     </table>
-
-                    
                   </div>
-                  
-
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+	      <!-- 모달 창은 일반적으로 tbody 밖에 위치 -->
+		  <!--모달 팝업-->
+			<div class="modal">
+			    <div class="modal_popup">
+			        <h3>사원 검색</h3>
+			        <p>사원을 검색하세요</p>
+			        
+			        검색 : <input type="text" name="searchStr" id="searchStr">
+			        <br><br>
+			        <button type="button" class="close_btn">닫기</button>
+			    </div>
+			</div>
+			<!-- 모달 팝업-->
+
+
+                  
+
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
@@ -546,13 +585,26 @@
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
 <script>
-
-
-
-
-
+	const modal = document.querySelector('.modal');
+	const modalOpen = document.querySelector('.modal_btn');
+	const modalClose = document.querySelector('.close_btn');
+	
+	//열기 버튼을 눌렀을 때 모달팝업이 열림
+	modalOpen.addEventListener('click',function(){
+	  	//'on' class 추가
+	    modal.classList.add('on');
+	});
+	
+	//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+	modalClose.addEventListener('click',function(){
+	    //'on' class 제거
+	    modal.classList.remove('on');
+	});
 </script>
+
+
 
 
 </body>
