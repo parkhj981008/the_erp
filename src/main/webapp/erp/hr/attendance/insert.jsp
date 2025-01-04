@@ -272,10 +272,9 @@
         		var formData = {};
         		
         		 // 순차적으로 입력 확인
-        	    for (var i = 0; i < formDataArray.length; i++) {
-        	        var field = formDataArray[i];
+        	    for (i = 0; i < formDataArray.length; i++) {
+        	        field = formDataArray[i];
 
-        	        // 'notes'는 검증 제외
         	        if (field.name !== 'notes' && !field.value.trim()) {
         	            var fieldLabel;
         	            switch (field.name) {
@@ -295,13 +294,11 @@
         	                    fieldLabel = field.name;
         	            }
 
-        	            // 경고 메시지 표시 및 포커스 이동
         	            alert(fieldLabel + '를(을) 입력해주세요.');
         	            $('[name="' + field.name + '"]').focus();
-        	            return; // 중단
+        	            return;
         	        }
 
-        	        // 입력값 저장
         	        formData[field.name] = field.value;
         	    }
         	    
