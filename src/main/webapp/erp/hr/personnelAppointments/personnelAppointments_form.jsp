@@ -22,47 +22,93 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="/erp/images/favicon.png" />
   
-  <!-- 모달창 스타일링 -->
-  <style>
-     .modal{
-         position:absolute;
-         display:none;
-         
-         justify-content: center;
-         top:0;
-         left:0;
-
-         width:100%;
-         height:100%;
-
-         
-
-         background-color: rgba(0,0,0,0.4);
-     }
-  </style>
   
-  <!-- 모달창 body 부분 스타일링 -->
-  <style>
-  .modal_body{
-            position:absolute;
-            top:50%; //모달을 화면가운데 놓기위함. 
-        
+<!-- 모달 -->
+<style>
 
-            width:400px;  //모달의 가로크기 
-            height:600px; //모달의 세로크기 
+h2{
+    text-align: center;
+}
 
-            padding:40px;  
+.modal_btn {
+    display: block;
+    margin: 40px auto;
+    padding: 10px 20px;
+    background-color: royalblue;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
 
-            text-align: center;
+.modal_btn:hover {
+    box-shadow: 3px 4px 11px 0px #00000040;
+}
 
-            background-color: rgb(255,255,255); //모달창 배경색 흰색
-            border-radius:10px; //테두리 
-            box-shadow:0 2px 3px 0 rgba(34,36,38,0.15); //테두리 그림자 
+/*모달 팝업 배경 영역 스타일링*/
+.modal {
+	display: none; /*평소에는 보이지 않도록*/
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    overflow: hidden;
+    z-index: 1000; /* 모달의 z-index 값 */
+}
 
-            transform:translateY(-50%); //모듈창열었을때 위치설정 가운데로 
-        }
- </style>
- 
+
+/* 팝업 내부 스타일 */
+.modal .modal_popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    width: 400px; /* 모달 창의 너비 */
+    height: auto; /* 내용에 따라 높이 자동 조절 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto; /* 내용이 많을 경우 스크롤 */
+    z-index: 1010;
+}
+
+.modal .modal_popup .close_btn {
+    display: block;
+    padding: 10px 20px;
+    background-color: rgb(116, 0, 0);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.modal.on {
+    display: block;
+}
+
+/* 테이블 스타일 */
+#resultTable {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 겹침 제거 */
+    text-align: left;
+    margin-top: 10px;
+}
+
+#resultTable th, #resultTable td {
+    border: 1px solid #ddd; /* 테두리 색상 */
+    padding: 8px; /* 셀 간격 */
+}
+
+#resultTable th {
+    background-color: #f4f4f4; /* 헤더 배경 색 */
+    font-weight: bold;
+}
+</style>
     
 </head>
 
@@ -393,22 +439,24 @@
       
       <!-- partial -->
    <div class="main-panel">
+   
         <div class="content-wrapper">
+        
           <div class="row">
           
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
+              
                 <div class="card-body">
+                
                   <h4 class="card-title" style="font-size: 30px;">인사발령 등록</h4>
+                  
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">발령일자</th>
-                          <th scope="col">사원번호</th>
-                          <th scope="col">이름</th>
-                          <th scope="col">이전 부서</th>
-                          <th scope="col">이전 직급</th>
+                          <th scope="col">발령일자 선택</th>
+                          <th scope="col">사원 검색</th>
                           <th scope="col">발령 부서</th>
                           <th scope="col">발령 직급</th>
                           <th scope="col">발령구분</th>
@@ -424,51 +472,22 @@
                       		</td>
                       		
                       		
+                      		<!-- 모달창 열기 버튼 -->
                       		<td>
-                      			<input type="text" id="user_seq" name="user_seq" class="form-control">
+							    <section>
+							        <button type="button" class="modal_btn" id="user_seq" name="user_seq">사원검색</button>
+							    </section>
                       		</td>
-                      		
-                      		
-                      		<td>
-                      			<input type="text" id="user_name" name="user_name" class="form-control">
-                      		</td>
-                      		
-                      		
-                      		<td>
-                      			<select class="form-control form-control-lg" name="before_dept" id="before_dept">
-				                    <option>인사부</option>
-				                    <option>개발부</option>
-									<option>회계</option>
-									<option>총무</option>
-									<option>영업팀</option>
-									<option>공공영업1팀</option>
-									<option>공공영업2팀</option>
-									<option>기업영업1팀</option>
-									<option>기업영업2팀</option>
-			                    </select>
-                      		</td>
-                      		
-                      		
-                      		<td>
-			                    <select class="form-control form-control-lg" name="before_position" id="before_position">
-			                      <option>사원</option>
-			                      <option>대리</option>
-			                      <option>과장</option>
-			                      <option>차장</option>
-			                      <option>부장</option>
-			                      <option>팀장</option>
-			                      <option>대표이사</option>
-			                    </select>
-                      		</td>
+                      		<!-- 모달창 열기 버튼 -->
+							
                       		
                       		
                       		<td>
                       			<select class="form-control form-control-lg" name="assigned_dept" id="assigned_dept">
-                      			<option>인사부</option>
+                      				<option>인사부</option>
 				                    <option>개발부</option>
 									<option>회계</option>
 									<option>총무</option>
-									<option>영업팀</option>
 									<option>공공영업1팀</option>
 									<option>공공영업2팀</option>
 									<option>기업영업1팀</option>
@@ -497,22 +516,70 @@
                       		</td>
                       		
                       		 <td>
-                      			<input type="text" id="notes" name="notes" class="form-control">
+                      			<input type="text" id="notes" name="notes" class="form-control" placeholder="설명을 입력해주세요">
                       		 </td>
                       		 
 						<tr>	
                       </tbody>
                     </table>
-
-                    
                   </div>
-                  
-
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+	      <!-- 모달 창은 일반적으로 tbody 밖에 위치 -->
+		  <!--모달 팝업-->
+			<div class="modal">
+			    <div class="modal_popup">
+			        <h4>사원 검색</h4>
+			        <p>사원을 검색하여 선택해주세요</p>
+			        <br>
+			        <form id="searchForm"> 
+			        <table>
+			        	<tr>
+				        	<td>
+						        검색구분 : <select name="searchGubun" id="searchGubun">
+											<option value="user_name">이름</option>
+											<option value="user_seq">사원번호</option>
+										</select>
+					        </td>
+					        <td>
+					        	검색 : <input type="text" name="searchStr" id="searchStr">
+					        </td>
+					        
+			        	</tr>
+			        </table>
+			        </form>
+					
+
+					<br>
+
+				        <!-- 검색 결과 테이블 -->
+						<table id="resultTable">
+						    <thead>
+						        <tr>
+						            <th>사번</th>
+						            <th>이름</th>
+						            <th>부서</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <!-- 동적으로 추가된 행들이 들어갈 곳 -->
+						    </tbody>
+						</table>
+										
+				        <br><br>
+
+			        <button type="button" class="close_btn">닫기</button>
+			    </div> <!-- 모달팝업 div -->
+			</div> <!-- 모달 div -->
+			<!-- 모달 팝업-->
+
+
+                  
+
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
@@ -546,13 +613,85 @@
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
 <script>
-
-
-
-
-
+	const modal = document.querySelector('.modal');
+	const modalOpen = document.querySelector('.modal_btn');
+	const modalClose = document.querySelector('.close_btn');
+	
+	//열기 버튼을 눌렀을 때 모달팝업이 열림
+	modalOpen.addEventListener('click',function(){
+	  	//'on' class 추가
+	    modal.classList.add('on');
+	});
+	
+	//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
+	modalClose.addEventListener('click',function(){
+	    //'on' class 제거
+	    modal.classList.remove('on');
+	});
 </script>
+
+
+
+<script>
+$(document).ready(function() {
+
+	
+    // jQuery 동적 이벤트 바인딩
+    $(document).on('keyup', "#searchStr", function() {
+        var str = $("#searchStr").val();
+        if (str != "") {
+            var formData = $("#searchForm").serialize(); // k=v&k=v
+            console.log(formData);
+
+            $.ajax({
+                url : "/restSearch",
+                method : 'POST',
+                data : formData,
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8", 
+                //dataType: "json", 	
+                success : function(obj) {
+                	console.log(obj);  // vo 구조 확인
+                	
+                	
+                    // 결과 테이블의 tbody 부분 초기화
+                    $("#resultTable tbody").empty();
+
+                    // 검색 결과 추가
+					var htmlStr
+					
+					$(obj).map(function(i, vo) {
+						htmlStr += "<tr>";
+						htmlStr += "<td>"+vo.user_seq+"</td>";
+						htmlStr += "<td>"+vo.user_name+"</td>";
+						htmlStr += "<td>"+vo.department_name+"</td>";
+						htmlStr += "</tr>";
+					});
+
+					$("#resultTable tbody").html(htmlStr);
+
+                },
+                error : function(err) {
+                    console.log("에러:" + err);
+                }
+            });
+        }
+    });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
 
 
 </body>

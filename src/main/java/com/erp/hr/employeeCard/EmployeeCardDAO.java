@@ -183,6 +183,61 @@ public class EmployeeCardDAO{
 	}
 	
 	
+	// 인사카드 이름 검색(rest) Select 
+	public ArrayList<HrVO> insaCardSelect(String searchStr) {
+		
+		DBManager dbm = OracleDBManager.getInstance();
+		Connection conn = dbm.connect();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		ArrayList<HrVO> alist = new ArrayList<HrVO>();
+		
+		try {
+			//select * from app_users where user_name like %이름%
+			
+			String sql = "select a.* , d.name as department_name\r\n"
+					+ "from(select *\r\n"
+					+ "     from app_users\r\n"
+					+ "     where user_name like ?) a, department d\r\n"
+					+ "where a.department_id = d.department_id(+)";
+			
+			pstmt =  conn.prepareStatement(sql);
+			pstmt.setString(1, '%'+searchStr+'%');
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				HrVO hvo = new HrVO();
+					hvo.setUser_seq(rs.getInt("user_seq"));
+					hvo.setUser_id(rs.getString("user_id"));
+					hvo.setUser_password(rs.getString("user_password"));
+					hvo.setEmail(rs.getString("email"));
+					hvo.setAddress(rs.getString("address"));
+					hvo.setPhone_number(rs.getInt("phone_number"));
+					hvo.setRegister_date(rs.getDate("register_date"));
+	//				hvo.setUser_status(UserStatus.parseUserStatus(rs.getString("user_status")));
+					hvo.setUser_status(rs.getInt("user_status"));
+					hvo.setHire_date(rs.getDate("hire_date"));
+					hvo.setUser_name(rs.getString("user_name"));
+					hvo.setModify_date(rs.getDate("modify_date"));
+					hvo.setDepartment_id(rs.getInt("department_id"));
+					hvo.setDepartment_name(rs.getString("department_name"));	//부서명 추가
+					hvo.setGender(rs.getInt("gender"));
+					hvo.setBirth(rs.getDate("birth"));
+					hvo.setExtension_number(rs.getInt("extension_number"));
+					hvo.setTermination_date(rs.getDate("termination_date"));
+					hvo.setPosition(rs.getString("position"));
+					hvo.setManager_id(rs.getInt("manager_id"));
+				alist.add(hvo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbm.close(conn, pstmt, rs);
+		}
+		return alist;
+	}
+		
 	
 	// 인사카드 등록 Insert
 	public int insaCardInsert(HrVO hvo) {
@@ -418,6 +473,16 @@ public class EmployeeCardDAO{
 //        int deleteUserSeq = 3; // 삭제할 user_seq 값
 //        int deleteResult = dao.insaCardDelete(deleteUserSeq);
 //        System.out.println("Delete 결과: " + deleteResult);
+        
+//          // 6. Rest 이름검색 테스트
+//        System.out.println("=== 인사카드 REST 검색 테스트 ===");
+//        String searchStr = "마동석";
+//        ArrayList<HrVO> alist = new ArrayList<HrVO>();
+//        alist = dao.insaCardSelect(searchStr);
+//        
+//        for (HrVO hvo : alist) {
+//        	System.out.println(hvo.toString());
+//        }
 //    }
 
 	
