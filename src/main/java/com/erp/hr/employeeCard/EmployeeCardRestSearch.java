@@ -29,22 +29,18 @@ public class EmployeeCardRestSearch extends HttpServlet {
 		
 		String searchGubun = request.getParameter("searchGubun");
 		String searchStr   = request.getParameter("searchStr");
-<<<<<<< HEAD
+
 		//System.out.println(searchGubun + "," + searchStr);
-=======
-//		System.out.println(searchGubun + "," + searchStr);
->>>>>>> e37a11868ced11abcb331a95df16df2a91853f7e
+
 		
 		//-----------------------------------------------------------
 		//TODO 비즈니스 로직
 		EmployeeCardDAO dao = new EmployeeCardDAO();
 		
 		if (searchGubun.equals("user_seq")) {
-<<<<<<< HEAD
+
 			//System.out.println("사원번호로 검색");
-=======
-//			System.out.println("사원번호로 검색");
->>>>>>> e37a11868ced11abcb331a95df16df2a91853f7e
+
 			int searchInt = Integer.parseInt(searchStr);
 			HrVO hvo = dao.insaCardSelect(searchInt);
 			//-----------------------------------------------response : JSON 응답 생성
@@ -52,11 +48,8 @@ public class EmployeeCardRestSearch extends HttpServlet {
 
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonString = mapper.writeValueAsString(hvo);
-<<<<<<< HEAD
+
 			//System.out.println("검색된 사원:" + jsonString);
-=======
-//			System.out.println("검색된 사원:" + jsonString);
->>>>>>> e37a11868ced11abcb331a95df16df2a91853f7e
 
 			PrintWriter out = response.getWriter();
 			out.write(jsonString);
@@ -64,22 +57,18 @@ public class EmployeeCardRestSearch extends HttpServlet {
 		
 		ArrayList<HrVO> alist = new ArrayList<HrVO>();
 		if (searchGubun.equals("user_name")) {
-<<<<<<< HEAD
+
 			//System.out.println("이름으로 검색");
-=======
-//			System.out.println("이름으로 검색");
->>>>>>> e37a11868ced11abcb331a95df16df2a91853f7e
+
 			alist = dao.insaCardSelect(searchStr);
 		//-----------------------------------------------response : JSON 응답 생성
 		response.setContentType("application/json; charset=UTF-8");
 
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonString = mapper.writeValueAsString(alist);
-<<<<<<< HEAD
+
 		//System.out.println("검색된 사원:" + jsonString);
-=======
-//		System.out.println("검색된 사원:" + jsonString);
->>>>>>> e37a11868ced11abcb331a95df16df2a91853f7e
+
 
 		PrintWriter out = response.getWriter();
 		out.write(jsonString);
