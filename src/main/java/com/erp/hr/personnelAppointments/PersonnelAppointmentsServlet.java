@@ -36,7 +36,7 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
 		String pageGubun = request.getParameter("pageGubun");
 		PersonnelAppointmentsDAO padao = new PersonnelAppointmentsDAO();
    	
-   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
+//   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
    		
    		
    		//	 -------------------------------------------------------- 인사발령 전체 목록보기 (페이징)
@@ -101,14 +101,14 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
 	
 
 
-		System.out.println("POST 메서드 호출됨");
+//		System.out.println("POST 메서드 호출됨");
 
 		//페이지 구분자부터 받기
    		String pageGubun = request.getParameter("pageGubun");
    		
 
    		PersonnelAppointmentsDAO padao = new PersonnelAppointmentsDAO();
-   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
+//   		System.out.println("페이지 구분자는 : -" + pageGubun + "-");
    		
 
    		if (pageGubun == null) {
@@ -129,7 +129,7 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
    		    
    		    //값이 제대로 들어왔나 확인
    		    String jsonString = jsonData.toString();
-   		    System.out.println("들어온 값: " + jsonString);
+//   		    System.out.println("들어온 값: " + jsonString);
    			
    			ObjectMapper om = new ObjectMapper();
    			
@@ -146,7 +146,7 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
    			
 
    			
-   			System.out.println("Parsed PaVO: " + pvo);
+//   			System.out.println("Parsed PaVO: " + pvo);
    			
    			int res = padao.insert(pvo);
    			
@@ -173,10 +173,10 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
 	        String[] valueArr = request.getParameterValues("valueArr");
 	        int size = valueArr.length;
 	        
-	        System.out.println(
-	        		"삭제할 데이터: " + Arrays.toString(valueArr)
-	        		); // valueArr 값 잘 들어왔는지 확인 로그
-	        
+//	        System.out.println(
+//	        		"삭제할 데이터: " + Arrays.toString(valueArr)
+//	        		); // valueArr 값 잘 들어왔는지 확인 로그
+//	        
 	        
 	        boolean allDeleted = true; // 모두삭제 성공 여부 플래그
 	        int res = 0;	//삭제건수
@@ -187,7 +187,7 @@ public class PersonnelAppointmentsServlet extends HttpServlet {
 		        	res = padao.delete(valueArr[i]);
 		        	
 		        	// 삭제 결과 확인
-		        	System.out.println("삭제시도: " + valueArr[i] +"번 항목"+ ", 삭제결과: " + res);
+//		        	System.out.println("삭제시도: " + valueArr[i] +"번 항목"+ ", 삭제결과: " + res);
 		        	 
 		        	
 	                if (res <= 0) { // 하나라도 삭제 실패 시
